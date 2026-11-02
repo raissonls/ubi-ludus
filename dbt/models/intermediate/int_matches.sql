@@ -2,6 +2,8 @@
 -- Times stay in UTC. The local date uses the IANA zone, so any daylight saving rule applies.
 select
     m.match_id,
+    m.provider,
+    m.provider_rank,
     m.competition_id,
     m.season,
     m.round,

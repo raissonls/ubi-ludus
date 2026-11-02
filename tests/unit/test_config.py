@@ -32,7 +32,7 @@ def test_the_real_config_file_loads() -> None:
     by_id = {c.id: c for c in load_competitions()}
     assert by_id["brasileirao-serie-a"].coverage == "full"
     assert by_id["copa-do-brasil"].coverage == "short"
-    assert by_id["eliminatorias-copa-do-mundo"].coverage == "none"
+    assert by_id["eliminatorias-copa-do-mundo"].coverage == "short"  # API-Football since M1-07
 
 
 def test_provider_ids_are_read_as_text_even_when_written_as_numbers(tmp_path: Path) -> None:

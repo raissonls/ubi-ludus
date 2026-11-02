@@ -249,7 +249,7 @@ def test_a_run_with_no_targets_fetches_nothing_and_is_not_an_error() -> None:
 def test_the_default_registry_builds_this_adapter(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(TOKEN_ENV, TOKEN)
     registry = default_registry()
-    assert registry.names() == ["football-data"]
+    assert registry.names() == ["api-football", "football-data"]
     assert isinstance(registry.create("football-data"), FootballDataAdapter)
 
 

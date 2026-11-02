@@ -157,7 +157,10 @@ def test_competitions_are_published_with_their_provider_ids_and_coverage(
 
     validate_file(out, "competitions")
     by_id = {c["id"]: c for c in json.loads(out.read_text(encoding="utf-8"))["competitions"]}
-    assert by_id["brasileirao-serie-a"]["provider_ids"] == {"football-data": "BSA"}
+    assert by_id["brasileirao-serie-a"]["provider_ids"] == {
+        "football-data": "BSA",
+        "api-football": "71",
+    }
     assert by_id["brasileirao-serie-a"]["coverage"] == "full"
     assert by_id["copa-do-brasil"]["coverage"] == "short"
     assert by_id["copa-do-brasil"]["provider_ids"] == {"api-football": "73"}

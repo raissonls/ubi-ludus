@@ -1,0 +1,54 @@
+{
+  "get": "fixtures",
+  "parameters": {"date": "2026-11-02", "timezone": "America/Sao_Paulo"},
+  "errors": [],
+  "results": 3,
+  "paging": {"current": 1, "total": 1},
+  "response": [
+    {
+      "fixture": {
+        "id": 880001,
+        "timezone": "America/Sao_Paulo",
+        "date": "2026-11-02T21:30:00-03:00",
+        "timestamp": 1793665800,
+        "status": {"long": "Not Started", "short": "NS", "elapsed": null, "extra": null}
+      },
+      "league": {"id": 73, "name": "Copa do Brasil", "country": "Brazil", "season": 2026, "round": "Semi-finals"},
+      "teams": {
+        "home": {"id": 1, "name": "Flamengo", "winner": null},
+        "away": {"id": 2, "name": "Gremio", "winner": null}
+      },
+      "goals": {"home": null, "away": null}
+    },
+    {
+      "fixture": {
+        "id": 880002,
+        "timezone": "America/Sao_Paulo",
+        "date": "2026-11-02T19:00:00-03:00",
+        "timestamp": 1793656800,
+        "status": {"long": "Second Half", "short": "2H", "elapsed": 61, "extra": null}
+      },
+      "league": {"id": 11, "name": "CONMEBOL Sudamericana", "country": "World", "season": 2026, "round": "Group Stage - 6"},
+      "teams": {
+        "home": {"id": 3, "name": "Estudiantes L.P.", "winner": null},
+        "away": {"id": 4, "name": "Palmeiras", "winner": null}
+      },
+      "goals": {"home": 0, "away": 1}
+    },
+    {
+      "fixture": {
+        "id": 880003,
+        "timezone": "America/Sao_Paulo",
+        "date": "2026-11-02T20:00:00-03:00",
+        "timestamp": 1793660400,
+        "status": {"long": "Not Started", "short": "NS", "elapsed": null, "extra": null}
+      },
+      "league": {"id": 999, "name": "Some Other League", "country": "Nowhere", "season": 2026, "round": "Regular Season - 1"},
+      "teams": {
+        "home": {"id": 5, "name": "Club A", "winner": null},
+        "away": {"id": 6, "name": "Club B", "winner": null}
+      },
+      "goals": {"home": null, "away": null}
+    }
+  ]
+}

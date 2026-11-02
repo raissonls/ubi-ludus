@@ -5,6 +5,8 @@
 #   horizon_days 14 = a full window (yesterday through 14 days ahead)
 #   horizon_days 1  = only until tomorrow (the API-Football free plan). The site shows a notice.
 #   no sources      = not covered yet. The site lists it as such instead of hiding it.
+# A competition may list two providers. A match both of them know is published once, from
+# football-data.org when it has it (the pipeline prefers the provider with the longer horizon).
 # To add a competition, add an entry here. To add a provider, write an adapter and register it.
 version: 1
 competitions:
@@ -15,6 +17,7 @@ competitions:
     type: league
     sources:
       - {provider: football-data, provider_id: BSA, horizon_days: 14}
+      - {provider: api-football, provider_id: 71, horizon_days: 1}
 
   - id: copa-do-brasil
     name: Copa do Brasil
@@ -58,6 +61,8 @@ competitions:
     type: cup
     sources:
       - {provider: football-data, provider_id: CLI, horizon_days: 14}
+      # Fallback: football-data.org marks CLI as a paid tier and may cut it (provider comparison).
+      - {provider: api-football, provider_id: 13, horizon_days: 1}
 
   - id: copa-sul-americana
     name: Copa Sul-Americana
@@ -116,16 +121,19 @@ competitions:
     sources:
       - {provider: football-data, provider_id: WC, horizon_days: 14}
 
-  # Not covered yet: no free provider is verified for these. API-Football lists them,
-  # so M1-07 should look up their league ids and add a source with horizon_days 1.
+  # National teams: only API-Football has them. League ids confirmed with the API on 2026-11-02:
+  # 34 = "World Cup - Qualification South America", 10 = "Friendlies". The other confederations'
+  # qualifiers are separate leagues at API-Football; a competition takes one id per provider.
   - id: eliminatorias-copa-do-mundo
     name: Eliminatórias da Copa do Mundo
     country_or_region: Mundo
     type: league
-    sources: []
+    sources:
+      - {provider: api-football, provider_id: 34, horizon_days: 1}
 
   - id: amistosos-selecoes
     name: Amistosos de seleções
     country_or_region: Mundo
     type: cup
-    sources: []
+    sources:
+      - {provider: api-football, provider_id: 10, horizon_days: 1}

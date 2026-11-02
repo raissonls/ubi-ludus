@@ -49,6 +49,33 @@ def response(competition_id: str, payload: dict[str, Any], fetched_hour: int = 9
     )
 
 
+def api_football_fixture(
+    fixture_id: int,
+    league_id: int,
+    kickoff: str,
+    home: str,
+    away: str,
+    status: str = "NS",
+    round_label: str | None = "Regular Season - 33",
+) -> dict[str, Any]:
+    """One entry of the ``response`` list of API-Football's ``fixtures`` endpoint."""
+    return {
+        "fixture": {"id": fixture_id, "date": kickoff, "status": {"short": status}},
+        "league": {"id": league_id, "season": 2026, "round": round_label},
+        "teams": {"home": {"id": 1, "name": home}, "away": {"id": 2, "name": away}},
+    }
+
+
+def api_football_response(fixtures: list[dict[str, Any]], fetched_hour: int = 9) -> RawResponse:
+    return RawResponse(
+        provider="api-football",
+        resource="fixtures",
+        params={"date": "2026-11-02"},
+        fetched_at=datetime(2026, 11, 2, fetched_hour, tzinfo=UTC),
+        payload={"errors": [], "response": fixtures},
+    )
+
+
 def build(
     tmp_path: Path,
     change: Callable[[Payloads], list[RawResponse] | None] | None = None,

@@ -13,7 +13,7 @@ with compared as (
                 then cast('{{ var("run_at") }}' as timestamptz)
             else p.rescheduled_at
         end as rescheduled_stamp
-    from {{ ref('int_matches') }} as m
+    from {{ ref('int_matches_merged') }} as m
     left join {{ ref('stg_previous_matches') }} as p
         on m.match_id = p.match_id
 ),
