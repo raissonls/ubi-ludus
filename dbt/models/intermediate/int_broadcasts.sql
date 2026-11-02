@@ -1,15 +1,20 @@
 -- One row per match and broadcaster, with how sure we are (FR-12), and a single "unknown" row
 -- for a match nothing is known about (FR-13). An unknown row never names a broadcaster.
---   rule     : from the rights table
---   unknown  : nothing is known, so nothing is guessed
--- (`confirmed` comes from overrides, M2-03, and from provider data, which no provider gives us.)
+--   confirmed : the owner checked this match (an override)
+--   rule      : from the rights table
+--   unknown   : nothing is known, so nothing is guessed. Also what a match becomes when overrides
+--               remove every broadcaster it had.
+-- (Provider data could also confirm a broadcast, but no provider we use gives broadcasters.)
 with known as (
+    -- Only matches we have: an override for one that is gone changes nothing.
     select
-        match_id,
-        broadcaster_id,
-        'rule' as confidence,
-        'rights_rule' as source
-    from {{ ref('int_rule_broadcasts') }}
+        r.match_id,
+        r.broadcaster_id,
+        r.confidence,
+        r.source
+    from {{ ref('int_resolved_broadcasts') }} as r
+    inner join {{ ref('int_matches_merged') }} as m
+        on r.match_id = m.match_id
 ),
 
 unknown as (

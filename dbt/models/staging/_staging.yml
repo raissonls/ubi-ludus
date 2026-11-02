@@ -116,6 +116,31 @@ models:
               arguments:
                 values: [all, round, stage, team]
 
+  - name: stg_overrides
+    description: Match-level overrides, one row per override and broadcaster.
+    columns:
+      - name: match_id
+        data_tests:
+          - not_null
+      - name: action
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [add, replace, remove]
+      - name: broadcaster_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_broadcasters')
+                field: broadcaster_id
+      - name: reason
+        data_tests:
+          - not_null
+      - name: added_at
+        data_tests:
+          - not_null
+
   - name: stg_team_aliases
     columns:
       - name: team_id

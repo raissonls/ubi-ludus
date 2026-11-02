@@ -138,11 +138,14 @@ def _insert(con: duckdb.DuckDBPyConnection, sql: str, rows: Sequence[tuple[Any, 
 
 
 def load_rights_tables(con: duckdb.DuckDBPyConnection, data: RightsData) -> None:
-    """Load the checked rights files into ``raw_broadcasters``, ``raw_services`` and
-    ``raw_rights_rules``. Tables are created even when empty, so the models always have them.
+    """Load the checked rights files into the ``raw_*`` tables the models read.
 
-    ``rule_number`` is the rule's place in ``rights.yml`` (from 1), which is how a problem is
-    traced back to the file.
+    The tables are ``raw_broadcasters``, ``raw_services``, ``raw_rights_rules`` and
+    ``raw_overrides``, created even when empty so the models always have them.
+
+    ``rule_number`` and ``override_number`` are the entry's place in its file (from 1). They
+    trace a problem back to the file, and they decide which of two overrides added on the same
+    day comes last.
     """
     con.execute(
         "create or replace table raw_broadcasters "
@@ -157,6 +160,11 @@ def load_rights_tables(con: duckdb.DuckDBPyConnection, data: RightsData) -> None
         "(rule_number integer, competition_id varchar, season varchar, scope varchar, "
         "scope_value varchar, broadcasters varchar[], valid_from date, valid_to date, "
         "source varchar, notes varchar)"
+    )
+    con.execute(
+        "create or replace table raw_overrides "
+        "(override_number integer, match_id varchar, action varchar, broadcasters varchar[], "
+        "reason varchar, added_at date)"
     )
     _insert(
         con,
@@ -185,6 +193,14 @@ def load_rights_tables(con: duckdb.DuckDBPyConnection, data: RightsData) -> None
                 r.notes,
             )
             for number, r in enumerate(data.rules, start=1)
+        ],
+    )
+    _insert(
+        con,
+        "insert into raw_overrides values (?, ?, ?, ?, ?, ?)",
+        [
+            (number, o.match_id, o.action, list(o.broadcasters), o.reason, o.added_at)
+            for number, o in enumerate(data.overrides, start=1)
         ],
     )
 
