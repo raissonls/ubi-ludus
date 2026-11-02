@@ -147,7 +147,10 @@ def test_the_key_never_appears_in_logs_errors_or_the_object_description(
         except ProviderError as exc:
             messages.append(str(exc))
     everything = "\n".join(messages + [record.getMessage() for record in caplog.records])
-    assert "football-data.org" in everything  # the scenarios really did log and raise
+    # The scenarios really did log and raise, so the check below is not vacuous.
+    assert "rejected the API token" in everything
+    assert "rate limit" in everything
+    assert "skipped" in everything
     assert TOKEN not in everything
     assert "token=<hidden>" in repr(adapter(FakeHttp()))
 
