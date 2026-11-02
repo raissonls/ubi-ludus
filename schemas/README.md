@@ -8,6 +8,7 @@ JSON Schemas (draft 2020-12) that describe our data. The pipeline validates ever
 |---|---|
 | `team`, `competition`, `match`, `broadcaster`, `service`, `broadcast` | One record of each kind |
 | `matches`, `teams`, `competitions`, `broadcasters`, `status` | The published files `matches.json`, `teams.json`, `competitions.json`, `broadcasters.json` and `status.json` |
+| `competitions-config` | The hand-edited `config/competitions.yml`: competitions, their provider ids and how many days ahead each can be fetched |
 | `common` | Shared building blocks: ids, UTC timestamps, hex colours |
 
 ## Rules baked into the schemas

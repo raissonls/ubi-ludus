@@ -12,6 +12,8 @@ license = { text = "Apache-2.0" }
 authors = [{ name = "Raisson Leal Silva" }]
 dependencies = [
     "jsonschema>=4.23",
+    "pyyaml>=6.0",
+    "tzdata>=2024.2", # IANA time zones (America/Sao_Paulo) on Windows
 ]
 
 [project.optional-dependencies]
@@ -22,6 +24,7 @@ dev = [
     "pytest-cov>=5.0",
     "ruff>=0.5",
     "types-jsonschema>=4.23",
+    "types-pyyaml>=6.0",
 ]
 
 [tool.setuptools.packages.find]

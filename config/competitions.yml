@@ -1,0 +1,131 @@
+# Competitions we follow and where their data comes from.
+# Validated against schemas/competitions-config.schema.json (see docs/research/provider-comparison.md).
+#
+# sources: which provider serves the competition and how many days ahead it can tell us.
+#   horizon_days 14 = a full window (yesterday through 14 days ahead)
+#   horizon_days 1  = only until tomorrow (the API-Football free plan). The site shows a notice.
+#   no sources      = not covered yet. The site lists it as such instead of hiding it.
+# To add a competition, add an entry here. To add a provider, write an adapter and register it.
+version: 1
+competitions:
+  # --- Brazil -------------------------------------------------------------
+  - id: brasileirao-serie-a
+    name: Campeonato Brasileiro Série A
+    country_or_region: Brasil
+    type: league
+    sources:
+      - {provider: football-data, provider_id: BSA, horizon_days: 14}
+
+  - id: copa-do-brasil
+    name: Copa do Brasil
+    country_or_region: Brasil
+    type: cup
+    sources:
+      - {provider: api-football, provider_id: 73, horizon_days: 1}
+
+  - id: campeonato-paulista
+    name: Campeonato Paulista
+    country_or_region: Brasil
+    type: league
+    sources:
+      - {provider: api-football, provider_id: 475, horizon_days: 1}
+
+  - id: campeonato-carioca
+    name: Campeonato Carioca
+    country_or_region: Brasil
+    type: league
+    sources:
+      - {provider: api-football, provider_id: 624, horizon_days: 1}
+
+  - id: campeonato-mineiro
+    name: Campeonato Mineiro
+    country_or_region: Brasil
+    type: league
+    sources:
+      - {provider: api-football, provider_id: 629, horizon_days: 1}
+
+  - id: campeonato-gaucho
+    name: Campeonato Gaúcho
+    country_or_region: Brasil
+    type: league
+    sources:
+      - {provider: api-football, provider_id: 477, horizon_days: 1}
+
+  # --- South America ------------------------------------------------------
+  - id: copa-libertadores
+    name: Copa Libertadores
+    country_or_region: América do Sul
+    type: cup
+    sources:
+      - {provider: football-data, provider_id: CLI, horizon_days: 14}
+
+  - id: copa-sul-americana
+    name: Copa Sul-Americana
+    country_or_region: América do Sul
+    type: cup
+    sources:
+      - {provider: api-football, provider_id: 11, horizon_days: 1}
+
+  # --- Europe and the world -----------------------------------------------
+  - id: uefa-champions-league
+    name: UEFA Champions League
+    country_or_region: Europa
+    type: cup
+    sources:
+      - {provider: football-data, provider_id: CL, horizon_days: 14}
+
+  - id: premier-league
+    name: Premier League
+    country_or_region: Inglaterra
+    type: league
+    sources:
+      - {provider: football-data, provider_id: PL, horizon_days: 14}
+
+  - id: la-liga
+    name: La Liga
+    country_or_region: Espanha
+    type: league
+    sources:
+      - {provider: football-data, provider_id: PD, horizon_days: 14}
+
+  - id: serie-a-italia
+    name: Serie A (Itália)
+    country_or_region: Itália
+    type: league
+    sources:
+      - {provider: football-data, provider_id: SA, horizon_days: 14}
+
+  - id: bundesliga
+    name: Bundesliga
+    country_or_region: Alemanha
+    type: league
+    sources:
+      - {provider: football-data, provider_id: BL1, horizon_days: 14}
+
+  - id: ligue-1
+    name: Ligue 1
+    country_or_region: França
+    type: league
+    sources:
+      - {provider: football-data, provider_id: FL1, horizon_days: 14}
+
+  - id: copa-do-mundo
+    name: Copa do Mundo FIFA
+    country_or_region: Mundo
+    type: cup
+    sources:
+      - {provider: football-data, provider_id: WC, horizon_days: 14}
+
+  # Not covered yet: no free provider is verified for these. API-Football lists them,
+  # so M1-07 should look up their league ids and add a source with horizon_days 1.
+  - id: eliminatorias-copa-do-mundo
+    name: Eliminatórias da Copa do Mundo
+    country_or_region: Mundo
+    type: league
+    sources: []
+
+  - id: amistosos-selecoes
+    name: Amistosos de seleções
+    country_or_region: Mundo
+    type: cup
+    sources: []
