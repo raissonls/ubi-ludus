@@ -37,7 +37,7 @@ Read from the GitHub docs and the API on 2026-11-01. Where the docs were unclear
 | GitHub Pages | No | Yes |
 | Secret scanning, push protection | No | Yes |
 | CodeQL code scanning | No | Yes |
-| Dependabot alerts | Yes (currently off, see below) | Yes |
+| Dependabot alerts | Yes (switched on 2026-11-02) | Yes |
 | Dependabot version updates | Yes (config merged in M0-04) | Yes |
 | GitHub Actions | Monthly allowance, then blocked unless a payment method exists | Free |
 
@@ -63,8 +63,10 @@ Do these in order, in the GitHub web settings. Items marked "now" can already be
 
 - [ ] Settings, Advanced Security: enable **secret scanning** and **push protection**.
 - [ ] Enable **code scanning**, CodeQL default setup (Python now; JavaScript when the site exists).
-- [ ] Enable **Dependabot alerts** and **Dependabot security updates** (alerts can be enabled now on the private repo).
-- [ ] Enable **private vulnerability reporting**, then add a short `SECURITY.md` saying how to report a problem.
+- [x] **Dependabot alerts** are on (enabled 2026-11-02 on the private repo, through the API).
+- [ ] Enable **Dependabot security updates**, if the settings offer them.
+- [x] `SECURITY.md` is in the repository. It tells people to use GitHub's private "Report a vulnerability" button.
+- [ ] Enable **private vulnerability reporting** (Settings, Advanced Security) once the repo is public, so that button exists.
 
 ### GitHub Actions
 
