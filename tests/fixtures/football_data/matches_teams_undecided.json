@@ -1,0 +1,29 @@
+{
+  "filters": {"dateFrom": "2026-11-16", "dateTo": "2026-11-30", "permission": "TIER_ONE", "limit": 100},
+  "resultSet": {"count": 1, "competitions": "TSC", "first": "2026-11-28", "last": "2026-11-28", "played": 0},
+  "competition": {"id": 9002, "name": "Test Cup", "code": "TSC", "type": "CUP"},
+  "matches": [
+    {
+      "area": {"id": 2, "name": "Testland Cup Region", "code": "TSC"},
+      "competition": {"id": 9002, "name": "Test Cup", "code": "TSC", "type": "CUP"},
+      "season": {"id": 2, "startDate": "2026-02-01", "endDate": "2026-11-28", "currentMatchday": null},
+      "id": 900101,
+      "utcDate": "2026-11-28T21:00:00Z",
+      "status": "TIMED",
+      "matchday": null,
+      "stage": "FINAL",
+      "group": null,
+      "lastUpdated": "2026-11-02T00:00:00Z",
+      "homeTeam": {"id": null, "name": null, "shortName": null, "tla": null, "crest": null},
+      "awayTeam": {"id": null, "name": null, "shortName": null, "tla": null, "crest": null},
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {"home": null, "away": null},
+        "halfTime": {"home": null, "away": null}
+      },
+      "odds": {"msg": "Activate Odds-Package in User-Panel to retrieve odds."},
+      "referees": []
+    }
+  ]
+}
