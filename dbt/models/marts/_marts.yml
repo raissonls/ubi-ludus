@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: teams
+    description: The published teams.json, one row per team.
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: name
+        data_tests:
+          - not_null
+      - name: country
+        data_tests:
+          - not_null

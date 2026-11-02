@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_teams
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_team_aliases
+    columns:
+      - name: team_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_teams')
+                field: team_id
+          - relationships:
+              arguments:
+                to: ref('teams')
+                field: id
+      - name: alias
+        description: Two different teams must never share an alias, or matching would be ambiguous.
+        data_tests:
+          - not_null
+          - unique

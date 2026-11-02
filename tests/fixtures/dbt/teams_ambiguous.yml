@@ -1,0 +1,14 @@
+# Two different teams share the alias "Atlético": matching names across providers would be ambiguous.
+teams:
+  - id: atletico-mg
+    name: Clube Atlético Mineiro
+    short_name: Atlético-MG
+    aliases: [Atlético]
+    country: BR
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: atletico-pr
+    name: Club Athletico Paranaense
+    short_name: Athletico-PR
+    aliases: [Atlético]
+    country: BR
+    colors: {primary: "#C8102E", secondary: "#000000"}

@@ -97,6 +97,7 @@ pre-commit install
 ```text
 src/ubi_ludus/pipeline/   data pipeline (providers, normalise, enrich, publish)
 src/ubi_ludus/email/      daily e-mail
+dbt/                      dbt project: models and data-quality tests on DuckDB
 site/                     static website
 config/  data/rights/     owner config and the rights table
 schemas/                  JSON Schemas

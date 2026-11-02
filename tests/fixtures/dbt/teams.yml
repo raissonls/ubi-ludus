@@ -1,0 +1,26 @@
+# Hand-written test teams for the dbt foundation tests. Not real data and not a provider payload.
+teams:
+  - id: flamengo
+    name: Clube de Regatas do Flamengo
+    short_name: Flamengo
+    aliases: [CR Flamengo, Flamengo RJ]
+    country: BR
+    colors: {primary: "#C52613", secondary: "#000000"}
+  - id: gremio
+    name: Grêmio Foot-Ball Porto Alegrense
+    short_name: Grêmio
+    aliases: [Grêmio FBPA, Gremio]
+    country: BR
+    colors: {primary: "#0D80BF", secondary: "#000000"}
+  - id: palmeiras
+    name: Sociedade Esportiva Palmeiras
+    short_name: Palmeiras
+    aliases: [SE Palmeiras]
+    country: BR
+    colors: {primary: "#006437", secondary: "#FFFFFF"}
+  - id: estudiantes
+    name: Estudiantes de La Plata
+    short_name: Estudiantes
+    aliases: [Estudiantes LP]
+    country: AR
+    colors: {primary: "#D2122E", secondary: "#FFFFFF"}

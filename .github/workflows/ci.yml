@@ -45,7 +45,9 @@ jobs:
       - name: Type-check
         run: mypy
 
-      - name: Unit tests
+      # Includes the dbt tests (marker "dbt"): they build the dbt project on fixtures, so a
+      # failing dbt model or data test fails this step.
+      - name: Tests (unit and dbt build on fixtures)
         run: pytest
 
   secret-scan:

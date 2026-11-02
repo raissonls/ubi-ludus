@@ -1,0 +1,23 @@
+name: ubi_ludus
+version: "0.1.0"
+config-version: 2
+profile: ubi_ludus
+
+model-paths: ["models"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "logs"]
+
+# Layers: raw (loaded by Python) -> staging -> intermediate -> marts. See dbt/README.md.
+models:
+  ubi_ludus:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
+
+# dbt phones home with anonymous usage statistics by default. Keep the pipeline quiet.
+flags:
+  send_anonymous_usage_stats: false
