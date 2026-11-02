@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-02T09:05:00Z",
+  "last_success_at": "2026-11-02T09:05:00Z",
+  "record_counts": {
+    "matches": 1,
+    "teams": 1,
+    "competitions": 1,
+    "broadcasters": 1,
+    "services": 1
+  },
+  "unknown_ratio": 0.0
+}

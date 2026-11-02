@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/status.schema.json",
+  "title": "status.json",
+  "description": "Published file: health of the last pipeline run, used by the freshness indicator.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "description": "Version of this file's format. Bump it when the format changes."
+    },
+    "generated_at": {
+      "$ref": "common.schema.json#/$defs/utc_timestamp",
+      "description": "When the pipeline produced this file."
+    },
+    "last_success_at": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/utc_timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "record_counts": {
+      "type": "object",
+      "properties": {
+        "matches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "teams": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "competitions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "broadcasters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "services": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "matches",
+        "teams",
+        "competitions",
+        "broadcasters",
+        "services"
+      ],
+      "additionalProperties": false
+    },
+    "unknown_ratio": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "last_success_at",
+    "record_counts",
+    "unknown_ratio"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/broadcaster.schema.json",
+  "title": "Broadcaster",
+  "description": "A channel or service that can carry a match.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "kind": {
+      "enum": [
+        "free_tv",
+        "pay_tv",
+        "ppv",
+        "streaming",
+        "youtube"
+      ]
+    },
+    "service_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^https?://\\S+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "kind",
+    "service_id",
+    "url"
+  ],
+  "additionalProperties": false
+}

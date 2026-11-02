@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/team.schema.json",
+  "title": "Team",
+  "description": "A club or national team. Text and colours only: no crests or logos.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "short_name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      },
+      "uniqueItems": true,
+      "description": "Other spellings, used to match the same team across providers."
+    },
+    "country": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}(-[A-Z]{3})?$",
+      "description": "ISO 3166-1 alpha-2, for example BR, or GB-ENG."
+    },
+    "colors": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "$ref": "common.schema.json#/$defs/hex_color"
+        },
+        "secondary": {
+          "$ref": "common.schema.json#/$defs/hex_color"
+        }
+      },
+      "required": [
+        "primary",
+        "secondary"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "short_name",
+    "aliases",
+    "country",
+    "colors"
+  ],
+  "additionalProperties": false
+}

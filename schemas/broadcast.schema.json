@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/broadcast.schema.json",
+  "title": "Broadcast",
+  "description": "One broadcaster for one match, with how sure we are. It lives inside a match, so match_id is not repeated. An `unknown` broadcast never names a broadcaster (PRD FR-13).",
+  "type": "object",
+  "properties": {
+    "broadcaster_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "confidence": {
+      "enum": [
+        "confirmed",
+        "rule",
+        "unknown"
+      ]
+    },
+    "source": {
+      "enum": [
+        "override",
+        "provider",
+        "rights_rule",
+        "none"
+      ]
+    },
+    "updated_at": {
+      "$ref": "common.schema.json#/$defs/utc_timestamp"
+    }
+  },
+  "required": [
+    "broadcaster_id",
+    "confidence",
+    "source",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "confidence": {
+            "const": "unknown"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "broadcaster_id": {
+            "type": "null"
+          },
+          "source": {
+            "const": "none"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "confidence": {
+            "const": "confirmed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "broadcaster_id": {
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "override",
+              "provider"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "confidence": {
+            "const": "rule"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "broadcaster_id": {
+            "type": "string"
+          },
+          "source": {
+            "const": "rights_rule"
+          }
+        }
+      }
+    }
+  ]
+}

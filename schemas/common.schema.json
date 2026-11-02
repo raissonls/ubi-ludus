@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/common.schema.json",
+  "title": "Shared definitions",
+  "description": "Building blocks reused by the other schemas.",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 80,
+      "description": "Lowercase letters, digits and single hyphens."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "utc_timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "description": "ISO 8601 in UTC with a trailing Z. Convert to America/Sao_Paulo only for display."
+    },
+    "hex_color": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    }
+  }
+}

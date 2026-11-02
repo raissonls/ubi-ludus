@@ -1,0 +1,14 @@
+{
+  "id": "flamengo",
+  "name": "Clube de Regatas do Flamengo",
+  "short_name": "Flamengo",
+  "aliases": [
+    "CR Flamengo",
+    "Flamengo RJ"
+  ],
+  "country": "BR",
+  "colors": {
+    "primary": "#C52613",
+    "secondary": "#000000"
+  }
+}

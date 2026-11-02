@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/competition.schema.json",
+  "title": "Competition",
+  "description": "A league or cup. `coverage` says how far ahead we have data: full = up to 14 days, short = only until tomorrow, none = not covered yet.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "country_or_region": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "type": {
+      "enum": [
+        "league",
+        "cup"
+      ]
+    },
+    "provider_ids": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "integer"
+        ]
+      },
+      "description": "Identifier of this competition at each provider."
+    },
+    "coverage": {
+      "enum": [
+        "full",
+        "short",
+        "none"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "country_or_region",
+    "type",
+    "provider_ids",
+    "coverage"
+  ],
+  "additionalProperties": false
+}

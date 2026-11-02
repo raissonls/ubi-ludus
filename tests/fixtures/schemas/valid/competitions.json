@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-02T09:05:00Z",
+  "competitions": [
+    {
+      "id": "brasileirao-serie-a",
+      "name": "Campeonato Brasileiro Série A",
+      "country_or_region": "Brasil",
+      "type": "league",
+      "provider_ids": {
+        "football-data": "BSA",
+        "api-football": 71
+      },
+      "coverage": "full"
+    }
+  ]
+}
