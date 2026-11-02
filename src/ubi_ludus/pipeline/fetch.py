@@ -54,8 +54,9 @@ def fetch_all(requests: Sequence[FetchRequest], registry: AdapterRegistry) -> li
         )
     outcomes: list[FetchOutcome] = []
     for request in requests:
-        adapter = registry.create(request.provider)
         try:
+            # Building the adapter can fail too, for example when its API key is not set.
+            adapter = registry.create(request.provider)
             responses = adapter.fetch(request)
         except ProviderError as exc:
             outcomes.append(FetchOutcome(request.provider, (), str(exc)))

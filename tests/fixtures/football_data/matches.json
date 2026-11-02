@@ -1,0 +1,51 @@
+{
+  "filters": {"dateFrom": "2026-11-01", "dateTo": "2026-11-16", "permission": "TIER_ONE", "limit": 100},
+  "resultSet": {"count": 2, "competitions": "TST", "first": "2026-11-01", "last": "2026-11-03", "played": 1},
+  "competition": {"id": 9001, "name": "Test League", "code": "TST", "type": "LEAGUE"},
+  "matches": [
+    {
+      "area": {"id": 1, "name": "Testland", "code": "TST"},
+      "competition": {"id": 9001, "name": "Test League", "code": "TST", "type": "LEAGUE"},
+      "season": {"id": 1, "startDate": "2026-01-01", "endDate": "2026-12-01", "currentMatchday": 34},
+      "id": 900001,
+      "utcDate": "2026-11-01T19:00:00Z",
+      "status": "FINISHED",
+      "matchday": 33,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2026-11-01T21:05:00Z",
+      "homeTeam": {"id": 11, "name": "Alfa Futebol Clube", "shortName": "Alfa", "tla": "ALF"},
+      "awayTeam": {"id": 12, "name": "Beta Esporte Clube", "shortName": "Beta", "tla": "BET"},
+      "score": {
+        "winner": "HOME_TEAM",
+        "duration": "REGULAR",
+        "fullTime": {"home": 2, "away": 1},
+        "halfTime": {"home": 1, "away": 0}
+      },
+      "odds": {"msg": "Activate Odds-Package in User-Panel to retrieve odds."},
+      "referees": []
+    },
+    {
+      "area": {"id": 1, "name": "Testland", "code": "TST"},
+      "competition": {"id": 9001, "name": "Test League", "code": "TST", "type": "LEAGUE"},
+      "season": {"id": 1, "startDate": "2026-01-01", "endDate": "2026-12-01", "currentMatchday": 34},
+      "id": 900002,
+      "utcDate": "2026-11-03T22:30:00Z",
+      "status": "TIMED",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2026-11-02T00:20:00Z",
+      "homeTeam": {"id": 13, "name": "Gama Atlético", "shortName": "Gama", "tla": "GAM"},
+      "awayTeam": {"id": 11, "name": "Alfa Futebol Clube", "shortName": "Alfa", "tla": "ALF"},
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {"home": null, "away": null},
+        "halfTime": {"home": null, "away": null}
+      },
+      "odds": {"msg": "Activate Odds-Package in User-Panel to retrieve odds."},
+      "referees": []
+    }
+  ]
+}

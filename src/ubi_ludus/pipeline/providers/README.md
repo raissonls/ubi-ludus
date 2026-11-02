@@ -22,3 +22,14 @@ If the config names a provider that has no adapter, the run stops before any cal
 - Stay inside the provider's rate limits. Read API keys from environment variables and never log them.
 - Raise `ProviderError` when the provider cannot be used. Let real bugs raise normally.
 - Never write recorded provider data into the repository. Trim test fixtures by hand.
+
+## Adapters that exist
+
+| Name | Module | Key (environment variable) | Notes |
+|---|---|---|---|
+| `football-data` | `football_data.py` | `FOOTBALL_DATA_TOKEN` | One call per competition. Waits when the per-minute allowance is used up and retries once after an HTTP 429. A competition the plan does not serve (403 or 404) is skipped and listed in `adapter.skipped`. |
+| `api-football` | not yet | `API_FOOTBALL_KEY` | Planned in M1-07. |
+
+`default_registry()` in `default.py` registers all of them. Put the key in a local `.env` file (git-ignored) or in GitHub Secrets. If the key is missing, that provider shows up as a failed `FetchOutcome` and the others still run.
+
+Tests use hand-written fixtures in `tests/fixtures/football_data/` and a fake HTTP function, so they never touch the network.
