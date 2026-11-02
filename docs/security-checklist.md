@@ -56,24 +56,24 @@ Do these in order, in the GitHub web settings. Items marked "now" can already be
 
 ### Visibility and branch protection
 
-- [ ] Settings, General, Danger Zone: change visibility to **Public**.
-- [ ] **Protect `main`** (Settings, Branches). Rules: require a pull request before merging; require status checks to pass, using the two checks `Lint, types and tests` and `Secret scan`; block force pushes; block branch deletion. Do not require approvals while there is a single maintainer (nobody could merge), but turn that on when a second person joins.
-- [ ] Settings, General, Pull Requests: allow squash merging only, and enable "Automatically delete head branches".
-- [ ] Repeat the deliberate-failure test from M0-04 once: a red check must now block the merge button.
+- [x] Settings, General, Danger Zone: change visibility to **Public**. Done 2026-11-02; confirmed with the API and a logged-out request.
+- [x] **Protect `main`** (Settings, Branches). Rules: require a pull request before merging; require status checks to pass, using the two checks `Lint, types and tests` and `Secret scan`; block force pushes; block branch deletion. Do not require approvals while there is a single maintainer (nobody could merge), but turn that on when a second person joins. Done 2026-11-02 and read back from the API: both checks required, pull request required with no approvals, no force pushes or deletion, linear history, and it applies to administrators too.
+- [x] Settings, General, Pull Requests: allow squash merging only, and enable "Automatically delete head branches". Done 2026-11-02 (merge commits and rebase merges are off).
+- [x] Repeat the deliberate-failure test from M0-04 once: a red check must now block the merge button. Done 2026-11-02 on throwaway PR #68: the red check made the pull request BLOCKED, and both a normal merge and a direct API merge as the admin were refused ("Required status check ... is failing"). The PR was closed without merging.
 
 ### Scanning and updates
 
-- [ ] Settings, Advanced Security: enable **secret scanning** and **push protection**.
-- [ ] Enable **code scanning**, CodeQL default setup (Python now; JavaScript when the site exists).
+- [x] Settings, Advanced Security: enable **secret scanning** and **push protection**. Done 2026-11-02, read back from the API.
+- [x] Enable **code scanning**, CodeQL default setup (Python now; JavaScript when the site exists). Configured 2026-11-02 (Python and GitHub Actions workflows). Check the Security tab after its first run.
 - [x] **Dependabot alerts** are on (enabled 2026-11-02 on the private repo, through the API).
-- [ ] Enable **Dependabot security updates**, if the settings offer them.
+- [x] Enable **Dependabot security updates**, if the settings offer them. Done 2026-11-02.
 - [x] `SECURITY.md` is in the repository. It tells people to use GitHub's private "Report a vulnerability" button.
-- [ ] Enable **private vulnerability reporting** (Settings, Advanced Security) once the repo is public, so that button exists.
+- [x] Enable **private vulnerability reporting** (Settings, Advanced Security) once the repo is public, so that button exists. Done 2026-11-02.
 
 ### GitHub Actions
 
-- [ ] Settings, Actions, General: turn on the policy that **requires actions to be pinned to a full-length commit SHA** (the workflow already complies). Dependabot alerts for Actions only work for actions with version tags, so keep the version in the comment next to each SHA.
-- [ ] Workflow permissions stay on "Read repository contents" and "Allow GitHub Actions to create and approve pull requests" stays off (both already set).
+- [x] Settings, Actions, General: turn on the policy that **requires actions to be pinned to a full-length commit SHA** (the workflow already complies). Dependabot alerts for Actions only work for actions with version tags, so keep the version in the comment next to each SHA. Done 2026-11-02, read back from the API.
+- [x] Workflow permissions stay on "Read repository contents" and "Allow GitHub Actions to create and approve pull requests" stays off (both already set). Verified 2026-11-02 through the API.
 - [ ] GitHub Pages and the API keys as repository secrets are set up in M4 (#32), not before.
 
 ## Checklist from PRD section 13 (used for the M5-04 sign-off)
@@ -86,9 +86,9 @@ Do these in order, in the GitHub web settings. Items marked "now" can already be
 | Third-party actions pinned to commit SHAs | M0-04 (#4) | done |
 | Dependabot for Actions and Python | M0-04 (#4) | done |
 | Dependabot for npm | when the site gets a `package.json` (M3-01, #18) | open |
-| Branch protection, required checks, no force pushes | go-public day (above) | open |
+| Branch protection, required checks, no force pushes | go-public day, 2026-11-02 | done |
 | Two-factor authentication on the owner's account | M0-06 (#6), confirmed 2026-11-02 | done |
-| Secret scanning and push protection | go-public day (above) | open |
+| Secret scanning and push protection | go-public day, 2026-11-02 | done |
 | Secret-scan step in CI | M0-04 (#4) | done |
 | Site renders data with `textContent`, not raw `innerHTML` | M3-05 (#22) | open |
 | Content Security Policy via meta tag, no inline scripts | M3-01 (#18) | open |
