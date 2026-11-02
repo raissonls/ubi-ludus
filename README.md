@@ -63,3 +63,46 @@ Add the `blocked` label and a comment saying why when a task is stuck waiting on
 - If something is unclear, say so on the issue before building on it.
 - Every **Must** requirement in the PRD must be covered by at least one issue. Search the issues for the requirement ID (for example `FR-12`) to see which.
 - Documentation is written in English.
+
+## Development
+
+You need Python 3.12 and Git. Everything below runs from the repository root.
+
+**First-time setup**
+
+```bash
+python -m venv .venv
+.venv/Scripts/activate          # Windows (Git Bash: source .venv/Scripts/activate; macOS/Linux: source .venv/bin/activate)
+pip install -e ".[dev]"
+pre-commit install
+```
+
+**Daily commands**
+
+| What | Command |
+|---|---|
+| Lint | `ruff check .` |
+| Format | `ruff format .` |
+| Type-check | `mypy` |
+| Tests with coverage (at least 80% required) | `pytest` |
+| Everything pre-commit runs, on all files | `pre-commit run --all-files` |
+
+**Secrets:** copy `.env.example` to `.env` and fill in your own API keys. `.env` is ignored by git. Keys must never be committed; in CI they come from GitHub Secrets. A secret scan runs on every commit through pre-commit.
+
+**Layout**
+
+```text
+src/ubi_ludus/pipeline/   data pipeline (providers, normalise, enrich, publish)
+src/ubi_ludus/email/      daily e-mail
+site/                     static website
+config/  data/rights/     owner config and the rights table
+schemas/                  JSON Schemas
+tests/                    unit/, fixtures/, e2e/
+docs/                     PRD, research, architecture decisions (adr/)
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to propose a change.
+
+## License
+
+Copyright 2026 Raisson Leal Silva. The code is licensed under the [Apache License 2.0](LICENSE). The licence covers our code only: data from third-party providers keeps its own terms (see [docs/research/provider-comparison.md](docs/research/provider-comparison.md)).

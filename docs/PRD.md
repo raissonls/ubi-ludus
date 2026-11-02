@@ -217,8 +217,8 @@ Proposed repository layout:
 config/              owner.yml, competitions.yml
 data/rights/         broadcasters.yml, services.yml, rights.yml, overrides.yml
 schemas/             *.schema.json
-src/pipeline/        providers/, normalise.py, enrich.py, publish.py
-src/email/           render.py, send.py, templates/
+src/ubi_ludus/pipeline/  providers/, normalise.py, enrich.py, publish.py
+src/ubi_ludus/email/     render.py, send.py, templates/
 site/                index.html, assets/, js/, css/, i18n/pt-BR.json
 tests/               unit/, fixtures/, e2e/
 docs/                PRD.md, architecture.md, runbook.md, adr/
