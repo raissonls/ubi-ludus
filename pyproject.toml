@@ -25,6 +25,7 @@ dev = [
     "pre-commit>=3.7",
     "pytest>=8.2",
     "pytest-cov>=5.0",
+    "pytest-xdist>=3.6", # runs the dbt tests in parallel: each builds its own warehouse
     "ruff>=0.5",
     "types-jsonschema>=4.23",
     "types-pyyaml>=6.0",

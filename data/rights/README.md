@@ -131,3 +131,13 @@ pytest tests/unit/test_rights.py
 ```
 
 It loads the real files and prints every problem at once, for example `rights.yml, rule 3 (brasileirao-serie-a 2026): broadcaster 'ghost' is not in broadcasters.yml`.
+
+## The weekly review
+
+Every Thursday morning (Brazil) the `Weekly review report` workflow runs the pipeline and opens a GitHub issue, labelled `review`, then closes last week's. It is how you find out what needs a look instead of hoping to notice. It lists:
+
+- **Unknown matches of your teams**: upcoming matches of the teams in `config/owner.yml` that nothing says where they will be shown, each with its match id so you can write an override.
+- **Rights rules ending within 30 days**: after the last day a rule covers, its matches silently become unknown, so renew or replace it in time.
+- **Rules that ended without a replacement** in the last 30 days: a competition that lost its rule and has no other one.
+
+The summary also counts how many of your teams' matches are confirmed, from rules, or unknown. You can start the workflow by hand from the Actions tab. Until `data/teams.yml` exists (#77) it skips itself with a notice, because no match can be mapped without it. To build the same report on your machine (with the provider keys in `.env`): `python -m ubi_ludus.pipeline.review --run`.
