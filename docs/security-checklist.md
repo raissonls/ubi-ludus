@@ -18,13 +18,15 @@ Why then:
 
 ### Before flipping to public
 
-- [ ] M0 is closed: all six M0 tasks done, including ADR-001 (#5).
-- [ ] Full-history secret scan is clean. CI runs gitleaks over the whole history, so check that the latest run on `main` is green, and run `pre-commit run gitleaks --all-files` locally right before flipping.
-- [ ] No raw provider data in the repo. `research-samples/` is git-ignored; confirm with `git ls-files | grep research-samples` (should print nothing).
-- [ ] No API keys in files: `.env` is git-ignored and `.env.example` has empty values.
-- [ ] README, PRD and docs read once as a stranger would, looking for anything private.
-- [ ] Commit e-mail checked (see [Account](#account-and-personal-data)).
-- [ ] Issues are read once: they become public with the repo. The project board stays private unless you change it.
+Run on 2026-11-02:
+
+- [x] M0 is closed: all six M0 tasks done, including ADR-001 (#5).
+- [x] Full-history secret scan is clean: gitleaks over all 25+ commits on every ref found nothing, and the latest run on `main` is green.
+- [x] No raw provider data in the repo. `research-samples/` is git-ignored and nothing like it is tracked.
+- [x] No API keys in files. `.env` is git-ignored and `.env.example` has empty values. The real key values were also searched for in every tracked file, commit message, issue, pull request and comment: no match.
+- [x] Docs read as a stranger would. The README status line was out of date ("no code yet") and was fixed. No local paths or employer names appear in files, issues or pull requests.
+- [ ] Commit e-mail checked (see [Account](#account-and-personal-data)). The scan found one personal address in the author field of 11 pre-squash commits. It cannot be removed from those commits, so the account settings in the Account section must be on.
+- [x] Issues read: 55 issues, 11 pull requests and 8 comments were scanned for e-mail addresses, tokens and local paths. Nothing found. They become public with the repo. The project board stays private unless you change it.
 
 ## What GitHub Free allows
 

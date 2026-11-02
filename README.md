@@ -2,7 +2,7 @@
 
 *Ubi ludus?* is Latin for "where is the game?". Ubi Ludus answers that question for Brazilian football fans: which TV channel or streaming service carries each match in Brazil, shown on a free static website and in a daily morning e-mail.
 
-**Status:** Phase 1 planning. No code yet. The repository is private for now and goes public after the planning milestone closes, targeting 9 November 2026. The plan and the checklist for that day are in [docs/security-checklist.md](docs/security-checklist.md).
+**Status:** Phase 1 is under way. Planning (milestone M0) is done and the data pipeline (M1) is being built. There is no website or daily e-mail yet. Progress is on the [project board](https://github.com/users/raissonls/projects/1), and the security checklist is in [docs/security-checklist.md](docs/security-checklist.md).
 
 ## Where things are
 
