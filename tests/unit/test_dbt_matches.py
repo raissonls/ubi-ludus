@@ -41,7 +41,15 @@ def test_matches_go_from_provider_responses_to_a_valid_matches_json(
         "home_team_id": "flamengo",
         "away_team_id": "gremio",
         "status": "finished",
-        "broadcasts": [],
+        # No rights rule yet, so nothing is known: one "unknown" broadcast, and no broadcaster.
+        "broadcasts": [
+            {
+                "broadcaster_id": None,
+                "confidence": "unknown",
+                "source": "none",
+                "updated_at": "2026-11-02T09:00:00Z",
+            }
+        ],
     }
     assert list(matches.values()) == sorted(
         matches.values(), key=lambda m: (m["kickoff_utc"], m["id"])

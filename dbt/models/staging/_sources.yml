@@ -14,6 +14,15 @@ sources:
       - name: previous_matches
         identifier: raw_previous_matches
         description: Matches of the previously published matches.json. Empty when it could not be downloaded.
+      - name: broadcasters
+        identifier: raw_broadcasters
+        description: The broadcaster catalogue from data/rights/broadcasters.yml.
+      - name: services
+        identifier: raw_services
+        description: Subscriptions and the broadcasters they include, from data/rights/services.yml.
+      - name: rights_rules
+        identifier: raw_rights_rules
+        description: The rights table from data/rights/rights.yml, one row per rule. May be empty.
       - name: provider_responses
         identifier: raw_provider_responses
         description: One row per provider response, with the payload untouched as JSON.

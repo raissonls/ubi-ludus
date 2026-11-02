@@ -40,6 +40,47 @@ models:
           - unique
           - not_null
 
+  - name: int_rule_broadcasts
+    description: The broadcasters the rights table gives to each match. Rules add up.
+    columns:
+      - name: match_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_matches_merged')
+                field: match_id
+      - name: broadcaster_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_broadcasters')
+                field: broadcaster_id
+
+  - name: int_broadcasts
+    description: Every match with its broadcasters and confidence, or one "unknown" row.
+    columns:
+      - name: match_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('int_matches_merged')
+                field: match_id
+      - name: confidence
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [confirmed, rule, unknown]
+      - name: source
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [override, provider, rights_rule, none]
+
   - name: int_matches_flagged
     columns:
       - name: match_id

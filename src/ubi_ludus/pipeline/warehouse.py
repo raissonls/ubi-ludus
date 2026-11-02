@@ -16,6 +16,7 @@ from typing import Any
 import duckdb
 
 from ubi_ludus.pipeline.config import CompetitionConfig
+from ubi_ludus.pipeline.rights import RightsData
 from ubi_ludus.pipeline.yamlio import read_yaml
 
 PROVIDER_RESPONSES_TABLE = "raw_provider_responses"
@@ -129,6 +130,63 @@ def load_previous_matches(
             rows,
         )
     return len(rows)
+
+
+def _insert(con: duckdb.DuckDBPyConnection, sql: str, rows: Sequence[tuple[Any, ...]]) -> None:
+    if rows:  # DuckDB refuses executemany with nothing to insert
+        con.executemany(sql, rows)
+
+
+def load_rights_tables(con: duckdb.DuckDBPyConnection, data: RightsData) -> None:
+    """Load the checked rights files into ``raw_broadcasters``, ``raw_services`` and
+    ``raw_rights_rules``. Tables are created even when empty, so the models always have them.
+
+    ``rule_number`` is the rule's place in ``rights.yml`` (from 1), which is how a problem is
+    traced back to the file.
+    """
+    con.execute(
+        "create or replace table raw_broadcasters "
+        "(id varchar, name varchar, kind varchar, service_id varchar, url varchar)"
+    )
+    con.execute(
+        "create or replace table raw_services "
+        "(id varchar, name varchar, includes_broadcasters varchar[])"
+    )
+    con.execute(
+        "create or replace table raw_rights_rules "
+        "(rule_number integer, competition_id varchar, season varchar, scope varchar, "
+        "scope_value varchar, broadcasters varchar[], valid_from date, valid_to date, "
+        "source varchar, notes varchar)"
+    )
+    _insert(
+        con,
+        "insert into raw_broadcasters values (?, ?, ?, ?, ?)",
+        [(b.id, b.name, b.kind, b.service_id, b.url) for b in data.broadcasters],
+    )
+    _insert(
+        con,
+        "insert into raw_services values (?, ?, ?)",
+        [(s.id, s.name, list(s.includes_broadcasters)) for s in data.services],
+    )
+    _insert(
+        con,
+        "insert into raw_rights_rules values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+            (
+                number,
+                r.competition_id,
+                r.season,
+                r.scope,
+                r.scope_value,
+                list(r.broadcasters),
+                r.valid_from,
+                r.valid_to,
+                r.source,
+                r.notes,
+            )
+            for number, r in enumerate(data.rules, start=1)
+        ],
+    )
 
 
 def load_provider_responses(con: duckdb.DuckDBPyConnection, responses: Sequence[Any]) -> int:

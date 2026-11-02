@@ -81,6 +81,41 @@ models:
         data_tests:
           - not_null
 
+  - name: stg_broadcasters
+    columns:
+      - name: broadcaster_id
+        data_tests:
+          - unique
+          - not_null
+      - name: kind
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [free_tv, pay_tv, ppv, streaming, youtube]
+
+  - name: stg_rights_rule_broadcasters
+    description: The rights table, one row per rule and broadcaster.
+    columns:
+      - name: broadcaster_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_broadcasters')
+                field: broadcaster_id
+      - name: competition_id
+        description: A rule for a competition we do not follow could never match, so it is an error.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_competitions')
+                field: competition_id
+      - name: scope
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [all, round, stage, team]
+
   - name: stg_team_aliases
     columns:
       - name: team_id

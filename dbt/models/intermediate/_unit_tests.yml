@@ -1,0 +1,104 @@
+version: 2
+
+# dbt unit tests: given rows in, expected rows out, no warehouse data involved.
+# They run in `dbt build`, so a wrong rule-matching change fails the pipeline.
+
+unit_tests:
+  - name: rule_matching_by_competition_season_and_scope
+    description: >
+      A rule covers a match of its competition and season. `all` fits every match, `round` and
+      `stage` fit the match's round, `team` fits either side. Rights add up and a broadcaster
+      named twice is listed once.
+    model: int_rule_broadcasts
+    given:
+      - input: ref('int_matches_merged')
+        rows:
+          - {match_id: m-final, competition_id: serie-a, season: "2026", round: final, kickoff_local_date: "2026-11-10", home_team_id: flamengo, away_team_id: gremio}
+          - {match_id: m-33, competition_id: serie-a, season: "2026", round: "33", kickoff_local_date: "2026-11-10", home_team_id: palmeiras, away_team_id: gremio}
+          - {match_id: m-34, competition_id: serie-a, season: "2026", round: "34", kickoff_local_date: "2026-11-10", home_team_id: palmeiras, away_team_id: santos}
+          - {match_id: m-no-teams, competition_id: serie-a, season: "2026", round: "34", kickoff_local_date: "2026-11-10"}
+          - {match_id: m-other-season, competition_id: serie-a, season: "2025", round: "34", kickoff_local_date: "2026-11-10", home_team_id: palmeiras, away_team_id: santos}
+          - {match_id: m-other-competition, competition_id: copa, season: "2026", round: "34", kickoff_local_date: "2026-11-10", home_team_id: palmeiras, away_team_id: santos}
+      - input: ref('stg_rights_rule_broadcasters')
+        rows:
+          - {rule_number: 1, competition_id: serie-a, season: "2026", scope: all, broadcaster_id: sportv, valid_from: "2026-01-01", valid_to: "2026-12-31"}
+          - {rule_number: 1, competition_id: serie-a, season: "2026", scope: all, broadcaster_id: premiere, valid_from: "2026-01-01", valid_to: "2026-12-31"}
+          - {rule_number: 2, competition_id: serie-a, season: "2026", scope: round, scope_value: "33", broadcaster_id: globo, valid_from: "2026-01-01", valid_to: "2026-12-31"}
+          - {rule_number: 3, competition_id: serie-a, season: "2026", scope: stage, scope_value: final, broadcaster_id: globo, valid_from: "2026-01-01", valid_to: "2026-12-31"}
+          - {rule_number: 4, competition_id: serie-a, season: "2026", scope: team, scope_value: gremio, broadcaster_id: globo, valid_from: "2026-01-01", valid_to: "2026-12-31"}
+          - {rule_number: 5, competition_id: serie-a, season: "2026", scope: team, scope_value: santos, broadcaster_id: cazetv, valid_from: "2026-01-01", valid_to: "2026-12-31"}
+    expect:
+      rows:
+        - {match_id: m-final, broadcaster_id: sportv}
+        - {match_id: m-final, broadcaster_id: premiere}
+        - {match_id: m-final, broadcaster_id: globo}   # the stage rule and the Grêmio rule both name Globo
+        - {match_id: m-33, broadcaster_id: sportv}
+        - {match_id: m-33, broadcaster_id: premiere}
+        - {match_id: m-33, broadcaster_id: globo}      # listed once although two rules name it
+        - {match_id: m-34, broadcaster_id: sportv}
+        - {match_id: m-34, broadcaster_id: premiere}
+        - {match_id: m-34, broadcaster_id: cazetv}     # Santos is the away side
+        - {match_id: m-no-teams, broadcaster_id: sportv}
+        - {match_id: m-no-teams, broadcaster_id: premiere}
+
+  - name: rule_validity_window_includes_both_ends
+    description: >
+      valid_from and valid_to are calendar days in Brazil and both count. The day before the
+      start and the day after the end are outside.
+    model: int_rule_broadcasts
+    given:
+      - input: ref('int_matches_merged')
+        rows:
+          - {match_id: day-before, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-03-14"}
+          - {match_id: first-day, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-03-15"}
+          - {match_id: middle, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-03-20"}
+          - {match_id: last-day, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-03-25"}
+          - {match_id: day-after, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-03-26"}
+      - input: ref('stg_rights_rule_broadcasters')
+        rows:
+          - {rule_number: 1, competition_id: serie-a, season: "2026", scope: all, broadcaster_id: globo, valid_from: "2026-03-15", valid_to: "2026-03-25"}
+    expect:
+      rows:
+        - {match_id: first-day, broadcaster_id: globo}
+        - {match_id: middle, broadcaster_id: globo}
+        - {match_id: last-day, broadcaster_id: globo}
+
+  - name: two_periods_of_one_deal_hand_over_on_the_day_they_change
+    description: A deal that changes hands mid-season is two rules; each match gets the one in force that day.
+    model: int_rule_broadcasts
+    given:
+      - input: ref('int_matches_merged')
+        rows:
+          - {match_id: before, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-06-30"}
+          - {match_id: after, competition_id: serie-a, season: "2026", round: "1", kickoff_local_date: "2026-07-01"}
+      - input: ref('stg_rights_rule_broadcasters')
+        rows:
+          - {rule_number: 1, competition_id: serie-a, season: "2026", scope: all, broadcaster_id: globo, valid_from: "2026-01-01", valid_to: "2026-06-30"}
+          - {rule_number: 2, competition_id: serie-a, season: "2026", scope: all, broadcaster_id: record, valid_from: "2026-07-01", valid_to: "2026-12-31"}
+    expect:
+      rows:
+        - {match_id: before, broadcaster_id: globo}
+        - {match_id: after, broadcaster_id: record}
+
+  - name: a_match_with_no_rule_is_unknown_and_names_no_broadcaster
+    description: >
+      FR-13. A match no rule covers gets one `unknown` row with no broadcaster. A match a rule
+      covers gets `rule` rows and no `unknown` row.
+    model: int_broadcasts
+    overrides:
+      vars:
+        run_at: "2026-11-02T09:00:00Z"
+    given:
+      - input: ref('int_matches_merged')
+        rows:
+          - {match_id: covered}
+          - {match_id: not-covered}
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: covered, broadcaster_id: globo}
+          - {match_id: covered, broadcaster_id: sportv}
+    expect:
+      rows:
+        - {match_id: covered, broadcaster_id: globo, confidence: rule, source: rights_rule, updated_at: "2026-11-02 09:00:00+00"}
+        - {match_id: covered, broadcaster_id: sportv, confidence: rule, source: rights_rule, updated_at: "2026-11-02 09:00:00+00"}
+        - {match_id: not-covered, broadcaster_id: null, confidence: unknown, source: none, updated_at: "2026-11-02 09:00:00+00"}
