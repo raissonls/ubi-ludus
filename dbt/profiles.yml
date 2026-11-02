@@ -1,0 +1,8 @@
+# No secrets here: the database is a local file. Python sets UBI_LUDUS_DB to an absolute path.
+ubi_ludus:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('UBI_LUDUS_DB', 'target/ubi_ludus.duckdb') }}"
+      threads: 1

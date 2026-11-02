@@ -11,6 +11,9 @@ requires-python = ">=3.12"
 license = { text = "Apache-2.0" }
 authors = [{ name = "Raisson Leal Silva" }]
 dependencies = [
+    "dbt-core>=1.12,<1.13",
+    "dbt-duckdb>=1.11,<1.12",
+    "duckdb>=2.0,<3",
     "jsonschema>=4.23",
     "pyyaml>=6.0",
     "tzdata>=2024.2", # IANA time zones (America/Sao_Paulo) on Windows
@@ -59,6 +62,7 @@ files = ["src", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=ubi_ludus --cov-report=term-missing"
+markers = ["dbt: builds the dbt project on fixtures (a few seconds); run alone with -m dbt"]
 
 [tool.coverage.report]
 fail_under = 80
