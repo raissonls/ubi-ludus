@@ -9,11 +9,13 @@ from typing import Any
 from ubi_ludus.pipeline import config
 from ubi_ludus.pipeline.dbt_runner import run_dbt
 from ubi_ludus.pipeline.providers.base import RawResponse
+from ubi_ludus.pipeline.rights import RightsData, load_rights
 from ubi_ludus.pipeline.warehouse import (
     connect,
     load_competitions,
     load_previous_matches,
     load_provider_responses,
+    load_rights_tables,
     load_yaml_file,
 )
 
@@ -80,6 +82,7 @@ def build(
     tmp_path: Path,
     change: Callable[[Payloads], list[RawResponse] | None] | None = None,
     previous: dict[str, Any] | None = None,
+    rights: RightsData | None = None,
 ) -> Path:
     """Load teams, competitions and fixture responses into a fresh DuckDB file and run dbt.
 
@@ -96,6 +99,7 @@ def build(
         con, [response(cid, payload) for cid, payload in payloads.items()] + extra
     )
     load_previous_matches(con, previous)
+    load_rights_tables(con, rights if rights is not None else load_rights())
     con.close()  # DuckDB allows one writer: close before dbt opens the file
     run_dbt(database, work_dir=tmp_path / "dbt-work", run_at=NOW, today=TODAY)
     return database

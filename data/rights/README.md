@@ -51,7 +51,24 @@ rules:
 - **`notes`** is optional.
 - Dates need no quotes. Seasons do (`"2026"`), or YAML turns them into a number.
 
-How the engine chooses between several rules for one match is decided in M2-02.
+### How the engine uses the rules
+
+For each match, every rule that covers it counts: same competition and season, the match's local date (Brazil) between `valid_from` and `valid_to` (both included), and a scope that fits. **Rights add up**: the match gets the broadcasters of all the rules that cover it, each listed once. A rule never takes another rule's broadcasters away.
+
+- Write the broadcasters every match of a competition has in an `all` rule. Add `round`, `stage` and `team` rules for what only some matches have.
+- A `team` rule covers the matches that team plays at home or away. A match between two teams with their own rules gets both.
+- When a deal changes hands in mid-season, write two rules with consecutive dates (to 30 June, from 1 July).
+- When a match is the exception ("only on SporTV this time"), do not bend the rules. Write an override (M2-03).
+
+Each broadcast in `matches.json` says how sure we are:
+
+| `confidence` | Meaning | Where it comes from |
+|---|---|---|
+| `rule` | the rights table says so | a rule in `rights.yml` |
+| `confirmed` | someone checked this match | an override (M2-03) |
+| `unknown` | nothing is known; no broadcaster is named | no rule covers the match |
+
+A match no rule covers carries a single `unknown` broadcast, and the site shows "Broadcast not confirmed yet" (FR-13). The pipeline checks that an `unknown` never carries a broadcaster and never sits next to one.
 
 ## Writing an override (`overrides.yml`)
 

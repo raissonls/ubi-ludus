@@ -10,12 +10,14 @@ import pytest
 from ubi_ludus.pipeline import config
 from ubi_ludus.pipeline.dbt_runner import DbtBuildError, run_dbt
 from ubi_ludus.pipeline.export import export_teams
+from ubi_ludus.pipeline.rights import load_rights
 from ubi_ludus.pipeline.validate import SchemaValidationError, validate_file
 from ubi_ludus.pipeline.warehouse import (
     connect,
     load_competitions,
     load_previous_matches,
     load_provider_responses,
+    load_rights_tables,
     load_yaml_file,
 )
 
@@ -33,6 +35,7 @@ def build(tmp_path: Path, teams_file: str) -> Path:
     load_competitions(con, config.load_competitions())
     load_provider_responses(con, [])  # no matches: these tests are about teams
     load_previous_matches(con, None)
+    load_rights_tables(con, load_rights())
     con.close()  # DuckDB allows one writer: close before dbt opens the file
     run_dbt(database, work_dir=tmp_path / "dbt-work")
     return database
