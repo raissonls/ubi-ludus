@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "competitions": [
+    {
+      "id": "brasileirao-serie-a",
+      "name": "Campeonato Brasileiro Série A",
+      "country_or_region": "Brasil",
+      "type": "league",
+      "sources": [
+        {
+          "provider": "Football Data",
+          "provider_id": "BSA",
+          "horizon_days": 14
+        }
+      ]
+    },
+    {
+      "id": "copa-do-brasil",
+      "name": "Copa do Brasil",
+      "country_or_region": "Brasil",
+      "type": "cup",
+      "sources": [
+        {
+          "provider": "api-football",
+          "provider_id": 73,
+          "horizon_days": 1
+        }
+      ]
+    },
+    {
+      "id": "amistosos-selecoes",
+      "name": "Amistosos de seleções",
+      "country_or_region": "Mundo",
+      "type": "cup",
+      "sources": []
+    }
+  ]
+}
