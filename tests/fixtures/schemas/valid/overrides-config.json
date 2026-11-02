@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "overrides": [
+    {
+      "match_id": "football-data-910001",
+      "action": "replace",
+      "broadcasters": ["sportv"],
+      "reason": "Moved to SporTV only (made-up example)",
+      "added_at": "2026-11-01"
+    }
+  ]
+}

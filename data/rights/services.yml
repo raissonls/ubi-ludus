@@ -1,0 +1,43 @@
+# The subscriptions a visitor can say they have (FR-21), and the broadcasters each one includes.
+# Checked against schemas/services-config.schema.json and against broadcasters.yml in CI.
+#
+# A visitor can watch a broadcaster when it is free (service_id null in broadcasters.yml) or when
+# one of their services lists it in includes_broadcasters. A broadcaster may be in several
+# services (ESPN is on pay TV and in Disney+).
+#
+# Services are deliberately coarse: one entry per subscription a fan thinks of as "I have X".
+# Plans that differ in what they include (Globoplay with and without live channels) are separate
+# entries. Draft: to be checked by the owner in M2-04.
+version: 1
+services:
+  - id: tv-por-assinatura
+    name: TV por assinatura (cabo, satélite ou operadora)
+    includes_broadcasters: [sportv, espn, tnt-sports]
+
+  - id: premiere
+    name: Premiere (pay-per-view)
+    includes_broadcasters: [premiere]
+
+  - id: globoplay
+    name: Globoplay
+    includes_broadcasters: [globoplay]
+
+  - id: globoplay-canais
+    name: Globoplay + Canais ao vivo
+    includes_broadcasters: [globoplay, sportv]
+
+  - id: disney-plus
+    name: Disney+ (plano com ESPN)
+    includes_broadcasters: [disney-plus, espn]
+
+  - id: hbo-max
+    name: HBO Max (com TNT Sports)
+    includes_broadcasters: [hbo-max, tnt-sports]
+
+  - id: prime-video
+    name: Prime Video
+    includes_broadcasters: [prime-video]
+
+  - id: paramount-plus
+    name: Paramount+
+    includes_broadcasters: [paramount-plus]

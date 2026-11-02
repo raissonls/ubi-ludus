@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/rights-config.schema.json",
+  "title": "data/rights/rights.yml",
+  "description": "Hand-edited rights table (PRD FR-10): who has the rights to a competition's matches in Brazil, for which matches, and for how long. Every rule says where the information came from.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    }
+  },
+  "required": ["version", "rules"],
+  "additionalProperties": false,
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "properties": {
+        "competition_id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "An id from config/competitions.yml."
+        },
+        "season": {
+          "type": "string",
+          "pattern": "^\\d{4}(-\\d{2})?$",
+          "description": "As the match carries it: 2026, or 2026-27 for a season that crosses a year."
+        },
+        "scope": {
+          "enum": ["all", "round", "stage", "team"],
+          "description": "Which matches of that competition and season the rule covers. `all` is every match; the others need a scope_value."
+        },
+        "scope_value": {
+          "type": "string",
+          "description": "round: the matchday number, for example 33. stage: a knockout stage as the match carries it, for example final or quarter-finals. team: a team id; the rule then covers the matches that team plays. Left out for `all`."
+        },
+        "broadcasters": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "description": "Ids from data/rights/broadcasters.yml."
+        },
+        "valid_from": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "First day (in Brazil) a match can be covered by this rule, inclusive."
+        },
+        "valid_to": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "Last day (in Brazil) a match can be covered by this rule, inclusive."
+        },
+        "source": {
+          "$ref": "common.schema.json#/$defs/long_text",
+          "description": "Where this was learned: an announcement, a page, who told you, and when."
+        },
+        "notes": {
+          "$ref": "common.schema.json#/$defs/long_text"
+        }
+      },
+      "required": [
+        "competition_id",
+        "season",
+        "scope",
+        "broadcasters",
+        "valid_from",
+        "valid_to",
+        "source"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "scope": { "const": "all" } },
+            "required": ["scope"]
+          },
+          "then": {
+            "not": { "required": ["scope_value"] }
+          }
+        },
+        {
+          "if": {
+            "properties": { "scope": { "const": "round" } },
+            "required": ["scope"]
+          },
+          "then": {
+            "required": ["scope_value"],
+            "properties": {
+              "scope_value": { "pattern": "^[0-9]+$" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "scope": { "const": "stage" } },
+            "required": ["scope"]
+          },
+          "then": {
+            "required": ["scope_value"],
+            "properties": {
+              "scope_value": { "pattern": "^(?![0-9]+$)[a-z0-9]+(-[a-z0-9]+)*$" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "scope": { "const": "team" } },
+            "required": ["scope"]
+          },
+          "then": {
+            "required": ["scope_value"],
+            "properties": {
+              "scope_value": { "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

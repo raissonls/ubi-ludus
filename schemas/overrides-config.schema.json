@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/overrides-config.schema.json",
+  "title": "data/rights/overrides.yml",
+  "description": "Hand-edited match-level corrections (PRD FR-11). An override wins over the rights table. Every one says why it exists and when it was added.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/override"
+      }
+    }
+  },
+  "required": ["version", "overrides"],
+  "additionalProperties": false,
+  "$defs": {
+    "override": {
+      "type": "object",
+      "properties": {
+        "match_id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "A published match id, for example football-data-910001."
+        },
+        "action": {
+          "enum": ["add", "replace", "remove"],
+          "description": "add: these broadcasters also carry the match. replace: only these broadcasters carry it. remove: these broadcasters do not carry it."
+        },
+        "broadcasters": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "description": "Ids from data/rights/broadcasters.yml."
+        },
+        "reason": {
+          "$ref": "common.schema.json#/$defs/long_text"
+        },
+        "added_at": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "The day the override was written."
+        }
+      },
+      "required": ["match_id", "action", "broadcasters", "reason", "added_at"],
+      "additionalProperties": false
+    }
+  }
+}

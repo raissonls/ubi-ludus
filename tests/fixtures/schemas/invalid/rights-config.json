@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "scope": "team",
+      "broadcasters": [],
+      "valid_from": "28/01/2026",
+      "valid_to": "2026-12-31"
+    }
+  ]
+}
