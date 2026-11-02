@@ -14,9 +14,9 @@ from pathlib import Path
 from typing import Any
 
 import duckdb
-import yaml
 
 from ubi_ludus.pipeline.config import CompetitionConfig
+from ubi_ludus.pipeline.yamlio import read_yaml
 
 PROVIDER_RESPONSES_TABLE = "raw_provider_responses"
 PREVIOUS_MATCHES_TABLE = "raw_previous_matches"
@@ -65,7 +65,7 @@ def load_yaml_file(
     con: duckdb.DuckDBPyConnection, table: str, path: Path, key: str | None = None
 ) -> int:
     """Load a YAML file holding a list of records, or a mapping with that list under ``key``."""
-    document = yaml.safe_load(path.read_text(encoding="utf-8"))
+    document = read_yaml(path)  # dates stay text, so they survive the trip through JSON
     return load_records(con, table, _records(document, key, path))
 
 

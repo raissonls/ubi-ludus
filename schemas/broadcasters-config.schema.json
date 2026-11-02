@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/broadcasters-config.schema.json",
+  "title": "data/rights/broadcasters.yml",
+  "description": "Hand-edited catalogue of the channels and services that can carry a match. Each entry has the shape of a published broadcaster.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "broadcasters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "broadcaster.schema.json"
+      }
+    }
+  },
+  "required": ["version", "broadcasters"],
+  "additionalProperties": false
+}

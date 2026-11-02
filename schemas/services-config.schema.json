@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/services-config.schema.json",
+  "title": "data/rights/services.yml",
+  "description": "Hand-edited list of the subscriptions a visitor can have and the broadcasters each one includes. Each entry has the shape of a published service.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "service.schema.json"
+      }
+    }
+  },
+  "required": ["version", "services"],
+  "additionalProperties": false
+}

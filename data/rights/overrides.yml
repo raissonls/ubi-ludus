@@ -1,0 +1,13 @@
+# Match-level corrections (FR-11). An override wins over the rights table.
+# Checked against schemas/overrides-config.schema.json and against the catalogue in CI.
+# See data/rights/README.md for how to write one.
+#
+# Example (keep it commented out; the ids must exist):
+#
+#   - match_id: football-data-910001
+#     action: replace                  # add | replace | remove
+#     broadcasters: [sportv]
+#     reason: "Moved to SporTV only, announced by Globo on 2026-11-01"
+#     added_at: 2026-11-01
+version: 1
+overrides: []

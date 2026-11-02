@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "broadcasters": [
+    {"id": "globo", "name": "TV Globo", "kind": "free_tv", "service_id": null, "url": null},
+    {"id": "sportv", "name": "SporTV", "kind": "pay_tv", "service_id": "pay-tv", "url": "https://example.org/sportv"}
+  ]
+}

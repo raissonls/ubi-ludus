@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "broadcasters": [
+    {"id": "Globo", "name": "TV Globo", "kind": "terrestrial", "service_id": null}
+  ]
+}

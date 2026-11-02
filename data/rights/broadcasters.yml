@@ -1,0 +1,40 @@
+# Who can carry a match: channels, streaming apps and YouTube channels.
+# Checked against schemas/broadcasters-config.schema.json and against services.yml in CI.
+# This is only the catalogue of what exists. Who has the rights to which competition goes in
+# rights.yml.
+#
+# kind        free_tv | pay_tv | ppv | streaming | youtube
+# service_id  the subscription a visitor needs to watch it (an id from services.yml), or null
+#             when it costs nothing: free TV and YouTube. A broadcaster with a service_id must be
+#             listed in that service's includes_broadcasters; one with null must not be listed in
+#             any service.
+# url         the official page, or null. Only links we are sure about are filled in.
+#
+# Draft catalogue: to be checked by the owner in M2-04.
+version: 1
+broadcasters:
+  # --- Free TV ----------------------------------------------------------------------------------
+  - {id: globo, name: TV Globo, kind: free_tv, service_id: null, url: null}
+  - {id: sbt, name: SBT, kind: free_tv, service_id: null, url: "https://www.sbt.com.br"}
+  - {id: record, name: Record, kind: free_tv, service_id: null, url: null}
+  - {id: band, name: Band, kind: free_tv, service_id: null, url: null}
+  - {id: tv-brasil, name: TV Brasil, kind: free_tv, service_id: null, url: "https://tvbrasil.ebc.com.br"}
+
+  # --- Pay TV (cable, satellite or operator subscription) ---------------------------------------
+  - {id: sportv, name: SporTV, kind: pay_tv, service_id: tv-por-assinatura, url: null}
+  - {id: espn, name: ESPN, kind: pay_tv, service_id: tv-por-assinatura, url: "https://www.espn.com.br"}
+  - {id: tnt-sports, name: TNT Sports, kind: pay_tv, service_id: tv-por-assinatura, url: null}
+
+  # --- Pay-per-view -----------------------------------------------------------------------------
+  - {id: premiere, name: Premiere, kind: ppv, service_id: premiere, url: null}
+
+  # --- Streaming --------------------------------------------------------------------------------
+  - {id: globoplay, name: Globoplay, kind: streaming, service_id: globoplay, url: "https://globoplay.globo.com"}
+  - {id: disney-plus, name: Disney+, kind: streaming, service_id: disney-plus, url: "https://www.disneyplus.com"}
+  - {id: hbo-max, name: HBO Max, kind: streaming, service_id: hbo-max, url: null}
+  - {id: prime-video, name: Prime Video, kind: streaming, service_id: prime-video, url: "https://www.primevideo.com"}
+  - {id: paramount-plus, name: Paramount+, kind: streaming, service_id: paramount-plus, url: "https://www.paramountplus.com"}
+
+  # --- YouTube (free) ---------------------------------------------------------------------------
+  - {id: cazetv, name: CazéTV, kind: youtube, service_id: null, url: "https://www.youtube.com/@CazeTV"}
+  - {id: tnt-sports-youtube, name: TNT Sports (YouTube), kind: youtube, service_id: null, url: null}

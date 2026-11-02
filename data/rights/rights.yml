@@ -1,0 +1,27 @@
+# The rights table (FR-10): who carries which competition's matches in Brazil.
+# Checked against schemas/rights-config.schema.json and against the catalogue and
+# config/competitions.yml in CI. See data/rights/README.md for how to write a rule.
+#
+# Empty until the owner curates it (M2-04). A competition with no rule here shows
+# "Broadcast not confirmed yet" on the site; nothing is guessed (FR-13).
+#
+# Example (keep it commented out; the ids must exist):
+#
+#   - competition_id: brasileirao-serie-a
+#     season: "2026"
+#     scope: all                       # all | round | stage | team
+#     broadcasters: [globo, sportv, premiere]
+#     valid_from: 2026-01-28           # first day, inclusive, in Brazil
+#     valid_to: 2026-12-31             # last day, inclusive
+#     source: "Where you learned it, and when"
+#
+#   - competition_id: brasileirao-serie-a
+#     season: "2026"
+#     scope: team                      # scope_value is a team id
+#     scope_value: flamengo
+#     broadcasters: [globo]
+#     valid_from: 2026-01-28
+#     valid_to: 2026-12-31
+#     source: "..."
+version: 1
+rules: []

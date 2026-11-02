@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "scope": "all",
+      "broadcasters": ["globo", "sportv"],
+      "valid_from": "2026-01-28",
+      "valid_to": "2026-12-31",
+      "source": "Announcement of 2025-12-01 (made-up example)"
+    },
+    {
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "scope": "team",
+      "scope_value": "flamengo",
+      "broadcasters": ["globo"],
+      "valid_from": "2026-01-28",
+      "valid_to": "2026-12-31",
+      "source": "Made-up example",
+      "notes": "Only the matches Flamengo plays."
+    }
+  ]
+}
