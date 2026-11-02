@@ -7,10 +7,16 @@ from pathlib import Path
 
 import pytest
 
+from ubi_ludus.pipeline import config
 from ubi_ludus.pipeline.dbt_runner import DbtBuildError, run_dbt
 from ubi_ludus.pipeline.export import export_teams
 from ubi_ludus.pipeline.validate import SchemaValidationError, validate_file
-from ubi_ludus.pipeline.warehouse import connect, load_yaml_file
+from ubi_ludus.pipeline.warehouse import (
+    connect,
+    load_competitions,
+    load_provider_responses,
+    load_yaml_file,
+)
 
 pytestmark = pytest.mark.dbt
 
@@ -23,6 +29,8 @@ def build(tmp_path: Path, teams_file: str) -> Path:
     database = tmp_path / "warehouse.duckdb"
     con = connect(database)
     load_yaml_file(con, "raw_teams", FIXTURES / teams_file, key="teams")
+    load_competitions(con, config.load_competitions())
+    load_provider_responses(con, [])  # no matches: these tests are about teams
     con.close()  # DuckDB allows one writer: close before dbt opens the file
     run_dbt(database, work_dir=tmp_path / "dbt-work")
     return database

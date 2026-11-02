@@ -18,6 +18,10 @@ models:
     marts:
       +materialized: table
 
+vars:
+  # Zone for local dates and times. An IANA name, never a fixed offset (FR-06).
+  display_timezone: America/Sao_Paulo
+
 # dbt phones home with anonymous usage statistics by default. Keep the pipeline quiet.
 flags:
   send_anonymous_usage_stats: false

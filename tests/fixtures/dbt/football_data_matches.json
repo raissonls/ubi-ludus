@@ -1,0 +1,111 @@
+{
+  "brasileirao-serie-a": {
+    "competition": {"id": 9001, "name": "Hand-written league", "code": "BSA", "type": "LEAGUE"},
+    "matches": [
+      {
+        "id": 910001,
+        "utcDate": "2026-11-01T19:00:00Z",
+        "status": "FINISHED",
+        "matchday": 33,
+        "stage": "REGULAR_SEASON",
+        "lastUpdated": "2026-11-01T21:05:00Z",
+        "season": {"startDate": "2026-01-01", "endDate": "2026-12-01"},
+        "homeTeam": {"id": 1, "name": "CR Flamengo", "shortName": "Flamengo", "tla": "FLA"},
+        "awayTeam": {"id": 2, "name": "Grêmio FBPA", "shortName": "Grêmio", "tla": "GRE"}
+      },
+      {
+        "id": 910002,
+        "utcDate": "2026-11-03T22:30:00Z",
+        "status": "TIMED",
+        "matchday": 34,
+        "stage": "REGULAR_SEASON",
+        "lastUpdated": "2026-11-02T00:20:00Z",
+        "season": {"startDate": "2026-01-01", "endDate": "2026-12-01"},
+        "homeTeam": {"id": 3, "name": "SE Palmeiras", "shortName": "Palmeiras", "tla": "PAL"},
+        "awayTeam": {"id": 1, "name": "CR Flamengo", "shortName": "Flamengo", "tla": "FLA"}
+      },
+      {
+        "id": 910003,
+        "utcDate": "2026-11-03T02:30:00Z",
+        "status": "IN_PLAY",
+        "matchday": 34,
+        "stage": "REGULAR_SEASON",
+        "lastUpdated": "2026-11-03T02:40:00Z",
+        "season": {"startDate": "2026-01-01", "endDate": "2026-12-01"},
+        "homeTeam": {"id": 2, "name": "Grêmio FBPA", "shortName": "Grêmio", "tla": "GRE"},
+        "awayTeam": {"id": 3, "name": "SE Palmeiras", "shortName": "Palmeiras", "tla": "PAL"}
+      },
+      {
+        "id": 910004,
+        "utcDate": "2026-11-03T03:00:00Z",
+        "status": "POSTPONED",
+        "matchday": 34,
+        "stage": "REGULAR_SEASON",
+        "lastUpdated": "2026-11-02T10:00:00Z",
+        "season": {"startDate": "2026-01-01", "endDate": "2026-12-01"},
+        "homeTeam": {"id": 1, "name": "CR Flamengo", "shortName": "Flamengo", "tla": "FLA"},
+        "awayTeam": {"id": 3, "name": "SE Palmeiras", "shortName": "Palmeiras", "tla": "PAL"}
+      },
+      {
+        "id": 910005,
+        "utcDate": "2018-12-01T02:30:00Z",
+        "status": "FINISHED",
+        "matchday": 36,
+        "stage": "REGULAR_SEASON",
+        "lastUpdated": "2018-12-01T04:30:00Z",
+        "season": {"startDate": "2018-04-14", "endDate": "2018-12-02"},
+        "homeTeam": {"id": 3, "name": "SE Palmeiras", "shortName": "Palmeiras", "tla": "PAL"},
+        "awayTeam": {"id": 2, "name": "Grêmio FBPA", "shortName": "Grêmio", "tla": "GRE"}
+      },
+      {
+        "id": 910006,
+        "utcDate": "2026-11-05T22:00:00Z",
+        "status": "SCHEDULED",
+        "matchday": 35,
+        "stage": "REGULAR_SEASON",
+        "lastUpdated": "2026-11-02T00:20:00Z",
+        "season": {"startDate": "2026-01-01", "endDate": "2026-12-01"},
+        "homeTeam": {"id": 99, "name": "Clube Desconhecido", "shortName": "Desconhecido", "tla": "DES"},
+        "awayTeam": {"id": 3, "name": "SE Palmeiras", "shortName": "Palmeiras", "tla": "PAL"}
+      },
+      {
+        "id": 910007,
+        "utcDate": "2026-11-28T21:00:00Z",
+        "status": "TIMED",
+        "matchday": null,
+        "stage": "FINAL",
+        "lastUpdated": "2026-11-02T00:00:00Z",
+        "season": {"startDate": "2026-01-01", "endDate": "2026-12-01"},
+        "homeTeam": {"id": null, "name": null, "shortName": null, "tla": null},
+        "awayTeam": {"id": null, "name": null, "shortName": null, "tla": null}
+      }
+    ]
+  },
+  "uefa-champions-league": {
+    "competition": {"id": 9002, "name": "Hand-written cup", "code": "CL", "type": "CUP"},
+    "matches": [
+      {
+        "id": 920001,
+        "utcDate": "2026-11-04T20:00:00Z",
+        "status": "TIMED",
+        "matchday": 3,
+        "stage": "LEAGUE_STAGE",
+        "lastUpdated": "2026-11-02T00:00:00Z",
+        "season": {"startDate": "2026-08-01", "endDate": "2027-05-30"},
+        "homeTeam": {"id": 4, "name": "Estudiantes de La Plata", "shortName": "Estudiantes", "tla": "EST"},
+        "awayTeam": {"id": 3, "name": "SE Palmeiras", "shortName": "Palmeiras", "tla": "PAL"}
+      },
+      {
+        "id": 920002,
+        "utcDate": "2027-03-10T20:00:00Z",
+        "status": "TIMED",
+        "matchday": 1,
+        "stage": "LAST_16",
+        "lastUpdated": "2026-11-02T00:00:00Z",
+        "season": {"startDate": "2026-08-01", "endDate": "2027-05-30"},
+        "homeTeam": {"id": 1, "name": "CR Flamengo", "shortName": "Flamengo", "tla": "FLA"},
+        "awayTeam": {"id": 4, "name": "Estudiantes de La Plata", "shortName": "Estudiantes", "tla": "EST"}
+      }
+    ]
+  }
+}

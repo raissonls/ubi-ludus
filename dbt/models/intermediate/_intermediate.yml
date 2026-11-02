@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: int_team_name_keys
+    description: One row per team and name key.
+    columns:
+      - name: name_key
+        description: Two different teams must never share a name key, or matching would be ambiguous.
+        data_tests:
+          - not_null
+          - unique
+
+  - name: int_match_sides
+    columns:
+      - name: resolution
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [undecided, mapped, unmapped, ambiguous]
+
+  - name: int_matches
+    columns:
+      - name: match_id
+        data_tests:
+          - unique
+          - not_null
+      - name: kickoff_local_date
+        data_tests:
+          - not_null
