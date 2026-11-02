@@ -26,6 +26,7 @@ from ubi_ludus.pipeline.providers.base import (
     ProviderError,
     RawResponse,
 )
+from ubi_ludus.pipeline.providers.guard import QuotaExceededError
 from ubi_ludus.pipeline.providers.http import HttpGet, HttpResponse, urllib_get
 
 logger = logging.getLogger(__name__)
@@ -64,13 +65,19 @@ class FootballDataAdapter(ProviderAdapter):
     def fetch(self, request: FetchRequest) -> list[RawResponse]:
         self.skipped = []
         responses: list[RawResponse] = []
-        for target in request.targets:
+        for index, target in enumerate(request.targets):
             resource = f"competitions/{target.provider_id}/matches"
             params = {
                 "dateFrom": target.window.date_from.isoformat(),
                 "dateTo": target.window.date_to.isoformat(),
             }
-            reply = self._get(resource, params)
+            try:
+                reply = self._get(resource, params)
+            except QuotaExceededError as exc:
+                # Keep what was fetched; the rest waits for the next run.
+                logger.warning("football-data.org stopped early: %s", exc)
+                self.skipped.extend((t.competition_id, str(exc)) for t in request.targets[index:])
+                break
             if reply.status in (403, 404):
                 reason = f"HTTP {reply.status}: not available on this plan"
                 logger.warning("football-data.org skipped %s (%s)", target.competition_id, reason)

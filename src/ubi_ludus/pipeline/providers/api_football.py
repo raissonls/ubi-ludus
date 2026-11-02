@@ -33,6 +33,7 @@ from ubi_ludus.pipeline.providers.base import (
     ProviderError,
     RawResponse,
 )
+from ubi_ludus.pipeline.providers.guard import CallBudget, QuotaExceededError
 from ubi_ludus.pipeline.providers.http import HttpGet, HttpResponse, urllib_get
 from ubi_ludus.pipeline.window import BRAZIL_TZ
 
@@ -71,12 +72,14 @@ class ApiFootballAdapter(ProviderAdapter):
         http_get: HttpGet = urllib_get,
         sleep: Callable[[float], None] = time.sleep,
         now: Callable[[], datetime] = lambda: datetime.now(UTC),
+        budget: CallBudget | None = None,
     ) -> None:
         resolved = (key if key is not None else os.environ.get(KEY_ENV, "")).strip()
         if not resolved:
             raise ProviderError(f"{KEY_ENV} is not set")
         self._key = resolved
         self._http_get = http_get
+        self._budget = budget
         self._sleep = sleep
         self._now = now
         self._pause = 0.0
@@ -97,7 +100,12 @@ class ApiFootballAdapter(ProviderAdapter):
         responses: list[RawResponse] = []
         for day in days:
             params = {"date": day.isoformat(), "timezone": TIMEZONE}
-            reply = self._call(RESOURCE, params)
+            try:
+                reply = self._call(RESOURCE, params)
+            except QuotaExceededError as exc:
+                self._skip(day, str(exc))
+                self._skip_rest(days, day, "call budget used up")
+                break
             left = _number(reply.http.headers.get(_DAY_LEFT))
             if "requests" in reply.errors:
                 self._skip(day, f"daily quota reached: {reply.errors['requests']}")
@@ -147,6 +155,9 @@ class ApiFootballAdapter(ProviderAdapter):
         left = self._quota_left()
         if left is None:
             return days
+        if self._budget is not None:
+            # Retries count too, so the budget is what the provider will still accept today.
+            self._budget.allow_only(left)
         if left <= 0:
             raise ProviderError("API-Football daily quota is used up")
         if left < len(days):

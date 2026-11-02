@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 .env
 research-samples/
+.cache/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
