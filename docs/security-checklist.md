@@ -43,7 +43,7 @@ Read from the GitHub docs and the API on 2026-11-01. Where the docs were unclear
 
 ## Account and personal data
 
-- [ ] **Two-factor authentication is on** for the GitHub account. This could not be checked from here (the API does not return it), so please confirm in GitHub: Settings, Password and authentication.
+- [x] **Two-factor authentication is on** for the GitHub account. Confirmed by the owner on 2026-11-02 (the API does not expose this setting, so it cannot be verified automatically).
 - [ ] Recovery codes are saved somewhere safe, not in this repo.
 - [ ] **Commit e-mail.** Squash-merged commits on `main` already use GitHub's noreply address, but the first empty commit and the pre-squash branch commits (visible on pull request pages once the repo is public) show a personal e-mail. In GitHub, Settings, Emails: turn on "Keep my email addresses private" and "Block command line pushes that expose my email". Locally, `git config user.email` is set to the noreply address for this repository.
 - [ ] Optional: sign commits (GitHub shows a "Verified" badge). Not required for Phase 1.
@@ -83,7 +83,7 @@ Do these in order, in the GitHub web settings. Items marked "now" can already be
 | Dependabot for Actions and Python | M0-04 (#4) | done |
 | Dependabot for npm | when the site gets a `package.json` (M3-01, #18) | open |
 | Branch protection, required checks, no force pushes | go-public day (above) | open |
-| Two-factor authentication on the owner's account | go-public day (above) | open |
+| Two-factor authentication on the owner's account | M0-06 (#6), confirmed 2026-11-02 | done |
 | Secret scanning and push protection | go-public day (above) | open |
 | Secret-scan step in CI | M0-04 (#4) | done |
 | Site renders data with `textContent`, not raw `innerHTML` | M3-05 (#22) | open |
