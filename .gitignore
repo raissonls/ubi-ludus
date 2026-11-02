@@ -3,3 +3,11 @@ __pycache__/
 .venv/
 .env
 research-samples/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
