@@ -90,7 +90,7 @@ Priorities use MoSCoW: **M**ust, **S**hould, **C**ould. Every requirement has an
 | FR-01 | M | Fetch fixtures for the covered competitions from one or more free providers through a **provider adapter interface**. | Adding a provider requires only a new adapter module and a config entry. Unit tests run adapters against recorded fixtures (no live calls in CI). |
 | FR-02 | M | Normalise provider data into the internal model ([section 8](#8-data-model)). | Output validates against the JSON Schema in `schemas/`. Invalid output fails the pipeline. |
 | FR-03 | M | Respect provider rate limits and terms. Cache responses between runs. | Pipeline never exceeds the provider's documented rate limit. Total calls per run are logged. |
-| FR-04 | M | Keep a rolling window of matches: yesterday through the next 14 days. | `matches.json` contains only matches in the window. |
+| FR-04 | M | Keep a rolling window of matches: yesterday through the next 14 days. Competitions whose only free provider limits the horizon (see [provider comparison](research/provider-comparison.md)) keep yesterday through tomorrow. | Each competition has a configured horizon (14 days or until tomorrow). `matches.json` contains only matches inside that competition's window. |
 | FR-05 | S | Detect and report postponed, rescheduled or cancelled matches. | A match whose kickoff changes between runs is flagged `rescheduled` for 48 hours. |
 | FR-06 | M | Convert all times to **America/Sao_Paulo** for display; store UTC. | Test cases around midnight show the correct local date. |
 
@@ -123,6 +123,7 @@ Priorities use MoSCoW: **M**ust, **S**hould, **C**ould. Every requirement has an
 | FR-31 | M | Light and dark themes; respect `prefers-color-scheme` and `prefers-reduced-motion`. | Manual verification plus automated accessibility checks. |
 | FR-32 | M | Clear, graceful states for loading, offline, empty data and errors. | Each state has a designed screen and a test. |
 | FR-33 | C | Installable PWA with offline cache of the last data. | Passes PWA installability checks. |
+| FR-34 | M | Competitions with a short data horizon are labeled so the visitor knows data is only available until tomorrow, and never looks like "no matches". | Matches and views of those competitions show the notice (for example "Data for this competition is available only until tomorrow"). The label is driven by the competition's configured horizon. Covered by a test. |
 
 #### Experience principles (what "really nice to use" means)
 
@@ -335,7 +336,7 @@ Phase 1 is delivered by the **owner with Claude as pair-programming and review p
 | # | Question | Owner | Needed by |
 |---|---|---|---|
 | Q1 | Which exact teams does the owner follow? (stored in `config/owner.yml`) | Owner | M2 |
-| Q2 | Which provider(s) cover each competition, and what do their terms say about republishing? | Owner + Claude | End of M0 |
+| Q2 | ~~Which provider(s) cover each competition, and what do their terms say about republishing?~~ **Resolved 2026-11-01:** football-data.org (14 days) plus API-Football (until tomorrow only). Details and terms in [docs/research/provider-comparison.md](research/provider-comparison.md). | Owner + Claude | End of M0 |
 | Q3 | Which e-mail sending method will be used? | Owner | M4 |
 | Q4 | ~~Final project name and repository name~~ **Resolved 2026-11-01: Ubi Ludus (`ubi-ludus`).** Still to check before going public: domain, social handles and similarly named apps. | Owner | M0 |
 | Q5 | Which streaming services does the owner currently subscribe to, so the service catalogue and defaults are correct? | Owner | M3 |
