@@ -82,9 +82,27 @@ overrides:
 ```
 
 - **`add`**: these broadcasters also carry the match.
-- **`replace`**: only these broadcasters carry it.
+- **`replace`**: only these broadcasters carry it. Everything before is wiped.
 - **`remove`**: these broadcasters do not carry it.
-- `reason` and `added_at` are required. Remove an override once the match is played.
+- `reason` and `added_at` are required. Remove an override once the match is played; the pipeline warns about overrides whose match it no longer has.
+
+### What an override does
+
+An override wins over the rules. Everything it puts on a match is `confirmed` (you checked it); what only the rules give stays `rule`.
+
+When a match has several overrides they are applied **one after the other, oldest `added_at` first**, and on the same day in the order they are written in the file. The last word wins:
+
+| Written | Result |
+|---|---|
+| replace `[premiere]`, then add `[cazetv]` | premiere and cazetv |
+| add `[cazetv]`, then replace `[premiere]` | only premiere (the replace wipes the add) |
+| remove `[sportv]`, then add `[sportv]` | sportv is back, confirmed |
+| add `[cazetv]`, then remove `[cazetv]` | cazetv is not there |
+| two `replace` overrides | the later one wipes the earlier one: list every broadcaster in a single `replace` |
+
+- An `add` of a broadcaster the rules already give turns it into `confirmed`: you checked and agree.
+- An override can give a match no rule covers its broadcasters.
+- If overrides remove every broadcaster a match had, it is **unknown** again ("Broadcast not confirmed yet"), not empty.
 
 ## Checking your changes
 

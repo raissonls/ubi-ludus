@@ -2,6 +2,7 @@
 
 import json
 from collections.abc import Callable
+from dataclasses import replace
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
@@ -9,7 +10,7 @@ from typing import Any
 from ubi_ludus.pipeline import config
 from ubi_ludus.pipeline.dbt_runner import run_dbt
 from ubi_ludus.pipeline.providers.base import RawResponse
-from ubi_ludus.pipeline.rights import RightsData, load_rights
+from ubi_ludus.pipeline.rights import Override, RightsData, RightsRule, load_rights
 from ubi_ludus.pipeline.warehouse import (
     connect,
     load_competitions,
@@ -76,6 +77,47 @@ def api_football_response(fixtures: list[dict[str, Any]], fetched_hour: int = 9)
         fetched_at=datetime(2026, 11, 2, fetched_hour, tzinfo=UTC),
         payload={"errors": [], "response": fixtures},
     )
+
+
+def rule(
+    competition: str,
+    scope: str,
+    broadcasters: list[str],
+    valid_from: str = "2026-01-01",
+    valid_to: str = "2026-12-31",
+    scope_value: str | None = None,
+    season: str = "2026",
+) -> RightsRule:
+    """A rights rule for the tests. The broadcaster ids must be in the real catalogue."""
+    return RightsRule(
+        competition_id=competition,
+        season=season,
+        scope=scope,  # type: ignore[arg-type]
+        scope_value=scope_value,
+        broadcasters=tuple(broadcasters),
+        valid_from=date.fromisoformat(valid_from),
+        valid_to=date.fromisoformat(valid_to),
+        source="A made-up source for the tests",
+        notes=None,
+    )
+
+
+def override(
+    match_id: str, action: str, broadcasters: list[str], added_at: str = "2026-11-01"
+) -> Override:
+    """A match-level override for the tests."""
+    return Override(
+        match_id=match_id,
+        action=action,  # type: ignore[arg-type]
+        broadcasters=tuple(broadcasters),
+        reason="A made-up reason for the tests",
+        added_at=date.fromisoformat(added_at),
+    )
+
+
+def rights_with(*rules: RightsRule, overrides: tuple[Override, ...] = ()) -> RightsData:
+    """The repository's catalogue with these rules and overrides in place of its own."""
+    return replace(load_rights(), rules=tuple(rules), overrides=overrides)
 
 
 def build(

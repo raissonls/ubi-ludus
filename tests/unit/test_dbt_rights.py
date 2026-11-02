@@ -13,48 +13,19 @@ Fixture matches (Série A season 2026 unless noted; dates are Brazil's calendar)
 
 import json
 import shutil
-from dataclasses import replace
-from datetime import date
 from pathlib import Path
 
 import pytest
-from dbt_helpers import NOW, TODAY, build, query
+from dbt_helpers import NOW, TODAY, build, query, rights_with, rule
 
 from ubi_ludus.pipeline.dbt_runner import DBT_DIR, DbtBuildError, run_dbt
 from ubi_ludus.pipeline.export import export_matches
-from ubi_ludus.pipeline.rights import RightsData, RightsRule, load_rights
 from ubi_ludus.pipeline.validate import validate_file
 
 pytestmark = pytest.mark.dbt
 
 SERIE_A = "brasileirao-serie-a"
 CHAMPIONS = "uefa-champions-league"
-
-
-def rule(
-    competition: str,
-    scope: str,
-    broadcasters: list[str],
-    valid_from: str = "2026-01-01",
-    valid_to: str = "2026-12-31",
-    scope_value: str | None = None,
-    season: str = "2026",
-) -> RightsRule:
-    return RightsRule(
-        competition_id=competition,
-        season=season,
-        scope=scope,  # type: ignore[arg-type]
-        scope_value=scope_value,
-        broadcasters=tuple(broadcasters),
-        valid_from=date.fromisoformat(valid_from),
-        valid_to=date.fromisoformat(valid_to),
-        source="A made-up source for the tests",
-        notes=None,
-    )
-
-
-def rights_with(*rules: RightsRule) -> RightsData:
-    return replace(load_rights(), rules=tuple(rules))
 
 
 RULES = (
@@ -204,11 +175,14 @@ def unit_test_results(work_dir: Path) -> dict[str, str]:
 
 def test_the_dbt_unit_tests_run_with_every_build_and_pass(database: Path) -> None:
     results = unit_test_results(database.parent / "dbt-work")
-    assert results == {
-        "rule_matching_by_competition_season_and_scope": "pass",
-        "rule_validity_window_includes_both_ends": "pass",
-        "two_periods_of_one_deal_hand_over_on_the_day_they_change": "pass",
-        "a_match_with_no_rule_is_unknown_and_names_no_broadcaster": "pass",
+    assert set(results.values()) == {"pass"}
+    assert set(results) >= {
+        "rule_matching_by_competition_season_and_scope",
+        "rule_validity_window_includes_both_ends",
+        "two_periods_of_one_deal_hand_over_on_the_day_they_change",
+        "a_match_nothing_is_known_about_is_unknown_and_names_no_broadcaster",
+        "each_override_action_alone",
+        "later_overrides_have_the_last_word",
     }
 
 

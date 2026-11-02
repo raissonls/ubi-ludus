@@ -80,10 +80,10 @@ unit_tests:
         - {match_id: before, broadcaster_id: globo}
         - {match_id: after, broadcaster_id: record}
 
-  - name: a_match_with_no_rule_is_unknown_and_names_no_broadcaster
+  - name: a_match_nothing_is_known_about_is_unknown_and_names_no_broadcaster
     description: >
-      FR-13. A match no rule covers gets one `unknown` row with no broadcaster. A match a rule
-      covers gets `rule` rows and no `unknown` row.
+      FR-13. A match with no broadcaster at all gets one `unknown` row with no broadcaster. A
+      match with broadcasters keeps its own rows, each with its confidence, and no `unknown` row.
     model: int_broadcasts
     overrides:
       vars:
@@ -93,12 +93,157 @@ unit_tests:
         rows:
           - {match_id: covered}
           - {match_id: not-covered}
-      - input: ref('int_rule_broadcasts')
+      - input: ref('int_resolved_broadcasts')
         rows:
-          - {match_id: covered, broadcaster_id: globo}
-          - {match_id: covered, broadcaster_id: sportv}
+          - {match_id: covered, broadcaster_id: globo, confidence: rule, source: rights_rule}
+          - {match_id: covered, broadcaster_id: cazetv, confidence: confirmed, source: override}
     expect:
       rows:
         - {match_id: covered, broadcaster_id: globo, confidence: rule, source: rights_rule, updated_at: "2026-11-02 09:00:00+00"}
-        - {match_id: covered, broadcaster_id: sportv, confidence: rule, source: rights_rule, updated_at: "2026-11-02 09:00:00+00"}
+        - {match_id: covered, broadcaster_id: cazetv, confidence: confirmed, source: override, updated_at: "2026-11-02 09:00:00+00"}
         - {match_id: not-covered, broadcaster_id: null, confidence: unknown, source: none, updated_at: "2026-11-02 09:00:00+00"}
+
+  # --- overrides (FR-11) -----------------------------------------------------------------------
+  # In these tests every match has the rule broadcasters globo and sportv, unless stated.
+
+  - name: each_override_action_alone
+    description: >
+      add puts a broadcaster in as confirmed and keeps the rule ones; replace leaves only what it
+      lists, confirmed; remove takes a broadcaster out and leaves the rest as rule.
+    model: int_resolved_broadcasts
+    given:
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: untouched, broadcaster_id: globo}
+          - {match_id: untouched, broadcaster_id: sportv}
+          - {match_id: added, broadcaster_id: globo}
+          - {match_id: added, broadcaster_id: sportv}
+          - {match_id: replaced, broadcaster_id: globo}
+          - {match_id: replaced, broadcaster_id: sportv}
+          - {match_id: removed, broadcaster_id: globo}
+          - {match_id: removed, broadcaster_id: sportv}
+      - input: ref('stg_overrides')
+        rows:
+          - {override_number: 1, match_id: added, action: add, broadcaster_id: cazetv, added_at: "2026-11-01"}
+          # One override listing two broadcasters is two rows with the same number.
+          - {override_number: 2, match_id: replaced, action: replace, broadcaster_id: premiere, added_at: "2026-11-01"}
+          - {override_number: 2, match_id: replaced, action: replace, broadcaster_id: band, added_at: "2026-11-01"}
+          - {override_number: 3, match_id: removed, action: remove, broadcaster_id: sportv, added_at: "2026-11-01"}
+    expect:
+      rows:
+        - {match_id: untouched, broadcaster_id: globo, confidence: rule, source: rights_rule}
+        - {match_id: untouched, broadcaster_id: sportv, confidence: rule, source: rights_rule}
+        - {match_id: added, broadcaster_id: globo, confidence: rule, source: rights_rule}
+        - {match_id: added, broadcaster_id: sportv, confidence: rule, source: rights_rule}
+        - {match_id: added, broadcaster_id: cazetv, confidence: confirmed, source: override}
+        - {match_id: replaced, broadcaster_id: premiere, confidence: confirmed, source: override}
+        - {match_id: replaced, broadcaster_id: band, confidence: confirmed, source: override}
+        - {match_id: removed, broadcaster_id: globo, confidence: rule, source: rights_rule}
+
+  - name: overrides_win_over_rules_even_for_a_match_the_rules_do_not_cover
+    description: A match with no rule can still be given broadcasters by an override.
+    model: int_resolved_broadcasts
+    given:
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: other, broadcaster_id: globo}
+      - input: ref('stg_overrides')
+        rows:
+          - {override_number: 1, match_id: no-rule, action: add, broadcaster_id: hbo-max, added_at: "2026-11-01"}
+          - {override_number: 2, match_id: no-rule-replaced, action: replace, broadcaster_id: sportv, added_at: "2026-11-01"}
+    expect:
+      rows:
+        - {match_id: other, broadcaster_id: globo, confidence: rule, source: rights_rule}
+        - {match_id: no-rule, broadcaster_id: hbo-max, confidence: confirmed, source: override}
+        - {match_id: no-rule-replaced, broadcaster_id: sportv, confidence: confirmed, source: override}
+
+  - name: an_add_that_repeats_a_rule_broadcaster_confirms_it
+    description: The owner checked the match and agrees with the rule. It is no longer just a rule.
+    model: int_resolved_broadcasts
+    given:
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: m, broadcaster_id: globo}
+          - {match_id: m, broadcaster_id: sportv}
+      - input: ref('stg_overrides')
+        rows:
+          - {override_number: 1, match_id: m, action: add, broadcaster_id: globo, added_at: "2026-11-01"}
+    expect:
+      rows:
+        - {match_id: m, broadcaster_id: globo, confidence: confirmed, source: override}
+        - {match_id: m, broadcaster_id: sportv, confidence: rule, source: rights_rule}
+
+  - name: later_overrides_have_the_last_word
+    description: >
+      Applied oldest first. A replace then an add keeps both. An add then a replace keeps only the
+      replace. A remove then an add of the same broadcaster puts it back, and the other way round
+      takes it out. A replace then a remove of one of its broadcasters drops it. Two replaces
+      are not merged: the later one wipes the earlier (list several broadcasters in one replace).
+    model: int_resolved_broadcasts
+    given:
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: replace-then-add, broadcaster_id: globo}
+          - {match_id: add-then-replace, broadcaster_id: globo}
+          - {match_id: remove-then-add, broadcaster_id: globo}
+          - {match_id: add-then-remove, broadcaster_id: globo}
+          - {match_id: replace-then-remove, broadcaster_id: globo}
+      - input: ref('stg_overrides')
+        rows:
+          - {override_number: 1, match_id: replace-then-add, action: replace, broadcaster_id: premiere, added_at: "2026-11-01"}
+          - {override_number: 2, match_id: replace-then-add, action: add, broadcaster_id: cazetv, added_at: "2026-11-02"}
+          - {override_number: 3, match_id: add-then-replace, action: add, broadcaster_id: cazetv, added_at: "2026-11-01"}
+          - {override_number: 4, match_id: add-then-replace, action: replace, broadcaster_id: premiere, added_at: "2026-11-02"}
+          - {override_number: 5, match_id: remove-then-add, action: remove, broadcaster_id: globo, added_at: "2026-11-01"}
+          - {override_number: 6, match_id: remove-then-add, action: add, broadcaster_id: globo, added_at: "2026-11-02"}
+          - {override_number: 7, match_id: add-then-remove, action: add, broadcaster_id: cazetv, added_at: "2026-11-01"}
+          - {override_number: 8, match_id: add-then-remove, action: remove, broadcaster_id: cazetv, added_at: "2026-11-02"}
+          - {override_number: 9, match_id: replace-then-remove, action: replace, broadcaster_id: premiere, added_at: "2026-11-01"}
+          - {override_number: 9, match_id: replace-then-remove, action: replace, broadcaster_id: band, added_at: "2026-11-01"}
+          - {override_number: 10, match_id: replace-then-remove, action: remove, broadcaster_id: band, added_at: "2026-11-02"}
+    expect:
+      rows:
+        - {match_id: replace-then-add, broadcaster_id: premiere, confidence: confirmed, source: override}
+        - {match_id: replace-then-add, broadcaster_id: cazetv, confidence: confirmed, source: override}
+        - {match_id: add-then-replace, broadcaster_id: premiere, confidence: confirmed, source: override}
+        - {match_id: remove-then-add, broadcaster_id: globo, confidence: confirmed, source: override}
+        - {match_id: add-then-remove, broadcaster_id: globo, confidence: rule, source: rights_rule}
+        - {match_id: replace-then-remove, broadcaster_id: premiere, confidence: confirmed, source: override}
+
+  - name: the_date_decides_the_order_and_on_the_same_day_the_file_order_does
+    description: >
+      The order of writing in the file does not matter when the dates differ: the newer override
+      wins even if it is written first. On the same day the one written later wins.
+    model: int_resolved_broadcasts
+    given:
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: newer-written-first, broadcaster_id: globo}
+          - {match_id: same-day-remove-last, broadcaster_id: globo}
+          - {match_id: same-day-add-last, broadcaster_id: globo}
+      - input: ref('stg_overrides')
+        rows:
+          - {override_number: 1, match_id: newer-written-first, action: remove, broadcaster_id: globo, added_at: "2026-11-05"}
+          - {override_number: 2, match_id: newer-written-first, action: add, broadcaster_id: globo, added_at: "2026-11-01"}
+          - {override_number: 3, match_id: same-day-remove-last, action: add, broadcaster_id: cazetv, added_at: "2026-11-02"}
+          - {override_number: 4, match_id: same-day-remove-last, action: remove, broadcaster_id: cazetv, added_at: "2026-11-02"}
+          - {override_number: 5, match_id: same-day-add-last, action: remove, broadcaster_id: cazetv, added_at: "2026-11-02"}
+          - {override_number: 6, match_id: same-day-add-last, action: add, broadcaster_id: cazetv, added_at: "2026-11-02"}
+    expect:
+      rows:
+        - {match_id: same-day-remove-last, broadcaster_id: globo, confidence: rule, source: rights_rule}
+        - {match_id: same-day-add-last, broadcaster_id: globo, confidence: rule, source: rights_rule}
+        - {match_id: same-day-add-last, broadcaster_id: cazetv, confidence: confirmed, source: override}
+
+  - name: removing_every_broadcaster_leaves_nothing_so_the_match_is_unknown_again
+    description: The model returns no row for the match; int_broadcasts then gives it its `unknown`.
+    model: int_resolved_broadcasts
+    given:
+      - input: ref('int_rule_broadcasts')
+        rows:
+          - {match_id: m, broadcaster_id: globo}
+      - input: ref('stg_overrides')
+        rows:
+          - {override_number: 1, match_id: m, action: remove, broadcaster_id: globo, added_at: "2026-11-01"}
+    expect:
+      rows: []

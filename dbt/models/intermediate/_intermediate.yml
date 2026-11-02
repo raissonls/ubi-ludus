@@ -58,6 +58,23 @@ models:
                 to: ref('stg_broadcasters')
                 field: broadcaster_id
 
+  - name: int_resolved_broadcasts
+    description: The broadcasters of each match after overrides are applied to the rights table.
+    columns:
+      - name: match_id
+        data_tests:
+          - not_null
+      - name: confidence
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [confirmed, rule]
+      - name: source
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [override, rights_rule]
+
   - name: int_broadcasts
     description: Every match with its broadcasters and confidence, or one "unknown" row.
     columns:
