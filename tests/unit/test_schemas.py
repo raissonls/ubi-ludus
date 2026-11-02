@@ -90,6 +90,18 @@ def test_kickoff_must_be_utc() -> None:
         validate(match, "match")
 
 
+def test_rescheduled_at_is_optional_and_must_be_utc() -> None:
+    match = load("valid", "match")
+    assert "rescheduled_at" not in match  # files from before the field existed stay valid
+    match["status"] = "rescheduled"
+    match["rescheduled_at"] = "2026-11-02T09:00:00Z"
+    validate(match, "match")
+
+    match["rescheduled_at"] = "2026-11-02T06:00:00-03:00"
+    with pytest.raises(SchemaValidationError, match="rescheduled_at"):
+        validate(match, "match")
+
+
 def test_match_with_teams_still_to_be_decided_is_allowed() -> None:
     match = load("valid", "match")
     match["home_team_id"] = None

@@ -11,6 +11,9 @@ sources:
       - name: competitions
         identifier: raw_competitions
         description: Competitions from config/competitions.yml, with their sources and coverage.
+      - name: previous_matches
+        identifier: raw_previous_matches
+        description: Matches of the previously published matches.json. Empty when it could not be downloaded.
       - name: provider_responses
         identifier: raw_provider_responses
         description: One row per provider response, with the payload untouched as JSON.

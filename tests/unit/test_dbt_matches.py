@@ -1,71 +1,18 @@
 """Provider responses go through dbt into matches.json, with team mapping and local dates."""
 
 import json
-from collections.abc import Callable
-from datetime import UTC, date, datetime
+from datetime import date
 from pathlib import Path
-from typing import Any
 
 import pytest
+from dbt_helpers import NOW, Payloads, build, query, response
 
-from ubi_ludus.pipeline import config
-from ubi_ludus.pipeline.dbt_runner import DbtBuildError, run_dbt
+from ubi_ludus.pipeline.dbt_runner import DbtBuildError
 from ubi_ludus.pipeline.export import export_competitions, export_matches
 from ubi_ludus.pipeline.providers.base import RawResponse
 from ubi_ludus.pipeline.validate import validate_file
-from ubi_ludus.pipeline.warehouse import (
-    connect,
-    load_competitions,
-    load_provider_responses,
-    load_yaml_file,
-)
 
 pytestmark = pytest.mark.dbt
-
-FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "dbt"
-NOW = datetime(2026, 11, 2, 9, 0, tzinfo=UTC)
-CODES = {"brasileirao-serie-a": "BSA", "uefa-champions-league": "CL"}
-
-Payloads = dict[str, dict[str, Any]]
-
-
-def fixture_payloads() -> Payloads:
-    payloads: Payloads = json.loads(
-        (FIXTURES / "football_data_matches.json").read_text(encoding="utf-8")
-    )
-    return payloads
-
-
-def response(competition_id: str, payload: dict[str, Any], fetched_hour: int = 9) -> RawResponse:
-    return RawResponse(
-        provider="football-data",
-        resource=f"competitions/{CODES[competition_id]}/matches",
-        params={},
-        fetched_at=datetime(2026, 11, 2, fetched_hour, tzinfo=UTC),
-        payload=payload,
-        competition_id=competition_id,
-    )
-
-
-def build(
-    tmp_path: Path, change: Callable[[Payloads], list[RawResponse] | None] | None = None
-) -> Path:
-    """Load teams, competitions and fixture responses into a fresh DuckDB file and run dbt.
-
-    ``change`` may edit the payloads first, and may return extra responses to load as well.
-    """
-    payloads = fixture_payloads()
-    extra = (change(payloads) if change else None) or []
-    database = tmp_path / "warehouse.duckdb"
-    con = connect(database)
-    load_yaml_file(con, "raw_teams", FIXTURES / "teams.yml", key="teams")
-    load_competitions(con, config.load_competitions())
-    load_provider_responses(
-        con, [response(cid, payload) for cid, payload in payloads.items()] + extra
-    )
-    con.close()  # DuckDB allows one writer: close before dbt opens the file
-    run_dbt(database, work_dir=tmp_path / "dbt-work")
-    return database
 
 
 @pytest.fixture(scope="module")
@@ -74,21 +21,14 @@ def database(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return build(tmp_path_factory.mktemp("matches"))
 
 
-def query(database: Path, sql: str) -> list[tuple[Any, ...]]:
-    con = connect(database)
-    try:
-        return con.execute(sql).fetchall()
-    finally:
-        con.close()
-
-
 def test_matches_go_from_provider_responses_to_a_valid_matches_json(
     database: Path, tmp_path: Path
 ) -> None:
     out = tmp_path / "out" / "matches.json"
 
-    # 9 matches in the fixture; the one with an unknown club is held back.
-    assert export_matches(database, out, NOW) == 8
+    # 9 matches in the fixture: one is from 2018 (outside the window) and one has an unknown
+    # club (held back).
+    assert export_matches(database, out, NOW) == 7
 
     validate_file(out, "matches")
     matches = {m["id"]: m for m in json.loads(out.read_text(encoding="utf-8"))["matches"]}

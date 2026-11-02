@@ -32,9 +32,14 @@ Everything lives in one DuckDB schema (`main`), so layers are told apart by pref
 ## How provider matches become `matches.json`
 
 ```text
-raw_provider_responses ─► stg_football_data_matches ─► int_matches_normalised ─┐
-raw_teams ─► stg_teams ─► stg_team_aliases ─► int_team_name_keys ──────────────┼─► int_match_sides ─► int_matches ─► matches
-raw_competitions ─► stg_competitions ─► competitions                           │                  └─► int_unmapped_teams
+raw_provider_responses  -> stg_football_data_matches -> int_matches_normalised
+raw_teams               -> stg_teams -> stg_team_aliases -> int_team_name_keys
+int_matches_normalised + int_team_name_keys -> int_match_sides -> int_unmapped_teams
+int_matches_normalised + int_match_sides    -> int_matches
+raw_previous_matches    -> stg_previous_matches
+int_matches + stg_previous_matches          -> int_matches_flagged
+int_matches_flagged + stg_competitions      -> matches   (window and unmapped teams applied)
+raw_competitions        -> stg_competitions  -> competitions
 ```
 
 - **One staging model per provider** (`stg_<provider>_matches`) translates that provider's codes (statuses, stages) into ours. A new provider adds its own staging model and one line in `int_matches_normalised`. An unknown provider status fails the build on purpose, so it gets translated deliberately.
@@ -42,6 +47,9 @@ raw_competitions ─► stg_competitions ─► competitions                    
 - **Team mapping** compares the provider's team name and short name with every name of every team (`name`, `short_name`, `aliases`), ignoring case, accents and punctuation (`name_key` macro). A slot ends up `mapped`, `undecided` (the provider has no team yet, so the id stays null), `unmapped` or `ambiguous`.
 - **Unmapped and ambiguous teams never stop the pipeline.** The match is held back from `matches.json`, and the `unmapped_teams_are_reported` test warns with the provider's spelling. The fix is to add that spelling to the team's `aliases`. A name that fits two teams is never guessed.
 - **Times are stored in UTC.** `int_matches` adds the local date and time using the `display_timezone` variable (`America/Sao_Paulo`, an IANA name, so any daylight saving rule applies). They are for the pipeline (daily e-mail, windows), not published.
+- **The window** (FR-04) is applied in the `matches` mart: local dates from yesterday through `horizon_days` ahead. The horizon is the longest one among a competition's sources in `config/competitions.yml` (14, or 1 for API-Football-only competitions). The `matches_are_inside_their_window` test guards it.
+- **Rescheduled matches** (FR-05): Python loads the previously published `matches.json` into `raw_previous_matches` (`fetch_previous_matches` downloads it and returns `None`, with a warning, if it cannot). `int_matches_flagged` compares kickoffs. A changed kickoff stamps the match with the run time, the stamp is carried from file to file, and the match shows as `rescheduled` for 48 hours (`reschedule_flag_hours`). Only a match the provider still calls `scheduled` is flagged; postponed, cancelled, live and finished keep their own status. Without a previous file nothing is flagged.
+- **The clock is a variable.** `run_dbt()` passes `today` (Brazil's date) and `run_at` (UTC) to the models, so SQL never reads the machine clock and tests can fix the time.
 - **Rounds** are the matchday for league-style stages (`"34"`) and the stage for knockouts (`"final"`, `"last-16"`).
 
 ## Running it
@@ -65,7 +73,8 @@ Or with the dbt command line, after loading the raw tables:
 
 ```bash
 cd dbt
-UBI_LUDUS_DB=target/ubi_ludus.duckdb dbt build --profiles-dir .
+UBI_LUDUS_DB=target/ubi_ludus.duckdb dbt build --profiles-dir . \
+  --vars '{"today": "2026-11-02", "run_at": "2026-11-02T09:00:00Z"}'
 ```
 
 The database file, `dbt/target/` and `dbt/logs/` are git-ignored.

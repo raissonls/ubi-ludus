@@ -20,6 +20,7 @@ JSON Schemas (draft 2020-12) that describe our data. The pipeline validates ever
 - **`coverage` on a competition** says how far ahead we have data: `full` is up to 14 days, `short` is only until tomorrow, `none` is "not covered yet" (PRD FR-34).
 - **A broadcast sits inside its match,** so `match_id` is not repeated. The PRD lists it as a separate entity, but the published shape nests it.
 - **A team id can be `null`** on a match whose opponent is not decided yet.
+- **`rescheduled_at` is optional.** It appears only on a match with status `rescheduled`: the UTC time the pipeline noticed the kickoff change. The flag lasts 48 hours (FR-05). The pipeline carries the stamp from one published file to the next, which is why the field exists.
 
 ## What schemas cannot check
 

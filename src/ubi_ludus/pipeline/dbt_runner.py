@@ -6,10 +6,14 @@ or data test raises :class:`DbtBuildError`, which stops the pipeline before anyt
 
 from __future__ import annotations
 
+import json
 import os
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 from dbt.cli.main import dbtRunner
+
+from ubi_ludus.pipeline.window import today_in_brazil
 
 DBT_DIR = Path(__file__).resolve().parents[3] / "dbt"
 
@@ -29,16 +33,28 @@ def run_dbt(
     project_dir: Path = DBT_DIR,
     work_dir: Path | None = None,
     select: str | None = None,
+    run_at: datetime | None = None,
+    today: date | None = None,
 ) -> None:
     """Run ``dbt build`` (models and tests) on ``database``.
+
+    ``run_at`` (default: now) and ``today`` (default: that moment's date in Brazil) are given to
+    the models as variables, so windows and reschedule flags never depend on the machine clock
+    inside SQL. Tests pass fixed values.
 
     ``work_dir`` is where dbt writes its logs and compiled files. It defaults to the project's
     git-ignored ``target`` and ``logs`` folders; tests pass a temporary folder instead.
     """
+    moment = run_at or datetime.now(UTC)
+    variables = {
+        "run_at": moment.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "today": (today or today_in_brazil(moment)).isoformat(),
+    }
     args = [
         "build",
         "--project-dir", str(project_dir),
         "--profiles-dir", str(project_dir),
+        "--vars", json.dumps(variables),
         "--quiet",
     ]  # fmt: skip
     if work_dir is not None:

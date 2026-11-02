@@ -56,10 +56,13 @@ def build_matches_document(database: Path, generated_at: datetime) -> dict[str, 
     """Read the ``matches`` mart and shape it like ``matches.json``.
 
     Every match gets an empty ``broadcasts`` list: the rights engine (M2) is what fills it.
+    ``rescheduled_at`` is only present on matches that are flagged rescheduled.
     """
     rows = _read_mart(database, "matches", "kickoff_utc, id")
     for row in rows:
         row["broadcasts"] = []
+        if row["rescheduled_at"] is None:
+            del row["rescheduled_at"]
     return _build("matches", generated_at, rows)
 
 
