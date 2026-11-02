@@ -59,6 +59,10 @@
         "rescheduled"
       ]
     },
+    "rescheduled_at": {
+      "$ref": "common.schema.json#/$defs/utc_timestamp",
+      "description": "When we noticed the kickoff change. Present only while status is rescheduled (48 hours)."
+    },
     "broadcasts": {
       "type": "array",
       "items": {

@@ -22,6 +22,11 @@ vars:
   # Zone for local dates and times. An IANA name, never a fixed offset (FR-06).
   display_timezone: America/Sao_Paulo
 
+  # How long a changed kickoff keeps the "rescheduled" flag (FR-05).
+  reschedule_flag_hours: 48
+  # `today` (Brazil's calendar date) and `run_at` (UTC) are passed in by run_dbt(), so the SQL
+  # never reads the machine clock. See src/ubi_ludus/pipeline/dbt_runner.py.
+
 # dbt phones home with anonymous usage statistics by default. Keep the pipeline quiet.
 flags:
   send_anonymous_usage_stats: false

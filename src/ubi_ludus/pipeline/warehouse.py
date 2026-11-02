@@ -19,6 +19,7 @@ import yaml
 from ubi_ludus.pipeline.config import CompetitionConfig
 
 PROVIDER_RESPONSES_TABLE = "raw_provider_responses"
+PREVIOUS_MATCHES_TABLE = "raw_previous_matches"
 _TABLE_NAME = re.compile(r"^raw_[a-z][a-z0-9_]*$")
 
 
@@ -81,7 +82,7 @@ def load_competitions(
 ) -> int:
     """Load the checked contents of ``config/competitions.yml`` into ``raw_competitions``.
 
-    Coverage is the config's own rule (``CompetitionConfig.coverage``), loaded as it is.
+    Horizon and coverage are the config's own rules (``CompetitionConfig``), loaded as they are.
     """
     return load_records(
         con,
@@ -93,6 +94,7 @@ def load_competitions(
                 "country_or_region": c.country_or_region,
                 "type": c.type,
                 "coverage": c.coverage,
+                "horizon_days": c.horizon_days,
                 "sources": [
                     {
                         "provider": s.provider,
@@ -105,6 +107,28 @@ def load_competitions(
             for c in competitions
         ],
     )
+
+
+def load_previous_matches(
+    con: duckdb.DuckDBPyConnection, document: Mapping[str, Any] | None
+) -> int:
+    """Load the matches of the previously published ``matches.json`` into ``raw_previous_matches``.
+
+    ``None`` means the previous file could not be had. The table is created empty, so the
+    models still run and simply find nothing to compare against.
+    """
+    con.execute(
+        f"create or replace table {PREVIOUS_MATCHES_TABLE} ("  # noqa: S608 - constant name
+        "id varchar, kickoff_utc varchar, status varchar, rescheduled_at varchar)"
+    )
+    matches = document["matches"] if document is not None else []
+    rows = [(m["id"], m["kickoff_utc"], m["status"], m.get("rescheduled_at")) for m in matches]
+    if rows:
+        con.executemany(
+            f"insert into {PREVIOUS_MATCHES_TABLE} values (?, ?, ?, ?)",  # noqa: S608
+            rows,
+        )
+    return len(rows)
 
 
 def load_provider_responses(con: duckdb.DuckDBPyConnection, responses: Sequence[Any]) -> int:

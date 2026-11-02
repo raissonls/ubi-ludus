@@ -24,6 +24,25 @@ models:
         data_tests:
           - unique
           - not_null
+      - name: competition_id
+        description: Every match must belong to a competition of config/competitions.yml.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_competitions')
+                field: competition_id
+
+  - name: int_matches_flagged
+    columns:
+      - name: match_id
+        data_tests:
+          - unique
+          - not_null
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [scheduled, live, finished, postponed, cancelled, rescheduled]
       - name: kickoff_local_date
         data_tests:
           - not_null

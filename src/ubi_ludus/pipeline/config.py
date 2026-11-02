@@ -36,12 +36,16 @@ class CompetitionConfig:
     sources: tuple[SourceConfig, ...]
 
     @property
+    def horizon_days(self) -> int:
+        """Days ahead we publish: the longest horizon of its sources, or 0 with no source."""
+        return max((s.horizon_days for s in self.sources), default=0)
+
+    @property
     def coverage(self) -> Coverage:
         """How far ahead we have data: full is 14 days, short is until tomorrow, none is no data."""
-        longest = max((s.horizon_days for s in self.sources), default=0)
-        if longest >= FULL_HORIZON_DAYS:
+        if self.horizon_days >= FULL_HORIZON_DAYS:
             return "full"
-        return "short" if longest >= 1 else "none"
+        return "short" if self.horizon_days >= 1 else "none"
 
 
 def load_competitions(path: Path = DEFAULT_PATH) -> list[CompetitionConfig]:
