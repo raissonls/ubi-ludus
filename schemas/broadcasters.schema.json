@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/broadcasters.schema.json",
+  "title": "broadcasters.json",
+  "description": "Published file: broadcasters and the services that include them.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "description": "Version of this file's format. Bump it when the format changes."
+    },
+    "generated_at": {
+      "$ref": "common.schema.json#/$defs/utc_timestamp",
+      "description": "When the pipeline produced this file."
+    },
+    "broadcasters": {
+      "type": "array",
+      "items": {
+        "$ref": "broadcaster.schema.json"
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "$ref": "service.schema.json"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "generated_at",
+    "broadcasters",
+    "services"
+  ],
+  "additionalProperties": false
+}

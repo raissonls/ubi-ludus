@@ -1,0 +1,11 @@
+{
+  "id": "brasileirao-serie-a",
+  "name": "Campeonato Brasileiro Série A",
+  "country_or_region": "Brasil",
+  "type": "league",
+  "provider_ids": {
+    "football-data": "BSA",
+    "api-football": 71
+  },
+  "coverage": "partial"
+}

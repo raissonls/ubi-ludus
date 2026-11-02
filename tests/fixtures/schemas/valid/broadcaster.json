@@ -1,0 +1,7 @@
+{
+  "id": "sportv",
+  "name": "SporTV",
+  "kind": "pay_tv",
+  "service_id": "globoplay",
+  "url": "https://example.org/sportv"
+}

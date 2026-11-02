@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/match.schema.json",
+  "title": "Match",
+  "description": "One match. A team id is null when the opponent is not decided yet. Kickoff is always UTC.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "competition_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "season": {
+      "type": "string",
+      "pattern": "^\\d{4}(-\\d{2})?$",
+      "description": "For example 2026 or 2026-27."
+    },
+    "round": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/text"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kickoff_utc": {
+      "$ref": "common.schema.json#/$defs/utc_timestamp"
+    },
+    "home_team_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "away_team_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "scheduled",
+        "live",
+        "finished",
+        "postponed",
+        "cancelled",
+        "rescheduled"
+      ]
+    },
+    "broadcasts": {
+      "type": "array",
+      "items": {
+        "$ref": "broadcast.schema.json"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "competition_id",
+    "season",
+    "round",
+    "kickoff_utc",
+    "home_team_id",
+    "away_team_id",
+    "status",
+    "broadcasts"
+  ],
+  "additionalProperties": false
+}

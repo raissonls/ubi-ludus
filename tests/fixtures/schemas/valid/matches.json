@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-02T09:05:00Z",
+  "matches": [
+    {
+      "id": "bsa-2026-34-flamengo-gremio",
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "round": "34",
+      "kickoff_utc": "2026-11-04T22:30:00Z",
+      "home_team_id": "flamengo",
+      "away_team_id": "gremio",
+      "status": "scheduled",
+      "broadcasts": [
+        {
+          "broadcaster_id": "sportv",
+          "confidence": "rule",
+          "source": "rights_rule",
+          "updated_at": "2026-11-02T09:05:00Z"
+        }
+      ]
+    }
+  ]
+}
