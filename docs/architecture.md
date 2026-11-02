@@ -42,15 +42,15 @@ DuckDB is embedded and the runners keep nothing between days, so each run starts
 | Part | Where | What it does | Built in |
 |---|---|---|---|
 | Provider adapters | `src/ubi_ludus/pipeline/providers/` | One module per data source behind a common interface | M1 ([#8](../../../issues/8), [#9](../../../issues/9), [#53](../../../issues/53)) |
-| Raw loader | `src/ubi_ludus/pipeline/` | Python loads provider responses, the rights YAML and the previous `matches.json` into DuckDB raw tables | M1 ([#10](../../../issues/10)) |
+| Raw loader | `src/ubi_ludus/pipeline/` | Python loads provider responses, the rights YAML and the previous `matches.json` into DuckDB raw tables | M1 ([#63](../../../issues/63), [#10](../../../issues/10)) |
 | Normalise and merge | `dbt/models/` (staging, intermediate) | Types and renames each provider's data, matches team names, removes duplicates across providers, converts times | M1 ([#10](../../../issues/10), [#53](../../../issues/53)) |
 | Cache and rate limiting | `src/ubi_ludus/pipeline/` | Avoids repeat calls, stays under each provider's limit | M1 ([#11](../../../issues/11)) |
 | Rolling window | `dbt/models/` | Keeps only each competition's allowed window; flags rescheduled matches by comparing with the previous run | M1 ([#12](../../../issues/12)) |
 | Rights engine | `dbt/models/` | Resolves broadcasters per match with a confidence level; applies overrides; covered by dbt tests and unit tests | M2 ([#14](../../../issues/14), [#15](../../../issues/15)) |
 | Rights data | `data/rights/` | Broadcasters, services, rules and overrides, edited by hand | M2 ([#13](../../../issues/13), [#16](../../../issues/16)) |
 | Schemas | `schemas/` | JSON Schemas that validate every published file (the contract with the site) | M1 ([#7](../../../issues/7)) |
-| dbt project | `dbt/` | Models, tests and docs that run on DuckDB; data quality checks between files (references, uniqueness, accepted values) | M1 |
-| Export and validate | `src/ubi_ludus/pipeline/` | Python writes the final JSON from the dbt marts and validates it against the schemas | M1 |
+| dbt project | `dbt/` | Models, tests and docs that run on DuckDB; data quality checks between files (references, uniqueness, accepted values) | M1 ([#63](../../../issues/63)) |
+| Export and validate | `src/ubi_ludus/pipeline/` | Python writes the final JSON from the dbt marts and validates it against the schemas | M1 ([#63](../../../issues/63)) |
 | Website | `site/` | Static pages, onboarding, filters, match cards, calendar export | M3 ([#18](../../../issues/18) onwards) |
 | Daily e-mail | `src/ubi_ludus/email/` | Renders and sends the morning briefing to the owner | M4 ([#30](../../../issues/30), [#31](../../../issues/31)) |
 | Workflows | `.github/workflows/` | CI on pull requests now; the daily pipeline and review report later | M0 ([#4](../../../issues/4)), M4 ([#32](../../../issues/32)) |
