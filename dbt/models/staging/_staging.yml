@@ -48,6 +48,39 @@ models:
         data_tests:
           - not_null
 
+  - name: stg_api_football_matches
+    columns:
+      - name: match_id
+        data_tests:
+          - unique
+          - not_null
+      - name: competition_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_competitions')
+                field: competition_id
+      - name: kickoff_utc
+        data_tests:
+          - not_null
+      - name: provider_status
+        description: A status we do not know yet fails here, so it is translated on purpose. TBD is filtered out before.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  [NS, 1H, HT, 2H, ET, BT, P, LIVE, INT, FT, AET, PEN, AWD, WO, PST, SUSP, ABD, CANC]
+      - name: status
+        data_tests:
+          - not_null
+      - name: home_team_name
+        data_tests:
+          - not_null
+      - name: away_team_name
+        data_tests:
+          - not_null
+
   - name: stg_team_aliases
     columns:
       - name: team_id

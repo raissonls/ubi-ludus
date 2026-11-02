@@ -28,8 +28,12 @@ If the config names a provider that has no adapter, the run stops before any cal
 | Name | Module | Key (environment variable) | Notes |
 |---|---|---|---|
 | `football-data` | `football_data.py` | `FOOTBALL_DATA_TOKEN` | One call per competition. Waits when the per-minute allowance is used up and retries once after an HTTP 429. A competition the plan does not serve (403 or 404) is skipped and listed in `adapter.skipped`. |
-| `api-football` | not yet | `API_FOOTBALL_KEY` | Planned in M1-07. |
+| `api-football` | `api_football.py` | `API_FOOTBALL_KEY` | The free plan sees only yesterday to tomorrow, and one call for a date returns every league. So a run reads `status` (the daily quota, 100) and then makes one `fixtures?date=...` call per day, three at most, today first. Days are asked for in Brazil's calendar (`timezone=America/Sao_Paulo`). Only the leagues listed in `config/competitions.yml` are kept. A day the plan refuses (an `errors.plan` answer with HTTP 200) is skipped and listed in `adapter.skipped`; the provider fails only when no day could be served. If the quota cannot cover all days, yesterday is dropped first. A rate-limit answer waits a minute and retries once. |
 
 `default_registry()` in `default.py` registers all of them. Put the key in a local `.env` file (git-ignored) or in GitHub Secrets. If the key is missing, that provider shows up as a failed `FetchOutcome` and the others still run.
 
-Tests use hand-written fixtures in `tests/fixtures/football_data/` and a fake HTTP function, so they never touch the network.
+Tests use hand-written fixtures in `tests/fixtures/football_data/` and `tests/fixtures/api_football/` and a fake HTTP function, so they never touch the network.
+
+## Two providers, one match
+
+A competition can list both providers in `config/competitions.yml` (Série A and Libertadores do). The adapters do not care: each fetches its own. The merge happens in dbt (`int_matches_merged`, see the [dbt README](../../../../dbt/README.md)), so a match both know is published once.
