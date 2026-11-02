@@ -18,12 +18,15 @@ broadcasters:
   - {id: sbt, name: SBT, kind: free_tv, service_id: null, url: "https://www.sbt.com.br"}
   - {id: record, name: Record, kind: free_tv, service_id: null, url: null}
   - {id: band, name: Band, kind: free_tv, service_id: null, url: null}
+  - {id: jovem-pan, name: Jovem Pan, kind: free_tv, service_id: null, url: null}
+  - {id: xsports, name: Xsports, kind: free_tv, service_id: null, url: null}
   - {id: tv-brasil, name: TV Brasil, kind: free_tv, service_id: null, url: "https://tvbrasil.ebc.com.br"}
 
   # --- Pay TV (cable, satellite or operator subscription) ---------------------------------------
   - {id: sportv, name: SporTV, kind: pay_tv, service_id: tv-por-assinatura, url: null}
   - {id: espn, name: ESPN, kind: pay_tv, service_id: tv-por-assinatura, url: "https://www.espn.com.br"}
   - {id: tnt-sports, name: TNT Sports, kind: pay_tv, service_id: tv-por-assinatura, url: null}
+  - {id: space, name: Space, kind: pay_tv, service_id: tv-por-assinatura, url: null}
 
   # --- Pay-per-view -----------------------------------------------------------------------------
   - {id: premiere, name: Premiere, kind: ppv, service_id: premiere, url: null}
@@ -38,3 +41,5 @@ broadcasters:
   # --- YouTube (free) ---------------------------------------------------------------------------
   - {id: cazetv, name: CazéTV, kind: youtube, service_id: null, url: "https://www.youtube.com/@CazeTV"}
   - {id: tnt-sports-youtube, name: TNT Sports (YouTube), kind: youtube, service_id: null, url: null}
+  - {id: ge-tv, name: ge tv, kind: youtube, service_id: null, url: null}
+  - {id: sportynet, name: SportyNet, kind: youtube, service_id: null, url: null}

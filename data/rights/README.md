@@ -51,6 +51,26 @@ rules:
 - **`notes`** is optional.
 - Dates need no quotes. Seasons do (`"2026"`), or YAML turns them into a number.
 
+### The current policy: list every broadcaster that may carry the competition
+
+In 2026 almost no competition has one broadcaster for every match. The home club decides in the Brasileirão, and the Libertadores, the Champions League and the European leagues are split between several broadcasters. The owner chose (2026-11-02) to **list every broadcaster that may carry a competition's matches**, not only the ones that carry all of them. So a `rule` broadcast on the site means "this broadcaster has rights to some matches of this competition", not "this match is on it". When a match matters (one of your teams), look it up and write an override: that makes it `confirmed`.
+
+Every rule says where it came from in `source` and what is uncertain in `notes`. The first table was written from news articles, some months old, so audit it (PRD S1) before trusting it.
+
+### Gaps: `not_covered`
+
+A competition and season with no rule is written down at the end of `rights.yml` with the reason and the day somebody last looked:
+
+```yaml
+not_covered:
+  - competition_id: campeonato-paulista
+    season: "2027"
+    reason: "No rights announcement found yet."
+    checked_at: 2026-11-02
+```
+
+The site shows those matches as "Broadcast not confirmed yet". A competition and season cannot be in both lists, and a test fails if a competition of `config/competitions.yml` is in neither.
+
 ### How the engine uses the rules
 
 For each match, every rule that covers it counts: same competition and season, the match's local date (Brazil) between `valid_from` and `valid_to` (both included), and a scope that fits. **Rights add up**: the match gets the broadcasters of all the rules that cover it, each listed once. A rule never takes another rule's broadcasters away.

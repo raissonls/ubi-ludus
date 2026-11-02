@@ -13,11 +13,41 @@
       "items": {
         "$ref": "#/$defs/rule"
       }
+    },
+    "not_covered": {
+      "type": "array",
+      "description": "Competitions and seasons we looked into and could not cover yet, so the gap is written down instead of forgotten. A competition and season listed here must not also have a rule.",
+      "items": {
+        "$ref": "#/$defs/not_covered"
+      }
     }
   },
   "required": ["version", "rules"],
   "additionalProperties": false,
   "$defs": {
+    "not_covered": {
+      "type": "object",
+      "properties": {
+        "competition_id": {
+          "$ref": "common.schema.json#/$defs/id",
+          "description": "An id from config/competitions.yml."
+        },
+        "season": {
+          "type": "string",
+          "pattern": "^\\d{4}(-\\d{2})?$"
+        },
+        "reason": {
+          "$ref": "common.schema.json#/$defs/long_text",
+          "description": "Why there is no rule: what was looked for and what was found."
+        },
+        "checked_at": {
+          "$ref": "common.schema.json#/$defs/date",
+          "description": "The day the owner or Claude last looked."
+        }
+      },
+      "required": ["competition_id", "season", "reason", "checked_at"],
+      "additionalProperties": false
+    },
     "rule": {
       "type": "object",
       "properties": {

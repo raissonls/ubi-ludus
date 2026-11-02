@@ -10,6 +10,7 @@ JSON Schemas (draft 2020-12) that describe our data. The pipeline validates ever
 | `matches`, `teams`, `competitions`, `broadcasters`, `status` | The published files `matches.json`, `teams.json`, `competitions.json`, `broadcasters.json` and `status.json` |
 | `competitions-config` | The hand-edited `config/competitions.yml`: competitions, their provider ids and how many days ahead each can be fetched |
 | `broadcasters-config`, `services-config`, `rights-config`, `overrides-config` | The hand-edited files in `data/rights/`: the broadcaster catalogue, the subscriptions, the rights table and the match-level overrides. See [data/rights/README.md](../data/rights/README.md) |
+| `owner-config` | The hand-edited `config/owner.yml`: the owner's teams, services and tastes. No e-mail address or credential is allowed in it (FR-41) |
 | `common` | Shared building blocks: ids, UTC timestamps, calendar dates, hex colours |
 
 ## Rules baked into the schemas

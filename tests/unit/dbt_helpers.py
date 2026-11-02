@@ -141,7 +141,7 @@ def build(
         con, [response(cid, payload) for cid, payload in payloads.items()] + extra
     )
     load_previous_matches(con, previous)
-    load_rights_tables(con, rights if rights is not None else load_rights())
+    load_rights_tables(con, rights if rights is not None else rights_with())
     con.close()  # DuckDB allows one writer: close before dbt opens the file
     run_dbt(database, work_dir=tmp_path / "dbt-work", run_at=NOW, today=TODAY)
     return database

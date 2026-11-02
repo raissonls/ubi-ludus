@@ -337,7 +337,7 @@ Phase 1 is delivered by the **owner with Claude as pair-programming and review p
 
 | # | Question | Owner | Needed by |
 |---|---|---|---|
-| Q1 | Which exact teams does the owner follow? (stored in `config/owner.yml`) | Owner | M2 |
+| Q1 | ~~Which exact teams does the owner follow? (stored in `config/owner.yml`)~~ **Resolved 2026-11-02:** Palmeiras and the Brazil national team (supported); Real Madrid, Barcelona, Chelsea and Manchester City (followed). Also likes the big Champions League matches and watches mostly on YouTube, CazéTV most of all. Stored in [config/owner.yml](../config/owner.yml). | Owner | M2 |
 | Q2 | ~~Which provider(s) cover each competition, and what do their terms say about republishing?~~ **Resolved 2026-11-01:** football-data.org (14 days) plus API-Football (until tomorrow only). Details and terms in [docs/research/provider-comparison.md](research/provider-comparison.md). | Owner + Claude | End of M0 |
 | Q3 | Which e-mail sending method will be used? | Owner | M4 |
 | Q4 | ~~Final project name and repository name~~ **Resolved 2026-11-01: Ubi Ludus (`ubi-ludus`).** Still to check before going public: domain, social handles and similarly named apps. | Owner | M0 |

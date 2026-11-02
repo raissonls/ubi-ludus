@@ -21,5 +21,13 @@
       "source": "Made-up example",
       "notes": "Only the matches Flamengo plays."
     }
+  ],
+  "not_covered": [
+    {
+      "competition_id": "campeonato-paulista",
+      "season": "2027",
+      "reason": "Rights not announced yet (made-up example)",
+      "checked_at": "2026-11-02"
+    }
   ]
 }

@@ -84,11 +84,22 @@ class Override:
 
 
 @dataclass(frozen=True)
+class NotCovered:
+    """A competition and season we looked into and cannot cover yet."""
+
+    competition_id: str
+    season: str
+    reason: str
+    checked_at: date
+
+
+@dataclass(frozen=True)
 class RightsData:
     broadcasters: tuple[Broadcaster, ...]
     services: tuple[Service, ...]
     rules: tuple[RightsRule, ...]
     overrides: tuple[Override, ...]
+    not_covered: tuple[NotCovered, ...] = ()
 
 
 # (file name, schema name, key that holds the list)
@@ -135,15 +146,29 @@ def load_rights(
         else:
             overrides.append(override)
 
+    not_covered: list[NotCovered] = []
+    for number, item in enumerate(documents["not_covered"], start=1):
+        checked_at = _date(item["checked_at"])
+        if checked_at is None:
+            problems.append(
+                f"rights.yml, not_covered {number}: "
+                f"checked_at {item['checked_at']} is not a real date"
+            )
+        else:
+            not_covered.append(
+                NotCovered(item["competition_id"], item["season"], item["reason"], checked_at)
+            )
+
     known_competitions = {
         c.id for c in (competitions if competitions is not None else load_competitions())
     }
     problems += _check_catalogue(broadcasters, services)
     problems += _check_rules(rules, {b.id for b in broadcasters}, known_competitions)
     problems += _check_overrides(overrides, {b.id for b in broadcasters})
+    problems += _check_not_covered(not_covered, rules, known_competitions)
     if problems:
         raise RightsDataError(problems)
-    return RightsData(broadcasters, services, tuple(rules), tuple(overrides))
+    return RightsData(broadcasters, services, tuple(rules), tuple(overrides), tuple(not_covered))
 
 
 def _read_documents(directory: Path) -> tuple[dict[str, list[dict[str, Any]]], list[str]]:
@@ -161,6 +186,8 @@ def _read_documents(directory: Path) -> tuple[dict[str, list[dict[str, Any]]], l
             problems += [f"{filename}: {line}" for line in exc.errors]
             continue
         documents[key] = document[key]
+        if key == "rules":
+            documents["not_covered"] = document.get("not_covered", [])
     return documents, problems
 
 
@@ -281,3 +308,24 @@ def _check_overrides(overrides: Sequence[Override], broadcaster_ids: set[str]) -
         for b in o.broadcasters
         if b not in broadcaster_ids
     ]
+
+
+def _check_not_covered(
+    not_covered: Sequence[NotCovered], rules: Sequence[RightsRule], competition_ids: set[str]
+) -> list[str]:
+    covered = {(r.competition_id, r.season) for r in rules}
+    problems: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for number, gap in enumerate(not_covered, start=1):
+        where = f"rights.yml, not_covered {number} ({gap.competition_id} {gap.season})"
+        key = (gap.competition_id, gap.season)
+        if gap.competition_id not in competition_ids:
+            problems.append(
+                f"{where}: competition '{gap.competition_id}' is not in competitions.yml"
+            )
+        if key in covered:
+            problems.append(f"{where}: listed as not covered, but a rule covers it")
+        if key in seen:
+            problems.append(f"{where}: listed twice")
+        seen.add(key)
+    return problems
