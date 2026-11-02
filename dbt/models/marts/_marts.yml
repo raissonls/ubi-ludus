@@ -14,3 +14,54 @@ models:
       - name: country
         data_tests:
           - not_null
+
+  - name: competitions
+    description: The published competitions.json, one row per competition.
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: coverage
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [full, short, none]
+
+  - name: matches
+    description: The published matches.json (before broadcasts), one row per match.
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: competition_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('competitions')
+                field: id
+      - name: kickoff_utc
+        data_tests:
+          - not_null
+      - name: home_team_id
+        description: Null while the team is not decided yet.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('teams')
+                field: id
+      - name: away_team_id
+        description: Null while the team is not decided yet.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('teams')
+                field: id
+      - name: status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [scheduled, live, finished, postponed, cancelled, rescheduled]

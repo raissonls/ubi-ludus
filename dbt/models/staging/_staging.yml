@@ -8,6 +8,46 @@ models:
           - unique
           - not_null
 
+  - name: stg_competitions
+    columns:
+      - name: competition_id
+        data_tests:
+          - unique
+          - not_null
+      - name: type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [league, cup]
+      - name: coverage
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [full, short, none]
+
+  - name: stg_football_data_matches
+    columns:
+      - name: match_id
+        data_tests:
+          - unique
+          - not_null
+      - name: competition_id
+        data_tests:
+          - not_null
+      - name: kickoff_utc
+        data_tests:
+          - not_null
+      - name: provider_status
+        description: A status we do not know yet fails here, so it is translated on purpose.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values:
+                  [SCHEDULED, TIMED, IN_PLAY, PAUSED, FINISHED, AWARDED, POSTPONED, SUSPENDED, CANCELLED]
+      - name: status
+        data_tests:
+          - not_null
+
   - name: stg_team_aliases
     columns:
       - name: team_id

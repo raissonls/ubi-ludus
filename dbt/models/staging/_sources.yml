@@ -8,6 +8,9 @@ sources:
       - name: teams
         identifier: raw_teams
         description: Curated teams from data/teams.yml, one row per team.
+      - name: competitions
+        identifier: raw_competitions
+        description: Competitions from config/competitions.yml, with their sources and coverage.
       - name: provider_responses
         identifier: raw_provider_responses
         description: One row per provider response, with the payload untouched as JSON.

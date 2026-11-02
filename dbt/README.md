@@ -29,6 +29,21 @@ Everything lives in one DuckDB schema (`main`), so layers are told apart by pref
 - **Avoid SQL keywords as column names** (`primary`, `inner`, `order`). Where a published field has such a name, use a struct literal such as `{'primary': color_primary}`.
 - **No secrets in this folder.** The profile only points at a local file.
 
+## How provider matches become `matches.json`
+
+```text
+raw_provider_responses ─► stg_football_data_matches ─► int_matches_normalised ─┐
+raw_teams ─► stg_teams ─► stg_team_aliases ─► int_team_name_keys ──────────────┼─► int_match_sides ─► int_matches ─► matches
+raw_competitions ─► stg_competitions ─► competitions                           │                  └─► int_unmapped_teams
+```
+
+- **One staging model per provider** (`stg_<provider>_matches`) translates that provider's codes (statuses, stages) into ours. A new provider adds its own staging model and one line in `int_matches_normalised`. An unknown provider status fails the build on purpose, so it gets translated deliberately.
+- **Match ids** are `<provider>-<provider match id>` (for example `football-data-910001`). They stay the same when a match is rescheduled.
+- **Team mapping** compares the provider's team name and short name with every name of every team (`name`, `short_name`, `aliases`), ignoring case, accents and punctuation (`name_key` macro). A slot ends up `mapped`, `undecided` (the provider has no team yet, so the id stays null), `unmapped` or `ambiguous`.
+- **Unmapped and ambiguous teams never stop the pipeline.** The match is held back from `matches.json`, and the `unmapped_teams_are_reported` test warns with the provider's spelling. The fix is to add that spelling to the team's `aliases`. A name that fits two teams is never guessed.
+- **Times are stored in UTC.** `int_matches` adds the local date and time using the `display_timezone` variable (`America/Sao_Paulo`, an IANA name, so any daylight saving rule applies). They are for the pipeline (daily e-mail, windows), not published.
+- **Rounds** are the matchday for league-style stages (`"34"`) and the stage for knockouts (`"final"`, `"last-16"`).
+
 ## Running it
 
 From Python, which is how the pipeline does it (see `src/ubi_ludus/pipeline/dbt_runner.py`):

@@ -16,6 +16,8 @@ from typing import Any
 import duckdb
 import yaml
 
+from ubi_ludus.pipeline.config import CompetitionConfig
+
 PROVIDER_RESPONSES_TABLE = "raw_provider_responses"
 _TABLE_NAME = re.compile(r"^raw_[a-z][a-z0-9_]*$")
 
@@ -72,6 +74,37 @@ def _records(document: Any, key: str | None, path: Path) -> list[Mapping[str, An
         where = f"under '{key}' in " if key else "in "
         raise ValueError(f"Expected a list of records {where}{path.name}")
     return records
+
+
+def load_competitions(
+    con: duckdb.DuckDBPyConnection, competitions: Sequence[CompetitionConfig]
+) -> int:
+    """Load the checked contents of ``config/competitions.yml`` into ``raw_competitions``.
+
+    Coverage is the config's own rule (``CompetitionConfig.coverage``), loaded as it is.
+    """
+    return load_records(
+        con,
+        "raw_competitions",
+        [
+            {
+                "id": c.id,
+                "name": c.name,
+                "country_or_region": c.country_or_region,
+                "type": c.type,
+                "coverage": c.coverage,
+                "sources": [
+                    {
+                        "provider": s.provider,
+                        "provider_id": s.provider_id,
+                        "horizon_days": s.horizon_days,
+                    }
+                    for s in c.sources
+                ],
+            }
+            for c in competitions
+        ],
+    )
 
 
 def load_provider_responses(con: duckdb.DuckDBPyConnection, responses: Sequence[Any]) -> int:
