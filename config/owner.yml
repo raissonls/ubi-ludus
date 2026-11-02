@@ -1,0 +1,37 @@
+# The owner's preferences (FR-41). Checked against schemas/owner-config.schema.json and against
+# the rights catalogue and competitions.yml in CI.
+#
+# The e-mail address and the credentials are NOT here. They are GitHub Secrets.
+#
+# Answers of 2026-11-02 (PRD question Q1). Edit this file when they change.
+version: 1
+
+# Teams whose matches come first. Ids are the ones data/teams.yml will use (issue #77); the
+# check that each id exists in that file starts once the file does.
+# Supported: palmeiras and the national team. Followed: the others.
+teams:
+  - palmeiras
+  - brasil
+  - real-madrid
+  - barcelona
+  - chelsea
+  - manchester-city
+
+# Subscriptions the owner has. ESPN is read as the Disney+ plan that includes it; pay TV
+# (SporTV, TNT Sports) is not listed because it was not named. YouTube channels are free, so
+# they need no service.
+services:
+  - disney-plus
+  - globoplay
+  - premiere
+  - hbo-max
+
+# Big matches of these competitions are worth listing even when none of the teams plays.
+notable_competitions:
+  - uefa-champions-league
+
+# What the owner likes to watch on: YouTube streams, CazéTV most of all.
+preferred_broadcasters:
+  - cazetv
+preferred_kinds:
+  - youtube

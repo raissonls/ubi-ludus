@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/raissonls/ubi-ludus/main/schemas/owner-config.schema.json",
+  "title": "config/owner.yml",
+  "description": "The owner's preferences (PRD FR-41): the teams they follow, the services they have and what they like to watch. The e-mail address and credentials are never here; they are GitHub Secrets.",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "teams": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "description": "Team ids from data/teams.yml, most important first. Their matches come first in the daily e-mail."
+    },
+    "services": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "description": "Service ids from data/rights/services.yml. A match is watchable when it is free or one of these includes its broadcaster."
+    },
+    "notable_competitions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "description": "Competition ids from config/competitions.yml whose big matches are worth listing even when none of the teams plays."
+    },
+    "preferred_broadcasters": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "description": "Broadcaster ids the owner likes best, most liked first. A match on one of them is shown first among its broadcasters."
+    },
+    "preferred_kinds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["free_tv", "pay_tv", "ppv", "streaming", "youtube"]
+      },
+      "description": "Kinds of broadcaster the owner likes best."
+    }
+  },
+  "required": ["version", "teams", "services"],
+  "additionalProperties": false
+}

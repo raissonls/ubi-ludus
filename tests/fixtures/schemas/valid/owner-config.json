@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "teams": ["flamengo", "brasil"],
+  "services": ["pay-tv"],
+  "notable_competitions": ["uefa-champions-league"],
+  "preferred_broadcasters": ["cazetv"],
+  "preferred_kinds": ["youtube"]
+}
