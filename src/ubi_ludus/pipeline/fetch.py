@@ -13,6 +13,7 @@ from ubi_ludus.pipeline.providers.base import (
     ProviderError,
     RawResponse,
 )
+from ubi_ludus.pipeline.providers.guard import CallLog
 from ubi_ludus.pipeline.providers.registry import AdapterRegistry, UnknownProviderError
 from ubi_ludus.pipeline.window import window_for
 
@@ -40,11 +41,17 @@ def plan_fetches(competitions: Sequence[CompetitionConfig], today: date) -> list
     ]
 
 
-def fetch_all(requests: Sequence[FetchRequest], registry: AdapterRegistry) -> list[FetchOutcome]:
+def fetch_all(
+    requests: Sequence[FetchRequest],
+    registry: AdapterRegistry,
+    call_log: CallLog | None = None,
+) -> list[FetchOutcome]:
     """Run every request. A provider that fails does not stop the others.
 
     Raises :class:`UnknownProviderError` before any call if the config names a provider with
-    no adapter, because that is a setup mistake, not a runtime outage.
+    no adapter, because that is a setup mistake, not a runtime outage. When the run's
+    ``call_log`` is given (the one passed to ``default_registry``), its total is logged at the
+    end, whatever happened (FR-03).
     """
     missing = sorted({r.provider for r in requests if r.provider not in registry})
     if missing:
@@ -53,13 +60,17 @@ def fetch_all(requests: Sequence[FetchRequest], registry: AdapterRegistry) -> li
             f"No adapter registered for: {', '.join(missing)}. Registered: {registered}"
         )
     outcomes: list[FetchOutcome] = []
-    for request in requests:
-        try:
-            # Building the adapter can fail too, for example when its API key is not set.
-            adapter = registry.create(request.provider)
-            responses = adapter.fetch(request)
-        except ProviderError as exc:
-            outcomes.append(FetchOutcome(request.provider, (), str(exc)))
-        else:
-            outcomes.append(FetchOutcome(request.provider, tuple(responses)))
+    try:
+        for request in requests:
+            try:
+                # Building the adapter can fail too, for example when its API key is not set.
+                adapter = registry.create(request.provider)
+                responses = adapter.fetch(request)
+            except ProviderError as exc:
+                outcomes.append(FetchOutcome(request.provider, (), str(exc)))
+            else:
+                outcomes.append(FetchOutcome(request.provider, tuple(responses)))
+    finally:
+        if call_log is not None:
+            call_log.log_summary()
     return outcomes
