@@ -4,7 +4,7 @@ How Ubi Ludus fits together. This is a living overview: it starts as a skeleton 
 
 ## In one paragraph
 
-A scheduled GitHub Actions job runs once a day. It fetches fixtures from two free data providers, cleans and merges them, adds broadcast information from our own rights table, validates the result, and publishes static JSON files plus a static website to GitHub Pages. It also sends the owner a morning e-mail. Visitors' browsers download the JSON and do all the personalisation locally, so there is no server and nothing personal is stored anywhere but the visitor's own browser.
+A scheduled GitHub Actions job runs once a day. Python fetches fixtures from two free data providers and loads them into an embedded DuckDB database. dbt models then clean and merge them, add broadcast information from our own rights table, and run data quality tests. Python exports the result as static JSON, validates it against the schemas, and publishes it with a static website to GitHub Pages. It also sends the owner a morning e-mail. Visitors' browsers download the JSON and do all the personalisation locally, so there is no server and nothing personal is stored anywhere but the visitor's own browser. The split between Python and dbt is explained in [ADR-002](adr/ADR-002-dbt-duckdb.md).
 
 ## Data flow
 
@@ -16,34 +16,41 @@ flowchart LR
       R["rights.yml + overrides.yml<br/>(maintained by hand)"]
       C["competitions.yml + owner.yml<br/>(config)"]
     end
+    P["Previous published matches.json<br/>(for reschedule detection)"]
     subgraph "GitHub Actions (daily, 06:00 BRT)"
-      F[Fetch + cache] --> N[Normalise + merge]
-      N --> E[Enrich with rights]
-      E --> V[Validate schemas]
-      V --> B[Build static site + JSON]
+      F["Python: fetch + cache"] --> L["Python: load raw tables<br/>into DuckDB"]
+      L --> T["dbt: staging, merge, window, rights<br/>+ data tests"]
+      T --> X["Python: export JSON<br/>+ validate against schemas"]
+      X --> B[Build static site]
     end
     FD --> F
     AF --> F
     C --> F
-    R --> E
+    R --> L
+    P --> L
     B --> D[Deploy to GitHub Pages]
-    B --> M[Render + send owner e-mail]
+    X --> M[Render + send owner e-mail]
     D --> U["Visitor browser:<br/>onboarding, filters, localStorage"]
 ```
 
-If a step fails, the previous good data stays published and the site's freshness indicator warns the visitor.
+Python does input, output and orchestration. dbt does the transformation and the data tests (unique ids, references between files, accepted values). If any test or schema check fails, the previous good data stays published and the site's freshness indicator warns the visitor.
+
+DuckDB is embedded and the runners keep nothing between days, so each run starts from the raw inputs plus the previously published `matches.json`.
 
 ## Components
 
 | Part | Where | What it does | Built in |
 |---|---|---|---|
 | Provider adapters | `src/ubi_ludus/pipeline/providers/` | One module per data source behind a common interface | M1 ([#8](../../../issues/8), [#9](../../../issues/9), [#53](../../../issues/53)) |
-| Normalise and merge | `src/ubi_ludus/pipeline/` | Turns provider data into our model, matches team names, removes duplicates, converts times | M1 ([#10](../../../issues/10)) |
+| Raw loader | `src/ubi_ludus/pipeline/` | Python loads provider responses, the rights YAML and the previous `matches.json` into DuckDB raw tables | M1 ([#63](../../../issues/63), [#10](../../../issues/10)) |
+| Normalise and merge | `dbt/models/` (staging, intermediate) | Types and renames each provider's data, matches team names, removes duplicates across providers, converts times | M1 ([#10](../../../issues/10), [#53](../../../issues/53)) |
 | Cache and rate limiting | `src/ubi_ludus/pipeline/` | Avoids repeat calls, stays under each provider's limit | M1 ([#11](../../../issues/11)) |
-| Rolling window | `src/ubi_ludus/pipeline/` | Keeps only each competition's allowed window; flags rescheduled matches | M1 ([#12](../../../issues/12)) |
-| Rights engine | `src/ubi_ludus/pipeline/` | Resolves broadcasters per match with a confidence level; applies overrides | M2 ([#14](../../../issues/14), [#15](../../../issues/15)) |
+| Rolling window | `dbt/models/` | Keeps only each competition's allowed window; flags rescheduled matches by comparing with the previous run | M1 ([#12](../../../issues/12)) |
+| Rights engine | `dbt/models/` | Resolves broadcasters per match with a confidence level; applies overrides; covered by dbt tests and unit tests | M2 ([#14](../../../issues/14), [#15](../../../issues/15)) |
 | Rights data | `data/rights/` | Broadcasters, services, rules and overrides, edited by hand | M2 ([#13](../../../issues/13), [#16](../../../issues/16)) |
-| Schemas | `schemas/` | JSON Schemas that validate every published file | M1 ([#7](../../../issues/7)) |
+| Schemas | `schemas/` | JSON Schemas that validate every published file (the contract with the site) | M1 ([#7](../../../issues/7)) |
+| dbt project | `dbt/` | Models, tests and docs that run on DuckDB; data quality checks between files (references, uniqueness, accepted values) | M1 ([#63](../../../issues/63)) |
+| Export and validate | `src/ubi_ludus/pipeline/` | Python writes the final JSON from the dbt marts and validates it against the schemas | M1 ([#63](../../../issues/63)) |
 | Website | `site/` | Static pages, onboarding, filters, match cards, calendar export | M3 ([#18](../../../issues/18) onwards) |
 | Daily e-mail | `src/ubi_ludus/email/` | Renders and sends the morning briefing to the owner | M4 ([#30](../../../issues/30), [#31](../../../issues/31)) |
 | Workflows | `.github/workflows/` | CI on pull requests now; the daily pipeline and review report later | M0 ([#4](../../../issues/4)), M4 ([#32](../../../issues/32)) |
@@ -65,6 +72,7 @@ Static JSON with a schema version, served next to the site: `matches.json`, `tea
 | Topic | Document |
 |---|---|
 | Why we chose this architecture | [ADR-001](adr/ADR-001-architecture.md) |
+| Why dbt and Python together, on DuckDB | [ADR-002](adr/ADR-002-dbt-duckdb.md) |
 | Providers: coverage, limits, terms | [provider comparison](research/provider-comparison.md) |
 | Security and the go-public plan | [security checklist](security-checklist.md) |
 | How we plan and track work | [README](../README.md#how-we-plan-work) |

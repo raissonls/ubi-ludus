@@ -88,7 +88,7 @@ Priorities use MoSCoW: **M**ust, **S**hould, **C**ould. Every requirement has an
 | ID | Pri | Requirement | Acceptance criteria |
 |---|---|---|---|
 | FR-01 | M | Fetch fixtures for the covered competitions from one or more free providers through a **provider adapter interface**. | Adding a provider requires only a new adapter module and a config entry. Unit tests run adapters against recorded fixtures (no live calls in CI). |
-| FR-02 | M | Normalise provider data into the internal model ([section 8](#8-data-model)). | Output validates against the JSON Schema in `schemas/`. Invalid output fails the pipeline. |
+| FR-02 | M | Normalise provider data into the internal model ([section 8](#8-data-model)). | Output validates against the JSON Schema in `schemas/`, and the dbt tests (unique ids, references between files, accepted values) pass. A failure of either stops the pipeline. |
 | FR-03 | M | Respect provider rate limits and terms. Cache responses between runs. | Pipeline never exceeds the provider's documented rate limit. Total calls per run are logged. |
 | FR-04 | M | Keep a rolling window of matches: yesterday through the next 14 days. Competitions whose only free provider limits the horizon (see [provider comparison](research/provider-comparison.md)) keep yesterday through tomorrow. | Each competition has a configured horizon (14 days or until tomorrow). `matches.json` contains only matches inside that competition's window. |
 | FR-05 | S | Detect and report postponed, rescheduled or cancelled matches. | A match whose kickoff changes between runs is flagged `rescheduled` for 48 hours. |
@@ -209,6 +209,7 @@ Key decisions:
 - **Python 3.12** for the pipeline and e-mail. **Vanilla HTML/CSS/JS** (ES modules) for the site; any build tooling stays minimal.
 - **Deploy with the Pages artefact action** instead of committing generated data on every run, to keep the git history clean.
 - **Provider adapters** isolate us from any single data source.
+- **dbt Core on DuckDB alongside Python** ([ADR-002](adr/ADR-002-dbt-duckdb.md)): Python handles input, output and orchestration; dbt models handle transformation and data quality tests. Both are free and run inside GitHub Actions.
 
 Proposed repository layout:
 
@@ -221,6 +222,7 @@ src/ubi_ludus/pipeline/  providers/, normalise.py, enrich.py, publish.py
 src/ubi_ludus/email/     render.py, send.py, templates/
 site/                index.html, assets/, js/, css/, i18n/pt-BR.json
 tests/               unit/, fixtures/, e2e/
+dbt/                 dbt project: models (staging, intermediate, marts), tests, seeds
 docs/                PRD.md, architecture.md, runbook.md, adr/
 ```
 

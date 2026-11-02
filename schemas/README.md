@@ -20,6 +20,10 @@ JSON Schemas (draft 2020-12) that describe our data. The pipeline validates ever
 - **A broadcast sits inside its match,** so `match_id` is not repeated. The PRD lists it as a separate entity, but the published shape nests it.
 - **A team id can be `null`** on a match whose opponent is not decided yet.
 
+## What schemas cannot check
+
+A schema looks at one file's shape. It cannot tell that a match points to a team that is missing from `teams.json`, or that two matches share an id. Those cross-record checks are dbt tests, which run in the same pipeline step ([ADR-002](../docs/adr/ADR-002-dbt-duckdb.md)). A run publishes only when both the dbt tests and the schemas pass.
+
 ## Changing a schema
 
 `schema_version` is `major.minor`. Change it in the file schemas (a `const`) and in every example under `tests/fixtures/schemas/valid/` when the format changes.
