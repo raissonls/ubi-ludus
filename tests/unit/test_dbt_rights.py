@@ -20,6 +20,7 @@ from dbt_helpers import NOW, TODAY, build, query, rights_with, rule
 
 from ubi_ludus.pipeline.dbt_runner import DBT_DIR, DbtBuildError, run_dbt
 from ubi_ludus.pipeline.export import export_matches
+from ubi_ludus.pipeline.rights import load_rights
 from ubi_ludus.pipeline.validate import validate_file
 
 pytestmark = pytest.mark.dbt
@@ -136,6 +137,28 @@ def test_a_match_no_rule_covers_is_unknown_and_names_no_broadcaster(
             "updated_at": "2026-11-02T09:00:00Z",
         }
     ]
+
+
+def test_the_repositorys_own_rights_table_gives_the_fixture_matches_their_broadcasters(
+    tmp_path: Path,
+) -> None:
+    """The real data/rights/rights.yml through the real models: the draft table works end to end."""
+    database = build(tmp_path, rights=load_rights())
+    rows = dict(
+        query(
+            database,
+            "select id, list_transform(broadcasts, lambda b: b.broadcaster_id) from matches",
+        )
+    )
+    # Brasileirão 2026, 3 Nov: every broadcaster the table lists for the competition.
+    assert set(rows["football-data-910002"]) == {
+        "globo", "sportv", "premiere", "globoplay", "ge-tv", "record", "cazetv", "prime-video",
+    }  # fmt: skip
+    # Champions League 2026-27, 4 Nov.
+    assert set(rows["football-data-920001"]) == {
+        "hbo-max", "tnt-sports", "space", "tnt-sports-youtube", "sbt",
+    }  # fmt: skip
+    assert all(None not in broadcasters for broadcasters in rows.values())
 
 
 def test_with_no_rules_at_all_every_match_is_unknown(tmp_path: Path) -> None:

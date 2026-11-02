@@ -109,9 +109,26 @@ def test_the_real_rights_files_are_valid_and_agree_with_each_other() -> None:
         "youtube",
     }
     assert data.services
-    # Nothing is curated yet (M2-04): the tables the owner fills in start empty.
-    assert data.rules == ()
-    assert data.overrides == ()
+    assert data.rules  # curated in M2-04
+    assert data.overrides == ()  # the owner writes these as matches need them
+
+
+def test_every_competition_has_a_rights_rule_or_is_listed_as_not_covered_yet() -> None:
+    """M2-04: nothing is silently missing. A gap is written down with its reason."""
+    data = load_rights()
+    with_a_rule = {r.competition_id for r in data.rules}
+    listed_as_gap = {g.competition_id for g in data.not_covered}
+    everything = {c.id for c in load_competitions()}
+    assert everything <= with_a_rule | listed_as_gap
+    assert not with_a_rule & listed_as_gap
+    assert all(g.reason for g in data.not_covered)
+
+
+def test_every_real_rule_names_its_source_and_a_period_with_an_end() -> None:
+    for rule_ in load_rights().rules:
+        assert rule_.source
+        assert rule_.valid_from < rule_.valid_to
+        assert rule_.scope == "all"  # broadcasters vary by match, so overrides refine, not rules
 
 
 def test_every_broadcaster_that_costs_money_is_in_at_least_one_service() -> None:
@@ -236,6 +253,55 @@ def test_a_rule_for_a_competition_we_do_not_follow(tmp_path: Path) -> None:
     rules = {"version": 1, "rules": [rule(competition_id="la-liga")]}
     assert problems_of(tmp_path, rights=rules) == [
         "rights.yml, rule 1 (la-liga 2026): competition 'la-liga' is not in competitions.yml"
+    ]
+
+
+def test_a_gap_that_is_also_covered_by_a_rule_is_a_contradiction(tmp_path: Path) -> None:
+    document = {
+        "version": 1,
+        "rules": [rule()],
+        "not_covered": [
+            {
+                "competition_id": "serie-a",
+                "season": "2026",
+                "reason": "x",
+                "checked_at": "2026-11-02",
+            }
+        ],
+    }
+    assert problems_of(tmp_path, rights=document) == [
+        "rights.yml, not_covered 1 (serie-a 2026): listed as not covered, but a rule covers it"
+    ]
+
+
+def test_a_gap_for_another_season_of_a_covered_competition_is_fine(tmp_path: Path) -> None:
+    gap = {"competition_id": "serie-a", "season": "2027", "reason": "x", "checked_at": "2026-11-02"}
+    document = {"version": 1, "rules": [rule()], "not_covered": [gap]}
+    data = load_rights(write(tmp_path, files(rights=document)), COMPETITIONS)
+    assert [(g.competition_id, g.season, g.checked_at) for g in data.not_covered] == [
+        ("serie-a", "2027", date(2026, 11, 2))
+    ]
+
+
+def test_gaps_for_unknown_competitions_twice_or_with_a_false_date_are_reported(
+    tmp_path: Path,
+) -> None:
+    gap = {"competition_id": "serie-a", "season": "2027", "reason": "x", "checked_at": "2026-11-02"}
+    document = {
+        "version": 1,
+        "rules": [],
+        "not_covered": [
+            gap,
+            gap,
+            {**gap, "competition_id": "la-liga"},
+            {**gap, "season": "2028", "checked_at": "2026-02-31"},
+        ],
+    }
+    assert problems_of(tmp_path, rights=document) == [
+        "rights.yml, not_covered 4: checked_at 2026-02-31 is not a real date",
+        "rights.yml, not_covered 2 (serie-a 2027): listed twice",
+        "rights.yml, not_covered 3 (la-liga 2027): "
+        "competition 'la-liga' is not in competitions.yml",
     ]
 
 

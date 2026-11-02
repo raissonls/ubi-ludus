@@ -2,26 +2,146 @@
 # Checked against schemas/rights-config.schema.json and against the catalogue and
 # config/competitions.yml in CI. See data/rights/README.md for how to write a rule.
 #
-# Empty until the owner curates it (M2-04). A competition with no rule here shows
-# "Broadcast not confirmed yet" on the site; nothing is guessed (FR-13).
+# POLICY (decided by the owner, 2026-11-02): a rule lists every broadcaster that MAY carry a
+# match of the competition, not only the ones that carry all of them. In 2026 almost no
+# competition has one broadcaster for every match; the home club or a per-round selection
+# decides. So a `rule` broadcast on the site means "this broadcaster has rights to some of this
+# competition's matches", not "this match is on it". Check a match you care about and fix it
+# with an override (overrides.yml): that turns it into `confirmed`.
 #
-# Example (keep it commented out; the ids must exist):
+# DRAFT: written on 2026-11-02 from news articles, not from official announcements, and some
+# articles are months old. Every rule says where it came from. Audit before trusting (PRD S1).
 #
-#   - competition_id: brasileirao-serie-a
-#     season: "2026"
-#     scope: all                       # all | round | stage | team
-#     broadcasters: [globo, sportv, premiere]
-#     valid_from: 2026-01-28           # first day, inclusive, in Brazil
-#     valid_to: 2026-12-31             # last day, inclusive
-#     source: "Where you learned it, and when"
-#
-#   - competition_id: brasileirao-serie-a
-#     season: "2026"
-#     scope: team                      # scope_value is a team id
-#     scope_value: flamengo
-#     broadcasters: [globo]
-#     valid_from: 2026-01-28
-#     valid_to: 2026-12-31
-#     source: "..."
+# Competitions with no rule are listed under `not_covered` at the end, with the reason.
 version: 1
-rules: []
+rules:
+  # --- Brazil -----------------------------------------------------------------------------------
+  - competition_id: brasileirao-serie-a
+    season: "2026"
+    scope: all
+    broadcasters: [globo, sportv, premiere, globoplay, ge-tv, record, cazetv, prime-video]
+    valid_from: 2026-01-01
+    valid_to: 2026-12-31
+    source: "Lance, 28 Jan 2026, 'Onde assistir ao Brasileirão 2026' (lance.com.br); Meio & Mensagem, Jan 2026"
+    notes: "Two blocs (Libra, FFU); the home club decides (Lei do Mandante). Globo has both: TV Globo (one game a round), SporTV, Premiere (nearly every game), Globoplay, ge tv. Per FFU round, Record and CazéTV share one game and Prime Video has one exclusive game."
+
+  - competition_id: copa-do-brasil
+    season: "2026"
+    scope: all
+    broadcasters: [globo, sportv, premiere, globoplay, ge-tv, prime-video]
+    valid_from: 2026-01-01
+    valid_to: 2026-12-31
+    source: "Match guides for the 2026 round of 16 (Máquina do Esporte, MKT Esportivo, Aug 2026); no official list found"
+    notes: "Globo holds the rights; the broadcaster varies by match. Prime Video carries some games, a few exclusively. The final is on 6 Dec 2026, its broadcaster not announced."
+
+  # --- South America ----------------------------------------------------------------------------
+  - competition_id: copa-libertadores
+    season: "2026"
+    scope: all
+    broadcasters: [globo, globoplay, ge-tv, espn, disney-plus, paramount-plus]
+    valid_from: 2026-01-01
+    valid_to: 2026-12-31
+    source: "Meio & Mensagem, 8 Apr 2026, 'Onde assistir: Conmebol Libertadores e Sul-Americana 2026'"
+    notes: "Globo shows one game a round from the round of 16 (and a regional selection in the groups, free). ESPN, Disney+ and Paramount+ share the rest. 2027 onwards: Globo on open TV and ESPN on pay TV (Conmebol, announced 2026)."
+
+  - competition_id: copa-sul-americana
+    season: "2026"
+    scope: all
+    broadcasters: [sbt, espn, disney-plus, paramount-plus]
+    valid_from: 2026-01-01
+    valid_to: 2026-12-31
+    source: "Meio & Mensagem, 8 Apr 2026, 'Onde assistir: Conmebol Libertadores e Sul-Americana 2026'"
+    notes: "SBT shows one game a round on open TV; ESPN, Disney+ and Paramount+ share the rest. From 2027 SBT leaves and TNT Sports takes the open window on YouTube."
+
+  # --- Europe -----------------------------------------------------------------------------------
+  - competition_id: uefa-champions-league
+    season: "2026-27"
+    scope: all
+    broadcasters: [hbo-max, tnt-sports, space, tnt-sports-youtube, sbt]
+    valid_from: 2026-08-01
+    valid_to: 2027-06-30
+    source: "Trivela, 21 Aug 2026, 'Futebol europeu: 5 mudanças nas transmissões'; Meio & Mensagem, Jul 2026"
+    notes: "HBO Max has 100% of the games. TNT Sports on YouTube has 31 games (free). SBT shows one game on Tuesdays on open TV. TNT and Space show a selection on pay TV."
+
+  - competition_id: premier-league
+    season: "2026-27"
+    scope: all
+    broadcasters: [disney-plus, espn, cazetv]
+    valid_from: 2026-08-01
+    valid_to: 2027-06-30
+    source: "Diário de Pernambuco, Aug 2026, 'Onde assistir à Premier League 2026/27'; Trivela, 21 Aug 2026"
+    notes: "Disney owns the Brazilian rights (all 380 games on Disney+). CazéTV sublicensed one game a round, free on YouTube."
+
+  - competition_id: la-liga
+    season: "2026-27"
+    scope: all
+    broadcasters: [cazetv]
+    valid_from: 2026-08-01
+    valid_to: 2027-06-30
+    source: "Trivela, 21 Aug 2026; Itatiaia, Aug 2026 'Quando começam e onde assistir os campeonatos europeus'"
+    notes: "CazéTV holds the rights on YouTube, apparently every game. ESPN and Disney+ no longer carry La Liga. Rumours of a SportyNet sublicence are not confirmed."
+
+  - competition_id: serie-a-italia
+    season: "2026-27"
+    scope: all
+    broadcasters: [disney-plus, espn, sportynet]
+    valid_from: 2026-08-01
+    valid_to: 2027-06-30
+    source: "Trivela, 21 Aug 2026 and 'Onde assistir ao vivo Premier League, LaLiga, Bundesliga, Serie A, Ligue 1'"
+    notes: "The rights sit with Disney (ESPN, Disney+); SportyNet shows two games a round on YouTube through a deal with Disney. How many games Disney+ carries is not stated."
+
+  - competition_id: bundesliga
+    season: "2026-27"
+    scope: all
+    broadcasters: [sportynet, jovem-pan, xsports, cazetv, sportv]
+    valid_from: 2026-08-01
+    valid_to: 2027-06-30
+    source: "Trivela, 21 Aug 2026; Máquina do Esporte, Aug 2026"
+    notes: "The most split league: SportyNet three games a round, Jovem Pan one on open TV and YouTube, Xsports. The sources disagree on SporTV, CazéTV and on how Xsports and Jovem Pan relate. Others named but not in the catalogue: Goat, OneFootball, Romário TV."
+
+  - competition_id: ligue-1
+    season: "2026-27"
+    scope: all
+    broadcasters: [cazetv, xsports]
+    valid_from: 2026-08-01
+    valid_to: 2027-06-30
+    source: "Trivela, 21 Aug 2026"
+    notes: "CazéTV holds the rights; Xsports shows three games a round on open TV. How many games CazéTV shows is not stated."
+
+# Competitions we looked into and could not cover. The site shows these matches as "Broadcast
+# not confirmed yet". A competition and season listed here must not also have a rule.
+not_covered:
+  - competition_id: campeonato-paulista
+    season: "2027"
+    reason: "The 2027 edition starts in January; no rights announcement found. In 2026 it was split between HBO Max/TNT Sports and other broadcasters."
+    checked_at: 2026-11-02
+
+  - competition_id: campeonato-carioca
+    season: "2027"
+    reason: "The 2027 edition starts in January; no reliable source on its broadcasters found."
+    checked_at: 2026-11-02
+
+  - competition_id: campeonato-mineiro
+    season: "2027"
+    reason: "The 2027 edition starts in January; no reliable source on its broadcasters found."
+    checked_at: 2026-11-02
+
+  - competition_id: campeonato-gaucho
+    season: "2027"
+    reason: "The 2027 edition starts in January; no reliable source on its broadcasters found."
+    checked_at: 2026-11-02
+
+  - competition_id: copa-do-mundo
+    season: "2026"
+    reason: "The 2026 World Cup ended on 19 July 2026 and the next is in 2030, so no match falls in the window."
+    checked_at: 2026-11-02
+
+  - competition_id: eliminatorias-copa-do-mundo
+    season: "2026"
+    reason: "No round of the South American qualifiers is in the window and no source on who will show the next ones was found."
+    checked_at: 2026-11-02
+
+  - competition_id: amistosos-selecoes
+    season: "2026"
+    reason: "Friendlies are sold match by match; no reliable source on who shows the November 2026 ones was found."
+    checked_at: 2026-11-02

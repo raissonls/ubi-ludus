@@ -12,7 +12,7 @@ version: 1
 services:
   - id: tv-por-assinatura
     name: TV por assinatura (cabo, satélite ou operadora)
-    includes_broadcasters: [sportv, espn, tnt-sports]
+    includes_broadcasters: [sportv, espn, tnt-sports, space]
 
   - id: premiere
     name: Premiere (pay-per-view)
