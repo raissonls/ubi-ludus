@@ -221,7 +221,6 @@ src/email/           render.py, send.py, templates/
 site/                index.html, assets/, js/, css/, i18n/pt-BR.json
 tests/               unit/, fixtures/, e2e/
 docs/                PRD.md, architecture.md, runbook.md, adr/
-planning/            requirements/, tasks/ (work breakdown derived from this PRD)
 ```
 
 ## 10. Success criteria
@@ -279,7 +278,7 @@ Success measurement (14 days) runs Dec 21 – Jan 3; Phase 1 closure review is J
 | R7 | Leaking secrets in a public repository. | Low | High | Secrets only in GitHub Secrets, pre-commit and CI secret scanning, no secrets in logs, least-privilege tokens. |
 | R8 | Free e-mail sending limits or deliverability problems (spam folder). | Medium | Low | Send to a single known recipient, mark sender as safe, keep volume at 1/day; fall back to an alternative free SMTP/API provider. |
 | R9 | Owner time shortfall. | Medium | Medium | Strict MoSCoW; "Could" items are cut first; buffer built into the 7 weeks. |
-| R10 | Scope creep toward Phase 2 (accounts, notifications). | Medium | Medium | Non-goals are explicit; ideas go to a `docs/backlog.md`. |
+| R10 | Scope creep toward Phase 2 (accounts, notifications). | Medium | Medium | Non-goals are explicit; ideas go to GitHub issues labeled `backlog`. |
 
 ## 13. Security and privacy
 
