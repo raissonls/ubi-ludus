@@ -12,7 +12,10 @@
 | Tasks, status and progress | [Issues](../../issues) and the [Ubi Ludus project board](https://github.com/users/raissonls/projects/1) |
 | Milestones M0 to M5 and their due dates | [Milestones](../../milestones) |
 | Ideas outside the current plan | Issues labeled [`backlog`](../../issues?q=label%3Abacklog) |
-| Architecture decisions, runbook | `docs/` (written during the work) |
+| How it fits together | [docs/architecture.md](docs/architecture.md) |
+| Why we chose it (architecture decisions) | [docs/adr/](docs/adr/README.md) |
+| Providers: coverage, limits, terms | [docs/research/provider-comparison.md](docs/research/provider-comparison.md) |
+| Security and the go-public plan | [docs/security-checklist.md](docs/security-checklist.md) |
 
 ## Phase 1 at a glance
 
