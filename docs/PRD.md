@@ -341,7 +341,7 @@ Phase 1 is delivered by the **owner with Claude as pair-programming and review p
 | Q2 | ~~Which provider(s) cover each competition, and what do their terms say about republishing?~~ **Resolved 2026-11-01:** football-data.org (14 days) plus API-Football (until tomorrow only). Details and terms in [docs/research/provider-comparison.md](research/provider-comparison.md). | Owner + Claude | End of M0 |
 | Q3 | Which e-mail sending method will be used? | Owner | M4 |
 | Q4 | ~~Final project name and repository name~~ **Resolved 2026-11-01: Ubi Ludus (`ubi-ludus`).** Still to check before going public: domain, social handles and similarly named apps. | Owner | M0 |
-| Q5 | Which streaming services does the owner currently subscribe to, so the service catalogue and defaults are correct? | Owner | M3 |
+| Q5 | ~~Which streaming services does the owner currently subscribe to, so the service catalogue and defaults are correct?~~ **Resolved 2026-11-03:** Disney+ (the plan with ESPN), Globoplay, Premiere and HBO Max, saved in [config/owner.yml](../config/owner.yml). The catalogue is [data/rights/services.yml](../data/rights/services.yml) (8 services). The default for a visitor is nothing ticked, which means free TV and YouTube only. | Owner | M3 |
 | Q6 | Should Phase 2 allow visitors to receive their own e-mails? If yes, it brings accounts, consent and LGPD obligations | Owner | Phase 2 planning |
 
 ## 17. Phase 2 preview (not committed)

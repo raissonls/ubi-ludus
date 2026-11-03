@@ -15,14 +15,72 @@
       "kind": "pay_tv",
       "service_id": "tv-por-assinatura",
       "url": null
+    },
+    {
+      "id": "espn",
+      "name": "ESPN",
+      "kind": "pay_tv",
+      "service_id": "tv-por-assinatura",
+      "url": null
+    },
+    {
+      "id": "premiere",
+      "name": "Premiere",
+      "kind": "ppv",
+      "service_id": "premiere",
+      "url": null
+    },
+    {
+      "id": "globoplay",
+      "name": "Globoplay",
+      "kind": "streaming",
+      "service_id": "globoplay",
+      "url": null
+    },
+    {
+      "id": "disney-plus",
+      "name": "Disney+",
+      "kind": "streaming",
+      "service_id": "disney-plus",
+      "url": null
+    },
+    {
+      "id": "cazetv",
+      "name": "CazéTV",
+      "kind": "youtube",
+      "service_id": null,
+      "url": null
     }
   ],
   "services": [
     {
       "id": "tv-por-assinatura",
-      "name": "TV por assinatura",
+      "name": "TV por assinatura (cabo, satélite ou operadora)",
       "includes_broadcasters": [
-        "sportv"
+        "sportv",
+        "espn"
+      ]
+    },
+    {
+      "id": "premiere",
+      "name": "Premiere (pay-per-view)",
+      "includes_broadcasters": [
+        "premiere"
+      ]
+    },
+    {
+      "id": "globoplay",
+      "name": "Globoplay",
+      "includes_broadcasters": [
+        "globoplay"
+      ]
+    },
+    {
+      "id": "disney-plus",
+      "name": "Disney+ (plano com ESPN)",
+      "includes_broadcasters": [
+        "disney-plus",
+        "espn"
       ]
     }
   ]

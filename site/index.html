@@ -54,6 +54,16 @@
       <p id="picker-announcer" class="visually-hidden" role="status"></p>
     </section>
 
+    <!-- Which services do you have? js/services-picker.js draws one checkbox for each. -->
+    <section class="picker" aria-labelledby="services-title">
+      <h2 id="services-title" data-i18n="services.title"></h2>
+      <p id="services-hint" data-i18n="services.hint"></p>
+      <div role="group" aria-labelledby="services-title" aria-describedby="services-hint">
+        <ul id="service-options" class="services"></ul>
+      </div>
+      <p id="services-summary" role="status"></p>
+    </section>
+
     <section aria-labelledby="matches-title">
       <h2 id="matches-title" data-i18n="matches.title"></h2>
       <ul id="matches-list" class="matches" hidden></ul>

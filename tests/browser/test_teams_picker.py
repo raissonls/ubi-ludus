@@ -197,7 +197,7 @@ def test_the_accessibility_tree_has_a_labelled_combobox_and_a_named_list_of_choi
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
         page.keyboard.press("Enter")
-        tree = page.locator("section.picker").aria_snapshot()
+        tree = page.locator("section[aria-labelledby=teams-title]").aria_snapshot()
         assert 'heading "Quais times você segue?"' in tree
         assert 'combobox "Buscar time"' in tree
         assert 'list "Times escolhidos"' in tree

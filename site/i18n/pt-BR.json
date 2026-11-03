@@ -37,6 +37,16 @@
       "other": "{team} removido. {count} times escolhidos."
     }
   },
+  "services": {
+    "title": "Quais serviços você tem?",
+    "hint": "Marque as assinaturas que você tem. TV aberta e YouTube não precisam de assinatura: esses jogos você já pode ver.",
+    "includes": "Inclui: {names}.",
+    "noneChosen": "Nenhum serviço marcado: vamos considerar só a TV aberta e o YouTube.",
+    "chosen": {
+      "one": "{count} serviço marcado.",
+      "other": "{count} serviços marcados."
+    }
+  },
   "matches": {
     "title": "Próximos jogos dos seus times",
     "pickPrompt": "Escolha ao menos um time para ver os jogos dele.",

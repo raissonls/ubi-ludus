@@ -5,6 +5,7 @@ import { loadData } from './data.js';
 import { applyStrings, createTranslator, loadStrings } from './i18n.js';
 import { createMatchesView } from './matches-view.js';
 import { createPreferences, restrictTo } from './preferences.js';
+import { createServicesPicker } from './services-picker.js';
 import { createTeamPicker } from './teams-picker.js';
 
 const strings = await loadStrings(new URL('../i18n/pt-BR.json', import.meta.url));
@@ -20,18 +21,26 @@ try {
 
   // The choices that are saved may name a team that has since gone: keep only the ones we know.
   const known = { teams: new Set(data.teamsById.keys()), services: new Set(data.servicesById.keys()) };
-  const chosenTeams = () => restrictTo(preferences.get(), known).teams;
+  const chosen = () => restrictTo(preferences.get(), known);
 
   const picker = createTeamPicker({
     teams: data.teams,
     translator,
     onChange: (ids) => preferences.setTeams(ids),
   });
+  const servicesPicker = createServicesPicker({
+    services: data.services,
+    broadcastersById: data.broadcastersById,
+    translator,
+    onChange: (ids) => preferences.setServices(ids),
+  });
   const matches = createMatchesView({ data, translator });
 
   function show() {
-    picker.update(chosenTeams());
-    matches.render(chosenTeams());
+    const { teams, services } = chosen();
+    picker.update(teams);
+    servicesPicker.update(services);
+    matches.render(teams);
   }
   preferences.subscribe(show);
   show();
