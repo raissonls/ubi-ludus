@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-02T09:00:00Z",
+  "competitions": [
+    {
+      "id": "brasileirao-serie-a",
+      "name": "Campeonato Brasileiro Série A",
+      "country_or_region": "Brasil",
+      "type": "league",
+      "provider_ids": {
+        "football-data": "BSA"
+      },
+      "coverage": "full"
+    },
+    {
+      "id": "uefa-champions-league",
+      "name": "UEFA Champions League",
+      "country_or_region": "Europa",
+      "type": "cup",
+      "provider_ids": {
+        "football-data": "CL"
+      },
+      "coverage": "full"
+    },
+    {
+      "id": "amistosos-selecoes",
+      "name": "Amistosos de seleções",
+      "country_or_region": "Mundo",
+      "type": "cup",
+      "provider_ids": {
+        "api-football": "10"
+      },
+      "coverage": "short"
+    }
+  ]
+}

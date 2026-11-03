@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-02T09:00:00Z",
+  "matches": [
+    {
+      "id": "fx-1",
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "round": "34",
+      "kickoff_utc": "2026-11-03T22:00:00Z",
+      "home_team_id": "palmeiras",
+      "away_team_id": "flamengo",
+      "status": "scheduled",
+      "broadcasts": [
+        {
+          "broadcaster_id": "globo",
+          "confidence": "rule",
+          "source": "rights_rule",
+          "updated_at": "2026-11-02T09:00:00Z"
+        },
+        {
+          "broadcaster_id": "sportv",
+          "confidence": "rule",
+          "source": "rights_rule",
+          "updated_at": "2026-11-02T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "fx-2",
+      "competition_id": "uefa-champions-league",
+      "season": "2026",
+      "round": "3",
+      "kickoff_utc": "2026-11-04T20:00:00Z",
+      "home_team_id": "real-madrid",
+      "away_team_id": "barcelona",
+      "status": "scheduled",
+      "broadcasts": [
+        {
+          "broadcaster_id": null,
+          "confidence": "unknown",
+          "source": "none",
+          "updated_at": "2026-11-02T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "fx-3",
+      "competition_id": "uefa-champions-league",
+      "season": "2026",
+      "round": "3",
+      "kickoff_utc": "2026-11-05T20:00:00Z",
+      "home_team_id": "chelsea",
+      "away_team_id": "atletico-madrid",
+      "status": "scheduled",
+      "broadcasts": [
+        {
+          "broadcaster_id": null,
+          "confidence": "unknown",
+          "source": "none",
+          "updated_at": "2026-11-02T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "fx-4",
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "round": "35",
+      "kickoff_utc": "2026-11-06T22:30:00Z",
+      "home_team_id": "sao-paulo",
+      "away_team_id": "atletico-mineiro",
+      "status": "scheduled",
+      "broadcasts": [
+        {
+          "broadcaster_id": "globo",
+          "confidence": "confirmed",
+          "source": "override",
+          "updated_at": "2026-11-02T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "fx-5",
+      "competition_id": "amistosos-selecoes",
+      "season": "2026",
+      "round": null,
+      "kickoff_utc": "2026-11-08T22:00:00Z",
+      "home_team_id": "brasil",
+      "away_team_id": null,
+      "status": "scheduled",
+      "broadcasts": [
+        {
+          "broadcaster_id": null,
+          "confidence": "unknown",
+          "source": "none",
+          "updated_at": "2026-11-02T09:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "fx-6",
+      "competition_id": "brasileirao-serie-a",
+      "season": "2026",
+      "round": "33",
+      "kickoff_utc": "2026-10-30T22:00:00Z",
+      "home_team_id": "palmeiras",
+      "away_team_id": "sao-paulo",
+      "status": "finished",
+      "broadcasts": [
+        {
+          "broadcaster_id": "globo",
+          "confidence": "rule",
+          "source": "rights_rule",
+          "updated_at": "2026-11-02T09:00:00Z"
+        }
+      ]
+    }
+  ]
+}

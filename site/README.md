@@ -10,6 +10,11 @@ js/main.js        entry point
 js/i18n.js        loads i18n/pt-BR.json, translates, fills the page
 js/data.js        loads the five published files from data/ and indexes them by id
 js/preferences.js  the visitor's teams and services, in localStorage and nowhere else
+js/search.js       finds a team as you type (no accents, aliases, ranked); pure
+js/teams-picker.js  the "Which teams do you follow?" combobox and the chosen teams
+js/matches-preview.js  which matches of the followed teams are still to come; pure
+js/matches-view.js  draws them as a plain list (the match card replaces it in M3-05)
+js/dom.js          safe element building and team colours as CSS variables
 js/format.js      dates and times in Brazil's time zone (Intl)
 i18n/pt-BR.json   every string the visitor reads
 assets/           the icon
@@ -45,3 +50,11 @@ test/             unit tests for js/ (Node's built-in runner)
 ## Data attribution
 
 The footer shows "Football data provided by the Football-Data.org API" exactly as football-data.org's terms require, and credits API-Football. See [the provider comparison](../docs/research/provider-comparison.md).
+
+## The teams picker
+
+- It is an ARIA editable combobox with list autocomplete: `role=combobox` on the box, a `listbox` it controls, `aria-activedescendant` for the option under the arrow keys. Down and Up move (and wrap), Enter chooses (the first suggestion if none is under the arrows), Escape closes and then clears. What happened is said in a polite live region ("Palmeiras adicionado. 2 times escolhidos.").
+- Search ignores case, accents and punctuation and also looks at each team's short name and aliases, so `barca` finds Barcelona and `brazil` finds Brasil. With nothing typed it suggests Brazilian teams first.
+- Choosing a team saves it at once and shows its next matches, so a new visitor is two or three interactions from a result (click, type, pick; or just type and press Enter).
+- The suggestions close after a choice and when a chosen team is removed, so they never cover the chosen teams the visitor may want to reach.
+- A team's two colours are only an accent (a small square and a bar), set as CSS variables from script (the policy allows that, not a `style` attribute). There is no crest or logo, and the name is always next to the colour.

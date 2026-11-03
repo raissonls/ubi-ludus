@@ -1,165 +1,24 @@
-"""The site in a real browser: accessibility (axe), the Content Security Policy at work, requests.
+"""The site in a real browser: accessibility (axe), the Content Security Policy at work, requests,
+the data and the visitor's choices. The browser and the server are in conftest.py."""
 
-Needs a Chromium. In CI it is installed (`playwright install chromium`) and a missing browser is a
-failure (UBI_LUDUS_REQUIRE_BROWSER=1). On a developer machine the tests use Chromium if it is
-there, else Chrome or Edge, and skip when there is none.
-"""
-
-import functools
-import http.server
 import json
-import os
-import threading
-from collections.abc import Callable, Iterator
-from pathlib import Path
 from urllib.parse import urlparse
 
 import pytest
-from axe_playwright_python.sync_playwright import Axe  # type: ignore[import-untyped]
-from playwright.sync_api import Browser, Page, Playwright, Request, Route, sync_playwright
+from playwright.sync_api import Browser
+from site_browser import (
+    CHOICES,
+    DATA,
+    SECRET_SERVICE,
+    SECRET_TEAM,
+    STORAGE_KEY,
+    VIEWPORTS,
+    WATCH_VIOLATIONS,
+    axe_violations,
+    visit,
+)
 
 pytestmark = pytest.mark.browser
-
-SITE = Path(__file__).resolve().parents[2] / "site"
-# The published files the site loads from /data/. The pipeline writes the real ones; the tests
-# serve the valid examples of the schemas.
-DATA = Path(__file__).resolve().parents[1] / "fixtures" / "schemas" / "valid"
-STORAGE_KEY = "ubi-ludus:preferences"
-SECRET_TEAM = "time-secreto-xyz"  # noqa: S105 - a marker that must never leave the browser
-SECRET_SERVICE = "servico-secreto-xyz"  # noqa: S105 - same
-CHOICES = {
-    STORAGE_KEY: json.dumps({"version": 1, "teams": [SECRET_TEAM], "services": [SECRET_SERVICE]})
-}
-STORAGE_BLOCKED = (
-    "Object.defineProperty(window, 'localStorage',"
-    " { get() { throw new DOMException('denied', 'SecurityError'); } });"
-)
-WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]
-WATCH_VIOLATIONS = (
-    "window.__violations = [];"
-    "document.addEventListener('securitypolicyviolation',"
-    " e => window.__violations.push(e.violatedDirective));"
-)
-VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
-
-
-class QuietHandler(http.server.SimpleHTTPRequestHandler):
-    def log_message(self, format: str, *args: object) -> None:  # noqa: A002 - the base class name
-        return
-
-    def translate_path(self, path: str) -> str:
-        clean = urlparse(path).path
-        if clean.startswith("/data/"):
-            return str(DATA / clean.removeprefix("/data/"))
-        return super().translate_path(path)
-
-
-@pytest.fixture(scope="module")
-def origin() -> Iterator[str]:
-    handler = functools.partial(QuietHandler, directory=str(SITE))
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    yield f"http://127.0.0.1:{server.server_address[1]}"
-    server.shutdown()
-    server.server_close()
-
-
-def launch(playwright: Playwright) -> Browser:
-    errors = []
-    for channel in (None, "chrome", "msedge"):
-        try:
-            return playwright.chromium.launch(channel=channel)
-        except Exception as exc:  # noqa: BLE001 - any launch failure means "try the next one"
-            errors.append(f"{channel or 'chromium'}: {str(exc).splitlines()[0]}")
-    message = "No browser for the site tests (" + "; ".join(errors) + ")"
-    if os.environ.get("UBI_LUDUS_REQUIRE_BROWSER") == "1":
-        pytest.fail(message)
-    pytest.skip(message)
-
-
-@pytest.fixture(scope="module")
-def browser() -> Iterator[Browser]:
-    with sync_playwright() as playwright:
-        found = launch(playwright)
-        yield found
-        found.close()
-
-
-def answer_with(status: int) -> Callable[[Route], None]:
-    return lambda route: route.fulfill(status=status)
-
-
-class Visit:
-    """One page load, with everything the browser reported while it happened."""
-
-    def __init__(self, page: Page, origin: str) -> None:
-        self.page = page
-        self.origin = origin
-        self.console: list[str] = []
-        self.requests: list[str] = []
-        self.details: list[Request] = []
-        self.failed: list[str] = []
-        page.on("console", lambda m: self.console.append(f"{m.type}: {m.text}"))
-        page.on("pageerror", lambda e: self.console.append(f"pageerror: {e}"))
-        page.on("request", self._saw)
-        page.on("requestfailed", lambda r: self.failed.append(r.url))
-
-    def _saw(self, request: Request) -> None:
-        self.requests.append(request.url)
-        self.details.append(request)
-
-    def open(self) -> None:
-        self.page.goto(self.origin + "/index.html")
-        self.page.wait_for_selector("html[data-ready='true']")
-
-
-def visit(
-    browser: Browser,
-    origin: str,
-    scheme: str = "light",
-    size: str = "desktop",
-    reduced_motion: str = "no-preference",
-    saved: dict[str, str] | None = None,
-    storage_blocked: bool = False,
-    broken: dict[str, int] | None = None,
-    newer_format: str | None = None,
-) -> Iterator[Visit]:
-    """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
-    data file to the HTTP status it answers with, `newer_format` names a data file served as if
-    it were in a format the site does not know."""
-    width, height = VIEWPORTS[size]
-    context = browser.new_context(
-        color_scheme=scheme,  # type: ignore[arg-type]
-        reduced_motion=reduced_motion,  # type: ignore[arg-type]
-        viewport={"width": width, "height": height},
-    )
-    try:
-        if saved:
-            items = json.dumps(saved)
-            context.add_init_script(
-                f"for (const [k, v] of Object.entries({items})) localStorage.setItem(k, v);"
-            )
-        if storage_blocked:
-            context.add_init_script(STORAGE_BLOCKED)
-        page = context.new_page()
-        for name, status in (broken or {}).items():
-            page.route(f"**/data/{name}.json", answer_with(status))
-        if newer_format:
-            document = json.loads((DATA / f"{newer_format}.json").read_text(encoding="utf-8"))
-            document["schema_version"] = "2.0"
-            page.route(
-                f"**/data/{newer_format}.json",
-                lambda route: route.fulfill(
-                    status=200, content_type="application/json", body=json.dumps(document)
-                ),
-            )
-        current = Visit(page, origin)
-        current.open()
-        yield current
-    finally:
-        context.close()
-
 
 # --- accessibility (axe) --------------------------------------------------------------------------
 
@@ -170,12 +29,7 @@ def test_axe_finds_no_wcag_2_2_aa_violation(
     browser: Browser, origin: str, scheme: str, size: str
 ) -> None:
     for current in visit(browser, origin, scheme, size):
-        results = Axe().run(current.page, options={"runOnly": {"type": "tag", "values": WCAG_TAGS}})
-        violations = [
-            f"{v['id']} ({v['impact']}): {[n['target'] for n in v['nodes']]}"
-            for v in results.response["violations"]
-        ]
-        assert violations == []
+        assert axe_violations(current.page) == []
 
 
 # --- the page works ------------------------------------------------------------------------------
@@ -311,8 +165,7 @@ def test_when_the_data_cannot_be_loaded_the_page_says_so_and_stays_accessible(
         message = current.page.locator("#data-status").inner_text()
         assert message.startswith("Não foi possível carregar os jogos")
         assert any("matches.json" in line for line in current.console)
-        results = Axe().run(current.page, options={"runOnly": {"type": "tag", "values": WCAG_TAGS}})
-        assert results.response["violations"] == []
+        assert axe_violations(current.page) == []
 
 
 def test_a_data_file_in_a_newer_format_is_refused_the_same_way(
