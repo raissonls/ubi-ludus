@@ -390,6 +390,9 @@ TEXT_PAIRS = [
     ("--color-unknown-fg", "--color-unknown-bg"),
     ("--color-live-fg", "--color-live-bg"),
     ("--color-warning-fg", "--color-warning-bg"),
+    # The "confirmed" line of a card is written straight on the card.
+    ("--color-confirmed-fg", "--color-surface"),
+    ("--color-confirmed-fg", "--color-bg"),
 ]
 # Not text, but meant to be seen: the edge of a control and the focus ring need 3:1 (WCAG 1.4.11).
 GRAPHIC_PAIRS = [

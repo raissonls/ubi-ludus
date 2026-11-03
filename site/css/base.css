@@ -284,6 +284,7 @@ input[type="text"] {
   margin: 0;
   padding: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* a long name wraps instead of widening the column */
   gap: var(--space-2);
 }
 
@@ -322,6 +323,7 @@ input[type="text"] {
 .match-card__teams {
   margin: 0;
   font-size: var(--font-size-lg);
+  overflow-wrap: anywhere;
 }
 
 .match-card__competition {
