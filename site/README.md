@@ -1,4 +1,4 @@
-﻿# The site
+# The site
 
 Static HTML, CSS and JavaScript (ES modules). **No framework, no build step, no dependencies** ([ADR-001](../docs/adr/ADR-001-architecture.md)). What is in `site/` is what gets published.
 
@@ -8,9 +8,12 @@ css/tokens.css    design tokens: colour (light and dark), type, space, shape, mo
 css/base.css      reset, typography and the page frame; reads only tokens
 js/main.js        entry point
 js/i18n.js        loads i18n/pt-BR.json, translates, fills the page
+js/data.js        loads the five published files from data/ and indexes them by id
+js/preferences.js  the visitor's teams and services, in localStorage and nowhere else
 js/format.js      dates and times in Brazil's time zone (Intl)
 i18n/pt-BR.json   every string the visitor reads
 assets/           the icon
+data/             the published JSON files (matches, teams, competitions, broadcasters, status); written by the pipeline, git-ignored
 test/             unit tests for js/ (Node's built-in runner)
 ```
 
@@ -26,10 +29,13 @@ test/             unit tests for js/ (Node's built-in runner)
 | **Contrast**: every text colour pair at least 4.5:1, borders and focus rings at least 3:1, in both themes. | `test_site.py` (computed from the tokens) |
 | **Accessibility**: axe with the WCAG 2.2 AA rules, light and dark, at 1280, 375 and 320 px; focus rings; the skip link. | `tests/browser` |
 | **Size**: JavaScript at most 100 KB gzipped (PRD), CSS 20 KB, the whole site 150 KB. | `test_site.py` |
-| **Privacy**: no cookies and no storage until the preferences module (M3-02); the footer notice and `PRIVACY.md` exist. | `test_site.py` |
+| **Privacy**: no cookies; only `js/preferences.js` touches `localStorage`; the only requests are plain GETs of the site's own files, with no query string, body or cookie, and **no request carries the visitor's choices** (a browser test saves choices, loads the page, and reads every request); the footer notice and `PRIVACY.md` exist. | `test_site.py`, `tests/browser` |
+| **Storage that fails**: blocked, missing or full, the page works and the choices live in memory for the visit. | `site/test/`, `tests/browser` |
+| **Data that fails**: a file that is missing, not JSON, or in a newer format shows a message, not a blank page, and is still accessible. | `site/test/`, `tests/browser` |
 
 ## Working on it
 
+- **Data:** `python -m ubi_ludus.pipeline.publish --run` runs the pipeline against the live providers (keys in `.env`, see `.env.example`) and writes `site/data/`. `--cache-dir .cache` reuses answers for an hour, so repeated runs spend no quota. Without `--run` it only re-writes the files from the last warehouse.
 - **Preview:** `python -m http.server -d site 8000`, then http://localhost:8000. (Opening `index.html` from disk does not work: scripts and the strings file need a server.)
 - **A new string:** add it to `i18n/pt-BR.json`, use it with `data-i18n="group.key"` in HTML or `t('group.key')` in code. Plurals are objects of forms (`one`, `other`) read with `plural()`. A string nothing uses fails a test, so add it with the thing that shows it.
 - **A new colour or size:** add a token to `css/tokens.css` (with a dark value), never a raw value in another file. A colour used for text goes in `TEXT_PAIRS` in `tests/unit/test_site.py` so its contrast is checked.

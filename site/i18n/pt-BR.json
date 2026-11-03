@@ -8,10 +8,17 @@
   },
   "home": {
     "title": "Onde assistir futebol no Brasil",
-    "intro": "Os jogos de hoje e dos próximos dias, com a emissora de cada um e o quanto temos certeza dela. Em breve aqui."
+    "intro": "Os jogos de hoje e dos próximos dias, com a emissora de cada um e o quanto temos certeza dela. Em breve aqui.",
+    "matchesLoaded": {
+      "one": "{count} jogo carregado.",
+      "other": "{count} jogos carregados."
+    },
+    "loadFailed": "Não foi possível carregar os jogos agora. Tente de novo em alguns minutos."
   },
   "footer": {
     "privacy": "Sem cadastro, sem cookies e sem rastreadores. O que você escolher fica só neste navegador.",
+    "reset": "Apagar meus dados",
+    "resetDone": "Pronto: suas escolhas foram apagadas deste navegador.",
     "privacyLink": "Aviso de privacidade",
     "sourceCode": "Código-fonte",
     "dataSources": "Fontes dos dados",

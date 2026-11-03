@@ -36,6 +36,8 @@
   <main id="main" class="container" tabindex="-1">
     <h1 data-i18n="home.title"></h1>
     <p data-i18n="home.intro"></p>
+    <!-- Filled in by the script: how many matches were loaded, or that they could not be. -->
+    <p id="data-status" role="status"></p>
     <!-- Shown only when scripts are off; the one string that lives outside the strings file. -->
     <noscript><p>Este site precisa de JavaScript para mostrar os jogos.</p></noscript>
   </main>
@@ -43,6 +45,8 @@
   <footer class="site-footer">
     <div class="container">
       <p data-i18n="footer.privacy"></p>
+      <p><button type="button" id="reset-data" data-i18n="footer.reset"></button></p>
+      <p id="reset-result" role="status"></p>
       <ul>
         <li><a href="https://github.com/raissonls/ubi-ludus/blob/main/PRIVACY.md" rel="noopener noreferrer" data-i18n="footer.privacyLink"></a></li>
         <li><a href="https://github.com/raissonls/ubi-ludus" rel="noopener noreferrer" data-i18n="footer.sourceCode"></a></li>
