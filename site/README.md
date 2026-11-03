@@ -14,7 +14,9 @@ js/search.js       finds a team as you type (no accents, aliases, ranked); pure
 js/teams-picker.js  the "Which teams do you follow?" combobox and the chosen teams
 js/services-picker.js  the "Which services do you have?" checkboxes
 js/matches-preview.js  which matches of the followed teams are still to come; pure
-js/matches-view.js  draws them as a plain list (the match card replaces it in M3-05)
+js/match-model.js  turns a match and the data into what a card shows (state, confidence, badges); pure
+js/match-card.js   draws one match card from that model
+js/matches-view.js  draws the upcoming matches of the followed teams as cards
 js/dom.js          safe element building and team colours as CSS variables
 js/format.js      dates and times in Brazil's time zone (Intl)
 i18n/pt-BR.json   every string the visitor reads
@@ -65,3 +67,11 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - One native checkbox for each service in `broadcasters.json` (pay TV, Premiere, Globoplay, Disney+, ...), each with what it includes ("Inclui: SporTV e ESPN."), tied to the checkbox with `aria-describedby`. Native checkboxes with real labels are the most accessible control there is.
 - **Nothing is ticked by default.** Free TV and YouTube need no subscription, so no choice at all means "only free TV and YouTube", and the page says so in a live region that also reports how many are ticked.
 - Choices are saved with the teams in one record, each change at once, and a service the data no longer has is ignored. How a match is marked "watchable with my services" is M3-07.
+
+## The match card
+- One card per match: when (Brazil time), the teams as the heading, competition and round, and where to watch. The left edge takes the colour of a followed team; no crests or logos, only colours.
+- State is always a word, never only a colour: *Ao vivo* (with a dot), *Remarcado*, *Adiado*, *Cancelado*, *Encerrado*. Only a match that can still be watched (scheduled, rescheduled, live) lists broadcasters.
+- How sure we are (FR-12): **confirmed** broadcasters carry a tick and a hidden "(confirmado)" for screen readers; **rule** broadcasters (from the rights table) have no tick and the card says to check before the match; **unknown** names no broadcaster at all and says "Transmissão ainda não confirmada" (FR-13). A card with both confirmed and rule broadcasters counts as rule.
+- More than four broadcasters wait behind a "+N" button (`aria-expanded`, works with Enter and Space).
+- Names come from the data and are always set as text, never as markup.
+- Tests: `tests/fixtures/site/gallery/cards.html` draws all 14 cases (every state, confidence, a long list, a hostile name) with the site's own modules. `tests/browser/test_match_card.py` checks them, runs axe in both themes and three sizes, and compares colours, borders and words with `tests/browser/snapshots/match_card_styles.json` (computed styles rather than pixels, so Windows and Linux agree). After a deliberate change of look, record again with `UBI_LUDUS_UPDATE_SNAPSHOTS=1` and review the diff.

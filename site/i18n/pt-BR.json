@@ -51,8 +51,47 @@
     "title": "Próximos jogos dos seus times",
     "pickPrompt": "Escolha ao menos um time para ver os jogos dele.",
     "empty": "Nenhum jogo dos seus times nos próximos dias.",
-    "versus": "{home} x {away}",
     "tbd": "A definir"
+  },
+  "card": {
+    "versus": "x",
+    "round": "Rodada {number}",
+    "stages": {
+      "final": "Final",
+      "semi-finals": "Semifinal",
+      "quarter-finals": "Quartas de final",
+      "last-16": "Oitavas de final",
+      "last-32": "16 avos de final",
+      "last-64": "32 avos de final",
+      "play-offs": "Play-offs",
+      "group-stage": "Fase de grupos",
+      "league-stage": "Fase de liga",
+      "third-place": "Disputa do terceiro lugar"
+    },
+    "states": {
+      "live": "Ao vivo",
+      "finished": "Encerrado",
+      "postponed": "Adiado",
+      "cancelled": "Cancelado",
+      "rescheduled": "Remarcado"
+    },
+    "confidence": {
+      "confirmed": "Confirmado",
+      "rule": "Pela tabela de direitos: confira antes do jogo.",
+      "unknown": "Transmissão ainda não confirmada"
+    },
+    "badge": {
+      "confirmed": "confirmado",
+      "rule": "pela tabela de direitos"
+    },
+    "watch": "Onde assistir",
+    "more": "+{count}",
+    "less": "menos",
+    "moreLabel": {
+      "one": "Mostrar mais {count} emissora",
+      "other": "Mostrar mais {count} emissoras"
+    },
+    "lessLabel": "Mostrar menos emissoras"
   },
   "countries": {
     "GB-ENG": "Inglaterra"

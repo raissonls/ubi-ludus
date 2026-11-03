@@ -25,7 +25,7 @@ def options(page: Page) -> list[str]:
 
 
 def listed_matches(page: Page) -> list[str]:
-    return page.locator("#matches-list .match__teams").all_inner_texts()
+    return page.locator("#matches-list .match-card__teams").all_inner_texts()
 
 
 # --- the goal: a new visitor sees their matches in three interactions or fewer ------------------
@@ -332,7 +332,7 @@ def test_team_colours_are_used_as_accents_and_nothing_else_is_drawn(
         assert "rgb(0, 100, 55)" in background  # Palmeiras green, #006437
         assert "rgb(255, 255, 255)" in background
         assert swatch.evaluate("e => e.getAttribute('aria-hidden')") == "true"  # the name is there
-        bar = page.locator("#matches-list .match").evaluate(
+        bar = page.locator("#matches-list .match-card").evaluate(
             "e => getComputedStyle(e).borderInlineStartColor"
         )
         assert bar == "rgb(0, 100, 55)"

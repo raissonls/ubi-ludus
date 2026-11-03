@@ -11,6 +11,7 @@ SITE = Path(__file__).resolve().parents[2] / "site"
 # The published files the site loads from /data/. The pipeline writes the real ones; the tests
 # serve small hand-written ones (tests/fixtures/site/data, valid against the schemas).
 DATA = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "data"
+GALLERY = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "gallery"
 NOW = "2026-11-02T12:00:00Z"  # the matches of the fixtures are in the days after this
 STORAGE_KEY = "ubi-ludus:preferences"
 SECRET_TEAM = "time-secreto-xyz"  # noqa: S105 - a marker that must never leave the browser
@@ -38,9 +39,10 @@ def answer_with(status: int) -> Callable[[Route], None]:
 class Visit:
     """One page load, with everything the browser reported while it happened."""
 
-    def __init__(self, page: Page, origin: str) -> None:
+    def __init__(self, page: Page, origin: str, path: str = "/index.html") -> None:
         self.page = page
         self.origin = origin
+        self.path = path
         self.console: list[str] = []
         self.requests: list[str] = []
         self.details: list[Request] = []
@@ -55,7 +57,7 @@ class Visit:
         self.details.append(request)
 
     def open(self) -> None:
-        self.page.goto(self.origin + "/index.html")
+        self.page.goto(self.origin + self.path)
         self.page.wait_for_selector("html[data-ready='true']")
 
 
@@ -69,6 +71,7 @@ def visit(
     storage_blocked: bool = False,
     broken: dict[str, int] | None = None,
     newer_format: str | None = None,
+    path: str = "/index.html",
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
@@ -100,7 +103,7 @@ def visit(
                     status=200, content_type="application/json", body=json.dumps(document)
                 ),
             )
-        current = Visit(page, origin)
+        current = Visit(page, origin, path)
         current.open()
         yield current
     finally:
