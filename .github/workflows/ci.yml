@@ -19,7 +19,7 @@ jobs:
   checks:
     name: Lint, types and tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: read
     steps:
@@ -46,9 +46,10 @@ jobs:
         run: mypy
 
       # Includes the dbt tests (marker "dbt"): they build the dbt project on fixtures, so a
-      # failing dbt model or data test fails this step.
+      # failing dbt model or data test fails this step. They run in parallel, one file per worker,
+      # because several files share one warehouse build between their tests.
       - name: Tests (unit and dbt build on fixtures)
-        run: pytest
+        run: pytest -n auto --dist loadfile
 
   secret-scan:
     name: Secret scan

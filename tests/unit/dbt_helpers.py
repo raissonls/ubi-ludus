@@ -5,11 +5,12 @@ from collections.abc import Callable
 from dataclasses import replace
 from datetime import UTC, date, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 from ubi_ludus.pipeline import config
 from ubi_ludus.pipeline.dbt_runner import run_dbt
-from ubi_ludus.pipeline.providers.base import RawResponse
+from ubi_ludus.pipeline.providers.base import FetchRequest, ProviderAdapter, RawResponse
+from ubi_ludus.pipeline.providers.registry import AdapterRegistry
 from ubi_ludus.pipeline.rights import Override, RightsData, RightsRule, load_rights
 from ubi_ludus.pipeline.warehouse import (
     connect,
@@ -153,3 +154,29 @@ def query(database: Path, sql: str) -> list[tuple[Any, ...]]:
         return con.execute(sql).fetchall()
     finally:
         con.close()
+
+
+class FixtureAdapter(ProviderAdapter):
+    """A football-data.org stand-in that answers every request with the dbt fixture matches."""
+
+    name: ClassVar[str] = "football-data"
+
+    def fetch(self, request: FetchRequest) -> list[RawResponse]:
+        return [response(cid, payload) for cid, payload in fixture_payloads().items()]
+
+
+class SilentAdapter(ProviderAdapter):
+    """A provider that has nothing to say, so only the other one feeds the run."""
+
+    name: ClassVar[str] = "api-football"
+
+    def fetch(self, request: FetchRequest) -> list[RawResponse]:
+        return []
+
+
+def fixture_registry() -> AdapterRegistry:
+    """Both providers of the real config, answering from the fixtures: no network, no keys."""
+    registry = AdapterRegistry()
+    registry.register(FixtureAdapter.name, FixtureAdapter)
+    registry.register(SilentAdapter.name, SilentAdapter)
+    return registry

@@ -1,0 +1,80 @@
+name: Weekly review report
+
+# Every Thursday (PRD FR-14): runs the pipeline, then opens a GitHub issue listing the upcoming
+# matches of the owner's teams whose broadcast is unknown and the rights rules that are about to
+# end. The issue is how the owner finds out; the same text is on the run's summary page.
+#
+# The daily pipeline and the site (M4-03) are separate. This workflow only reads provider data to
+# build a warehouse and reports on it; it publishes nothing to the site.
+on:
+  schedule:
+    - cron: "0 12 * * 4" # Thursday 12:00 UTC, 09:00 in Brazil
+  workflow_dispatch:
+
+# Nothing by default. The job asks only for what it needs.
+permissions: {}
+
+concurrency:
+  group: review-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    name: Build and publish the review
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write # to open the report and close last week's
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Without the curated teams no match can be mapped (issue #77), so there is nothing to
+      # report on. Say so and stop quietly instead of failing every Thursday.
+      - name: Check that the pipeline has what it needs
+        id: ready
+        run: |
+          if [ -f data/teams.yml ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Review report skipped::data/teams.yml does not exist yet (issue #77)."
+          fi
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        if: steps.ready.outputs.ready == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        if: steps.ready.outputs.ready == 'true'
+        run: python -m pip install -e .
+
+      # The provider keys are only given to this step.
+      - name: Build the report
+        if: steps.ready.outputs.ready == 'true'
+        env:
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        run: python -m ubi_ludus.pipeline.review --run --out review-report.md
+
+      - name: Show it on the run summary
+        if: steps.ready.outputs.ready == 'true'
+        run: cat review-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open the issue and close last week's
+        if: steps.ready.outputs.ready == 'true'
+        run: |
+          title="$(head -n 1 review-report.md | sed 's/^# //')"
+          gh label create review --description "Weekly review report" --color 1d76db || true
+          for number in $(gh issue list --label review --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --comment "Superseded by this week's report."
+          done
+          gh issue create --title "$title" --label review --body-file review-report.md
