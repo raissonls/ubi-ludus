@@ -90,6 +90,9 @@ pre-commit install
 | Fast tests while you work (about 8 seconds) | `pytest -m "not dbt" --no-cov` |
 | All tests with coverage, in parallel (about 2 minutes; what CI runs) | `pytest -n auto --dist loadfile` |
 | All tests, one process (about 3 to 4 minutes) | `pytest` |
+| Preview the site | `python -m http.server -d site 8000`, then open http://localhost:8000 |
+| The site's JavaScript tests (Node, no install) | `cd site && npm test` |
+| The site in a real browser (axe, security policy) | `pytest -m browser` (uses Chromium, Chrome or Edge) |
 | Everything pre-commit runs, on all files | `pre-commit run --all-files` |
 
 The tests marked `dbt` build the real dbt project on fixtures. Each build takes 10 to 15 seconds (dbt starting up, not the data), so tests share builds: a module-level fixture builds once and several tests read from it. Add a scenario to an existing fixture before adding a new build, and put a new check that does not need dbt in a plain unit test.

@@ -21,9 +21,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "axe-playwright-python>=0.1.7", # accessibility checks of the site (axe-core is inside the package)
     "mypy>=1.10",
-    "pre-commit>=3.7",
-    "pytest>=8.2",
+    "playwright>=1.49", # the site in a real browser
+    "pre-commit>=3.7",    "pytest>=8.2",
     "pytest-cov>=5.0",
     "pytest-xdist>=3.6", # runs the dbt tests in parallel: each builds its own warehouse
     "ruff>=0.5",
@@ -63,7 +64,10 @@ files = ["src", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=ubi_ludus --cov-report=term-missing"
-markers = ["dbt: builds the dbt project on fixtures (a few seconds); run alone with -m dbt"]
+markers = [
+    "dbt: builds the dbt project on fixtures (a few seconds); run alone with -m dbt",
+    "browser: opens the site in a real browser (axe, CSP); skipped when there is none",
+]
 
 [tool.coverage.report]
 fail_under = 80

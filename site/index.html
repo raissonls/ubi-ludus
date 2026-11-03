@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <!--
+    GitHub Pages cannot send headers, so the Content Security Policy is a meta tag. Everything
+    comes from this origin: no inline scripts or styles, no third-party hosts, no framework.
+    (frame-ancestors, report-uri and sandbox only work as headers, so they are not here.)
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f4">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0e1013">
+  <!-- The title and description stay here, not in the strings file: search engines and browsers
+       read them without running any script. -->
+  <title>Ubi Ludus: onde assistir futebol no Brasil</title>
+  <meta name="description" content="Os jogos de hoje e dos próximos dias no Brasil, com a emissora de cada um. Sem cadastro e sem cookies.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip.toContent"></a>
+
+  <header class="site-header">
+    <div class="container">
+      <p class="brand">
+        <span class="brand__name" data-i18n="app.name"></span>
+        <span class="brand__tagline" data-i18n="app.tagline"></span>
+      </p>
+    </div>
+  </header>
+
+  <main id="main" class="container" tabindex="-1">
+    <h1 data-i18n="home.title"></h1>
+    <p data-i18n="home.intro"></p>
+    <!-- Shown only when scripts are off; the one string that lives outside the strings file. -->
+    <noscript><p>Este site precisa de JavaScript para mostrar os jogos.</p></noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p data-i18n="footer.privacy"></p>
+      <ul>
+        <li><a href="https://github.com/raissonls/ubi-ludus/blob/main/PRIVACY.md" rel="noopener noreferrer" data-i18n="footer.privacyLink"></a></li>
+        <li><a href="https://github.com/raissonls/ubi-ludus" rel="noopener noreferrer" data-i18n="footer.sourceCode"></a></li>
+      </ul>
+      <p data-i18n="footer.dataSources"></p>
+      <ul>
+        <li><a href="https://www.football-data.org/" rel="noopener noreferrer" data-i18n="footer.attribution.footballData"></a></li>
+        <li><a href="https://www.api-football.com/" rel="noopener noreferrer" data-i18n="footer.attribution.apiFootball"></a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

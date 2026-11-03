@@ -36,6 +36,10 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -e ".[dev]"
 
+      # The site's accessibility, policy and request checks run in a real browser.
+      - name: Install the browser for the site tests
+        run: python -m playwright install --with-deps chromium
+
       - name: Lint
         run: ruff check .
 
@@ -45,10 +49,17 @@ jobs:
       - name: Type-check
         run: mypy
 
+      # The site's own unit tests. Plain Node, nothing to install. The shell expands the pattern,
+      # which works on every Node version.
+      - name: Site unit tests (Node)
+        run: node --test site/test/*.test.js
+
       # Includes the dbt tests (marker "dbt"): they build the dbt project on fixtures, so a
       # failing dbt model or data test fails this step. They run in parallel, one file per worker,
       # because several files share one warehouse build between their tests.
       - name: Tests (unit and dbt build on fixtures)
+        env:
+          UBI_LUDUS_REQUIRE_BROWSER: "1" # a missing browser fails the run instead of skipping
         run: pytest -n auto --dist loadfile
 
   secret-scan:
