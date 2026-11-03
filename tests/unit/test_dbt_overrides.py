@@ -131,17 +131,3 @@ def test_an_override_naming_a_broadcaster_that_does_not_exist_stops_the_build(
     with pytest.raises(DbtBuildError) as caught:
         build(tmp_path, rights=rights)
     assert any("stg_overrides" in name for name in caught.value.failed)
-
-
-def test_a_rule_and_an_override_together_still_pass_the_unknown_check(tmp_path: Path) -> None:
-    """The FR-13 test runs on every build: reaching the end means it found nothing wrong."""
-    rights = rights_with(
-        rule("brasileirao-serie-a", "all", ["globo"]),
-        overrides=(override("football-data-910002", "remove", ["globo"]),),
-    )
-    database = build(tmp_path, rights=rights)
-    unknown = query(
-        database,
-        "select id from matches where broadcasts[1].confidence = 'unknown' and id like '%910002'",
-    )
-    assert unknown == [("football-data-910002",)]

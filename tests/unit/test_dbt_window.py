@@ -3,6 +3,10 @@
 Today is 2 Nov 2026 in Brazil (UTC-3) and the run happens at 09:00 UTC. A competition with a
 14-day horizon publishes local dates from 1 Nov through 16 Nov; one with a 1-day horizon
 publishes 1 Nov through 3 Nov.
+
+Two dbt builds serve all the tests here, because a build takes seconds: one holds a match for
+every edge of the window, the other one for every case of the reschedule flag. Every match has
+its own id, so the scenarios do not disturb each other.
 """
 
 import json
@@ -17,6 +21,9 @@ from ubi_ludus.pipeline.export import export_matches
 from ubi_ludus.pipeline.validate import validate_file
 
 pytestmark = pytest.mark.dbt
+
+SERIE_A = "brasileirao-serie-a"
+COPA = "copa-do-brasil"  # the stand-in for a competition with a 1-day horizon
 
 
 def fixture_match(match_id: int, kickoff: str, status: str = "TIMED") -> dict[str, Any]:
@@ -33,43 +40,62 @@ def fixture_match(match_id: int, kickoff: str, status: str = "TIMED") -> dict[st
     }
 
 
-def only(competition_id: str, matches: list[dict[str, Any]]) -> Callable[[Payloads], None]:
+def only(competitions: dict[str, list[dict[str, Any]]]) -> Callable[[Payloads], None]:
     """A ``change`` for ``build`` that replaces every fixture response with these matches."""
 
     def replace(payloads: Payloads) -> None:
         payloads.clear()
-        payloads[competition_id] = {"matches": matches}
+        for competition_id, matches in competitions.items():
+            payloads[competition_id] = {"matches": matches}
 
     return replace
 
 
-def published_ids(database: Path) -> set[str]:
-    return {row[0] for row in query(database, "select id from matches")}
+def published_ids(database: Path) -> set[int]:
+    return {
+        int(row[0].removeprefix("football-data-"))
+        for row in query(database, "select id from matches")
+    }
 
 
-def test_a_14_day_competition_publishes_yesterday_through_14_days_ahead(tmp_path: Path) -> None:
-    matches = [
-        fixture_match(1, "2026-11-01T02:59:00Z"),  # 31 Oct 23:59 locally: before yesterday
-        fixture_match(2, "2026-11-01T03:00:00Z"),  # 1 Nov 00:00: yesterday starts
-        fixture_match(3, "2026-11-02T15:00:00Z"),  # today
-        fixture_match(4, "2026-11-03T15:00:00Z"),  # tomorrow
-        fixture_match(5, "2026-11-17T02:59:00Z"),  # 16 Nov 23:59: day 14 ends
-        fixture_match(6, "2026-11-17T03:00:00Z"),  # 17 Nov 00:00: day 15
+# --- the window ---------------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def windows(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    serie_a = [
+        fixture_match(101, "2026-11-01T02:59:00Z"),  # 31 Oct 23:59 locally: before yesterday
+        fixture_match(102, "2026-11-01T03:00:00Z"),  # 1 Nov 00:00: yesterday starts
+        fixture_match(103, "2026-11-02T15:00:00Z"),  # today
+        fixture_match(104, "2026-11-03T15:00:00Z"),  # tomorrow
+        fixture_match(105, "2026-11-17T02:59:00Z"),  # 16 Nov 23:59: day 14 ends
+        fixture_match(106, "2026-11-17T03:00:00Z"),  # 17 Nov 00:00: day 15
     ]
-    database = build(tmp_path, only("brasileirao-serie-a", matches))
-    assert published_ids(database) == {f"football-data-{n}" for n in (2, 3, 4, 5)}
-
-
-def test_a_short_horizon_competition_publishes_only_until_tomorrow(tmp_path: Path) -> None:
-    matches = [
-        fixture_match(1, "2026-11-01T02:59:00Z"),  # before yesterday
-        fixture_match(2, "2026-11-01T03:00:00Z"),  # yesterday
-        fixture_match(3, "2026-11-04T02:59:00Z"),  # 3 Nov 23:59: tomorrow ends
-        fixture_match(4, "2026-11-04T03:00:00Z"),  # 4 Nov 00:00: the day after tomorrow
-        fixture_match(5, "2026-11-10T15:00:00Z"),  # well beyond
+    cup = [
+        fixture_match(201, "2026-11-01T02:59:00Z"),  # before yesterday
+        fixture_match(202, "2026-11-01T03:00:00Z"),  # yesterday
+        fixture_match(203, "2026-11-04T02:59:00Z"),  # 3 Nov 23:59: tomorrow ends
+        fixture_match(204, "2026-11-04T03:00:00Z"),  # 4 Nov 00:00: the day after tomorrow
+        fixture_match(205, "2026-11-10T15:00:00Z"),  # well beyond
     ]
-    database = build(tmp_path, only("copa-do-brasil", matches))
-    assert published_ids(database) == {f"football-data-{n}" for n in (2, 3)}
+    change = only({SERIE_A: serie_a, COPA: cup})
+    return build(tmp_path_factory.mktemp("windows"), change)
+
+
+def test_a_14_day_competition_publishes_yesterday_through_14_days_ahead(windows: Path) -> None:
+    assert {i for i in published_ids(windows) if i < 200} == {102, 103, 104, 105}
+
+
+def test_a_short_horizon_competition_publishes_only_until_tomorrow(windows: Path) -> None:
+    assert {i for i in published_ids(windows) if i > 200} == {202, 203}
+
+
+def test_without_a_previous_file_the_run_goes_on_with_no_flags(windows: Path) -> None:
+    rows = query(windows, "select status, rescheduled_at from matches")
+    assert set(rows) == {("scheduled", None)}
+
+
+# --- the reschedule flag ------------------------------------------------------------------------
 
 
 def published(
@@ -78,7 +104,7 @@ def published(
     """One match as the previous run published it."""
     entry: dict[str, Any] = {
         "id": f"football-data-{match_id}",
-        "competition_id": "brasileirao-serie-a",
+        "competition_id": SERIE_A,
         "season": "2026",
         "round": "1",
         "kickoff_utc": kickoff,
@@ -92,102 +118,86 @@ def published(
     return entry
 
 
-def previous_file(*matches: dict[str, Any]) -> dict[str, Any]:
-    return {
+OLD = "2026-11-03T22:30:00Z"
+NEW = "2026-11-04T22:30:00Z"
+
+
+@pytest.fixture(scope="module")
+def flags(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """The run is at 2 Nov 09:00Z. Each match below is one case, named in the tests."""
+    current = [
+        fixture_match(1, NEW),  # moved a day
+        fixture_match(2, NEW),  # unchanged
+        fixture_match(3, NEW),  # flagged 47 h 59 min ago
+        fixture_match(4, NEW),  # flagged exactly 48 h ago
+        fixture_match(5, NEW),  # flagged an hour ago
+        fixture_match(6, "2026-11-05T22:30:00Z"),  # was flagged, moved again
+        fixture_match(7, NEW, "POSTPONED"),  # kickoff differs, but the provider says postponed
+        fixture_match(8, NEW, "CANCELLED"),
+        fixture_match(9, NEW, "POSTPONED"),  # same kickoff as before
+        fixture_match(10, NEW),  # not in the previous file at all
+    ]
+    previous = {
         "schema_version": "1.0",
         "generated_at": "2026-11-01T09:00:00Z",
-        "matches": list(matches),
+        "matches": [
+            published(1, OLD),
+            published(2, NEW),
+            published(3, NEW, "rescheduled", "2026-10-31T09:01:00Z"),
+            published(4, NEW, "rescheduled", "2026-10-31T09:00:00Z"),
+            published(5, NEW, "rescheduled", "2026-11-02T08:00:00Z"),
+            published(6, OLD, "rescheduled", "2026-10-31T10:00:00Z"),
+            published(7, OLD),
+            published(8, OLD),
+            published(9, NEW),
+            published(99, NEW),  # a match that is no longer fetched: ignored
+        ],
     }
+    return build(tmp_path_factory.mktemp("flags"), only({SERIE_A: current}), previous)
 
 
 def statuses(database: Path) -> dict[str, tuple[str, str | None]]:
     rows = query(database, "select id, status, rescheduled_at from matches")
-    return {row[0]: (row[1], row[2]) for row in rows}
+    return {row[0].removeprefix("football-data-"): (row[1], row[2]) for row in rows}
 
 
 def test_a_changed_kickoff_is_flagged_rescheduled_with_the_time_it_was_noticed(
-    tmp_path: Path,
+    flags: Path,
 ) -> None:
-    current = [fixture_match(1, "2026-11-04T22:30:00Z"), fixture_match(2, "2026-11-04T22:30:00Z")]
-    previous = previous_file(
-        published(1, "2026-11-03T22:30:00Z"),  # moved a day
-        published(2, "2026-11-04T22:30:00Z"),  # same
-    )
-    database = build(tmp_path, only("brasileirao-serie-a", current), previous)
-
-    found = statuses(database)
-    assert found["football-data-1"] == ("rescheduled", "2026-11-02T09:00:00Z")
-    assert found["football-data-2"] == ("scheduled", None)
+    found = statuses(flags)
+    assert found["1"] == ("rescheduled", "2026-11-02T09:00:00Z")
+    assert found["2"] == ("scheduled", None)
 
 
-def test_the_flag_is_carried_from_run_to_run_for_48_hours_then_ends(tmp_path: Path) -> None:
-    kickoff = "2026-11-04T22:30:00Z"
-    current = [fixture_match(n, kickoff) for n in (1, 2, 3)]
-    previous = previous_file(
-        # The run is at 2 Nov 09:00Z. Noticed 47 h 59 min ago: still flagged. Exactly 48 h: over.
-        published(1, kickoff, "rescheduled", rescheduled_at="2026-10-31T09:01:00Z"),
-        published(2, kickoff, "rescheduled", rescheduled_at="2026-10-31T09:00:00Z"),
-        # Noticed an hour ago.
-        published(3, kickoff, "rescheduled", rescheduled_at="2026-11-02T08:00:00Z"),
-    )
-    database = build(tmp_path, only("brasileirao-serie-a", current), previous)
-
-    found = statuses(database)
-    assert found["football-data-1"] == ("rescheduled", "2026-10-31T09:01:00Z")
-    assert found["football-data-2"] == ("scheduled", None)
-    assert found["football-data-3"] == ("rescheduled", "2026-11-02T08:00:00Z")
+def test_the_flag_is_carried_from_run_to_run_for_48_hours_then_ends(flags: Path) -> None:
+    found = statuses(flags)
+    assert found["3"] == ("rescheduled", "2026-10-31T09:01:00Z")  # 47 h 59 min: still flagged
+    assert found["4"] == ("scheduled", None)  # exactly 48 h: over
+    assert found["5"] == ("rescheduled", "2026-11-02T08:00:00Z")
 
 
-def test_moving_again_restarts_the_48_hours(tmp_path: Path) -> None:
-    previous = previous_file(
-        published(1, "2026-11-03T22:30:00Z", "rescheduled", rescheduled_at="2026-10-31T10:00:00Z")
-    )
-    current = [fixture_match(1, "2026-11-05T22:30:00Z")]
-    database = build(tmp_path, only("brasileirao-serie-a", current), previous)
-    assert statuses(database)["football-data-1"] == ("rescheduled", "2026-11-02T09:00:00Z")
+def test_moving_again_restarts_the_48_hours(flags: Path) -> None:
+    assert statuses(flags)["6"] == ("rescheduled", "2026-11-02T09:00:00Z")
 
 
-def test_postponed_and_cancelled_are_carried_through_and_not_overridden(tmp_path: Path) -> None:
-    current = [
-        fixture_match(1, "2026-11-04T22:30:00Z", "POSTPONED"),
-        fixture_match(2, "2026-11-04T22:30:00Z", "CANCELLED"),
-        fixture_match(3, "2026-11-04T22:30:00Z", "POSTPONED"),
-    ]
-    previous = previous_file(
-        published(1, "2026-11-03T22:30:00Z"),  # kickoff differs, but the provider says postponed
-        published(2, "2026-11-03T22:30:00Z"),
-        published(3, "2026-11-04T22:30:00Z"),
-    )
-    database = build(tmp_path, only("brasileirao-serie-a", current), previous)
-
-    found = statuses(database)
-    assert found["football-data-1"] == ("postponed", None)
-    assert found["football-data-2"] == ("cancelled", None)
-    assert found["football-data-3"] == ("postponed", None)
+def test_postponed_and_cancelled_are_carried_through_and_not_overridden(flags: Path) -> None:
+    found = statuses(flags)
+    assert found["7"] == ("postponed", None)
+    assert found["8"] == ("cancelled", None)
+    assert found["9"] == ("postponed", None)
 
 
-def test_a_match_missing_from_the_previous_file_is_never_flagged(tmp_path: Path) -> None:
-    previous = previous_file(published(99, "2026-11-04T22:30:00Z"))
-    current = [fixture_match(1, "2026-11-04T22:30:00Z")]
-    database = build(tmp_path, only("brasileirao-serie-a", current), previous)
-    assert statuses(database)["football-data-1"] == ("scheduled", None)
+def test_a_match_missing_from_the_previous_file_is_never_flagged(flags: Path) -> None:
+    assert statuses(flags)["10"] == ("scheduled", None)
+    assert "99" not in statuses(flags)
 
 
-def test_without_a_previous_file_the_run_goes_on_with_no_flags(tmp_path: Path) -> None:
-    current = [fixture_match(1, "2026-11-04T22:30:00Z")]
-    database = build(tmp_path, only("brasileirao-serie-a", current))
-    assert statuses(database) == {"football-data-1": ("scheduled", None)}
-
-
-def test_matches_json_shows_rescheduled_at_only_on_rescheduled_matches(tmp_path: Path) -> None:
-    current = [fixture_match(1, "2026-11-04T22:30:00Z"), fixture_match(2, "2026-11-04T22:30:00Z")]
-    previous = previous_file(
-        published(1, "2026-11-03T22:30:00Z"), published(2, "2026-11-04T22:30:00Z")
-    )
-    database = build(tmp_path, only("brasileirao-serie-a", current), previous)
+def test_matches_json_shows_rescheduled_at_only_on_rescheduled_matches(
+    flags: Path, tmp_path: Path
+) -> None:
     out = tmp_path / "out" / "matches.json"
 
-    export_matches(database, out, NOW)
+    export_matches(flags, out, NOW)
 
     validate_file(out, "matches")
     by_id = {m["id"]: m for m in json.loads(out.read_text(encoding="utf-8"))["matches"]}
