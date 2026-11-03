@@ -1,0 +1,889 @@
+# Teams we show: the whitelist the pipeline maps provider names to (PRD FR-01, FR-06).
+# Checked against schemas/team.schema.json, and by dbt (unique ids and aliases).
+#
+# A match is published only when both its teams are here. A match with a team that is not
+# here is held back and reported by the unmapped_teams_are_reported test with the provider's
+# spelling: add that spelling to the right team's `aliases`.
+#
+# aliases    every other spelling a provider uses (football-data.org and API-Football). Case,
+#            accents and punctuation do not matter when matching, so `Sao Paulo` is `São Paulo`.
+# colors     text and colours only, no crests or logos (PRD R5). They are the club's main and
+#            second colour as I know them (white counts); not taken from any provider. Review
+#            before the site relies on them.
+# country    ISO 3166-1 alpha-2, or GB-ENG for England. Always in quotes: YAML reads a bare NO
+#            (Norway) as the boolean false.
+#
+# Written on 2026-11-02 from the teams that play in the next 14 days in the competitions of
+# config/competitions.yml, the 20 Série A clubs, and the six teams of config/owner.yml. Clubs
+# that appear later (a cup draw, a promotion) are added when the report shows them.
+teams:
+
+  # --- Brazil: the Série A clubs (football-data.org and API-Football spellings) ------------------
+  - id: flamengo
+    name: "Flamengo"
+    short_name: "Flamengo"
+    aliases: ["CR Flamengo"]
+    country: "BR"
+    colors: {primary: "#C52613", secondary: "#000000"}
+  - id: palmeiras
+    name: "Palmeiras"
+    short_name: "Palmeiras"
+    aliases: ["SE Palmeiras"]
+    country: "BR"
+    colors: {primary: "#006437", secondary: "#FFFFFF"}
+  - id: corinthians
+    name: "Corinthians"
+    short_name: "Corinthians"
+    aliases: ["SC Corinthians Paulista"]
+    country: "BR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: sao-paulo
+    name: "São Paulo"
+    short_name: "São Paulo"
+    aliases: ["São Paulo FC"]
+    country: "BR"
+    colors: {primary: "#FE0000", secondary: "#000000"}
+  - id: santos
+    name: "Santos"
+    short_name: "Santos"
+    aliases: ["Santos FC"]
+    country: "BR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: fluminense
+    name: "Fluminense"
+    short_name: "Fluminense"
+    aliases: ["Fluminense FC"]
+    country: "BR"
+    colors: {primary: "#9E1B32", secondary: "#00913C"}
+  - id: botafogo
+    name: "Botafogo"
+    short_name: "Botafogo"
+    aliases: ["Botafogo FR"]
+    country: "BR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: vasco
+    name: "Vasco da Gama"
+    short_name: "Vasco"
+    aliases: ["CR Vasco da Gama"]
+    country: "BR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: gremio
+    name: "Grêmio"
+    short_name: "Grêmio"
+    aliases: ["Grêmio FBPA"]
+    country: "BR"
+    colors: {primary: "#0D80BF", secondary: "#000000"}
+  - id: internacional
+    name: "Internacional"
+    short_name: "Internacional"
+    aliases: ["SC Internacional"]
+    country: "BR"
+    colors: {primary: "#E5050F", secondary: "#FFFFFF"}
+  - id: cruzeiro
+    name: "Cruzeiro"
+    short_name: "Cruzeiro"
+    aliases: ["Cruzeiro EC"]
+    country: "BR"
+    colors: {primary: "#0033A0", secondary: "#FFFFFF"}
+  - id: atletico-mineiro
+    name: "Atlético Mineiro"
+    short_name: "Atlético-MG"
+    aliases: ["CA Mineiro", "Mineiro"]
+    country: "BR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: athletico-paranaense
+    name: "Athletico Paranaense"
+    short_name: "Athletico-PR"
+    aliases: ["CA Paranaense", "Paranaense", "Atletico Paranaense"]
+    country: "BR"
+    colors: {primary: "#C8102E", secondary: "#000000"}
+  - id: bahia
+    name: "Bahia"
+    short_name: "Bahia"
+    aliases: ["EC Bahia"]
+    country: "BR"
+    colors: {primary: "#0057A8", secondary: "#E31B23"}
+  - id: vitoria
+    name: "Vitória"
+    short_name: "Vitória"
+    aliases: ["EC Vitória"]
+    country: "BR"
+    colors: {primary: "#E2001A", secondary: "#000000"}
+  - id: bragantino
+    name: "Red Bull Bragantino"
+    short_name: "Bragantino"
+    aliases: ["RB Bragantino"]
+    country: "BR"
+    colors: {primary: "#E30613", secondary: "#FFFFFF"}
+  - id: mirassol
+    name: "Mirassol"
+    short_name: "Mirassol"
+    aliases: ["Mirassol FC"]
+    country: "BR"
+    colors: {primary: "#FFD500", secondary: "#00843D"}
+  - id: coritiba
+    name: "Coritiba"
+    short_name: "Coritiba"
+    aliases: ["Coritiba FBC"]
+    country: "BR"
+    colors: {primary: "#00544E", secondary: "#FFFFFF"}
+  - id: chapecoense
+    name: "Chapecoense"
+    short_name: "Chapecoense"
+    aliases: ["Chapecoense AF", "Chapecoense-SC"]
+    country: "BR"
+    colors: {primary: "#00A04A", secondary: "#FFFFFF"}
+  - id: remo
+    name: "Remo"
+    short_name: "Remo"
+    aliases: ["Clube do Remo"]
+    country: "BR"
+    colors: {primary: "#002F6C", secondary: "#FFFFFF"}
+
+  # --- Brazil: other clubs that play the cups (spellings are API-Football's; football-data.org's are added when seen) ---
+  - id: fortaleza
+    name: "Fortaleza"
+    short_name: "Fortaleza"
+    aliases: ["Fortaleza EC"]
+    country: "BR"
+    colors: {primary: "#00539F", secondary: "#E4002B"}
+  - id: ceara
+    name: "Ceará"
+    short_name: "Ceará"
+    aliases: ["Ceará SC"]
+    country: "BR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: sport-recife
+    name: "Sport Recife"
+    short_name: "Sport"
+    aliases: ["Sport Club do Recife"]
+    country: "BR"
+    colors: {primary: "#E4002B", secondary: "#000000"}
+  - id: juventude
+    name: "Juventude"
+    short_name: "Juventude"
+    aliases: ["EC Juventude"]
+    country: "BR"
+    colors: {primary: "#00843D", secondary: "#FFFFFF"}
+  - id: goias
+    name: "Goiás"
+    short_name: "Goiás"
+    aliases: ["Goiás EC"]
+    country: "BR"
+    colors: {primary: "#00843D", secondary: "#FFFFFF"}
+  - id: america-mineiro
+    name: "América Mineiro"
+    short_name: "América-MG"
+    aliases: ["América FC"]
+    country: "BR"
+    colors: {primary: "#00843D", secondary: "#000000"}
+  - id: atletico-goianiense
+    name: "Atlético Goianiense"
+    short_name: "Atlético-GO"
+    aliases: ["Atlético Clube Goianiense"]
+    country: "BR"
+    colors: {primary: "#E4002B", secondary: "#000000"}
+  - id: cuiaba
+    name: "Cuiabá"
+    short_name: "Cuiabá"
+    aliases: ["Cuiabá EC"]
+    country: "BR"
+    colors: {primary: "#00843D", secondary: "#FFD500"}
+  - id: criciuma
+    name: "Criciúma"
+    short_name: "Criciúma"
+    aliases: ["Criciúma EC"]
+    country: "BR"
+    colors: {primary: "#FFD500", secondary: "#000000"}
+
+  # --- South America: finalists of the 2026 Libertadores and the national team -------------------
+  - id: estudiantes
+    name: "Estudiantes de La Plata"
+    short_name: "Estudiantes"
+    aliases: ["Estudiantes LP", "Estudiantes L.P."]
+    country: "AR"
+    colors: {primary: "#D2122E", secondary: "#FFFFFF"}
+  - id: brasil
+    name: "Brasil"
+    short_name: "Brasil"
+    aliases: ["Brazil", "Seleção Brasileira"]
+    country: "BR"
+    colors: {primary: "#FFDF00", secondary: "#009C3B"}
+
+  # --- Spain: La Liga ----------------------------------------------------------------------------
+  - id: real-madrid
+    name: "Real Madrid"
+    short_name: "Real Madrid"
+    aliases: ["Real Madrid CF"]
+    country: "ES"
+    colors: {primary: "#FFFFFF", secondary: "#FEBE10"}
+  - id: barcelona
+    name: "Barcelona"
+    short_name: "Barça"
+    aliases: ["FC Barcelona"]
+    country: "ES"
+    colors: {primary: "#A50044", secondary: "#004D98"}
+  - id: atletico-madrid
+    name: "Atlético de Madrid"
+    short_name: "Atleti"
+    aliases: ["Club Atlético de Madrid", "Atletico Madrid"]
+    country: "ES"
+    colors: {primary: "#CB3524", secondary: "#272E61"}
+  - id: athletic-club
+    name: "Athletic Club"
+    short_name: "Athletic"
+    aliases: []
+    country: "ES"
+    colors: {primary: "#EE2523", secondary: "#FFFFFF"}
+  - id: osasuna
+    name: "Osasuna"
+    short_name: "Osasuna"
+    aliases: ["CA Osasuna"]
+    country: "ES"
+    colors: {primary: "#D91A21", secondary: "#0A346F"}
+  - id: alaves
+    name: "Alavés"
+    short_name: "Alavés"
+    aliases: ["Deportivo Alavés"]
+    country: "ES"
+    colors: {primary: "#0761AF", secondary: "#FFFFFF"}
+  - id: elche
+    name: "Elche"
+    short_name: "Elche"
+    aliases: ["Elche CF"]
+    country: "ES"
+    colors: {primary: "#00843D", secondary: "#FFFFFF"}
+  - id: getafe
+    name: "Getafe"
+    short_name: "Getafe"
+    aliases: ["Getafe CF"]
+    country: "ES"
+    colors: {primary: "#005999", secondary: "#FFFFFF"}
+  - id: levante
+    name: "Levante"
+    short_name: "Levante"
+    aliases: ["Levante UD"]
+    country: "ES"
+    colors: {primary: "#B4053F", secondary: "#0B4AA0"}
+  - id: malaga
+    name: "Málaga"
+    short_name: "Málaga"
+    aliases: ["Málaga CF"]
+    country: "ES"
+    colors: {primary: "#0072BC", secondary: "#FFFFFF"}
+  - id: rayo-vallecano
+    name: "Rayo Vallecano"
+    short_name: "Rayo Vallecano"
+    aliases: ["Rayo Vallecano de Madrid"]
+    country: "ES"
+    colors: {primary: "#E1202A", secondary: "#FFFFFF"}
+  - id: celta-vigo
+    name: "Celta de Vigo"
+    short_name: "Celta"
+    aliases: ["RC Celta de Vigo"]
+    country: "ES"
+    colors: {primary: "#8AC3EE", secondary: "#FFFFFF"}
+  - id: deportivo-la-coruna
+    name: "Deportivo La Coruña"
+    short_name: "Deportivo"
+    aliases: ["RC Deportivo La Coruña"]
+    country: "ES"
+    colors: {primary: "#0059A9", secondary: "#FFFFFF"}
+  - id: espanyol
+    name: "Espanyol"
+    short_name: "Espanyol"
+    aliases: ["RCD Espanyol de Barcelona"]
+    country: "ES"
+    colors: {primary: "#007FC8", secondary: "#FFFFFF"}
+  - id: real-betis
+    name: "Real Betis"
+    short_name: "Real Betis"
+    aliases: ["Real Betis Balompié"]
+    country: "ES"
+    colors: {primary: "#00954C", secondary: "#FFFFFF"}
+  - id: racing-santander
+    name: "Racing Santander"
+    short_name: "Racing"
+    aliases: ["Real Racing Club de Santander", "Santander"]
+    country: "ES"
+    colors: {primary: "#00843D", secondary: "#FFFFFF"}
+  - id: real-sociedad
+    name: "Real Sociedad"
+    short_name: "Real Sociedad"
+    aliases: ["Real Sociedad de Fútbol"]
+    country: "ES"
+    colors: {primary: "#0067B1", secondary: "#FFFFFF"}
+  - id: sevilla
+    name: "Sevilla"
+    short_name: "Sevilla"
+    aliases: ["Sevilla FC"]
+    country: "ES"
+    colors: {primary: "#D6001C", secondary: "#FFFFFF"}
+  - id: valencia
+    name: "Valencia"
+    short_name: "Valencia"
+    aliases: ["Valencia CF"]
+    country: "ES"
+    colors: {primary: "#EE7F00", secondary: "#000000"}
+  - id: villarreal
+    name: "Villarreal"
+    short_name: "Villarreal"
+    aliases: ["Villarreal CF"]
+    country: "ES"
+    colors: {primary: "#FBE122", secondary: "#005187"}
+
+  # --- England: Premier League -------------------------------------------------------------------
+  - id: chelsea
+    name: "Chelsea"
+    short_name: "Chelsea"
+    aliases: ["Chelsea FC"]
+    country: "GB-ENG"
+    colors: {primary: "#034694", secondary: "#FFFFFF"}
+  - id: manchester-city
+    name: "Manchester City"
+    short_name: "Man City"
+    aliases: ["Manchester City FC"]
+    country: "GB-ENG"
+    colors: {primary: "#6CABDD", secondary: "#FFFFFF"}
+  - id: manchester-united
+    name: "Manchester United"
+    short_name: "Man United"
+    aliases: ["Manchester United FC"]
+    country: "GB-ENG"
+    colors: {primary: "#DA291C", secondary: "#FBE122"}
+  - id: arsenal
+    name: "Arsenal"
+    short_name: "Arsenal"
+    aliases: ["Arsenal FC"]
+    country: "GB-ENG"
+    colors: {primary: "#EF0107", secondary: "#FFFFFF"}
+  - id: liverpool
+    name: "Liverpool"
+    short_name: "Liverpool"
+    aliases: ["Liverpool FC"]
+    country: "GB-ENG"
+    colors: {primary: "#C8102E", secondary: "#FFFFFF"}
+  - id: tottenham
+    name: "Tottenham"
+    short_name: "Tottenham"
+    aliases: ["Tottenham Hotspur FC"]
+    country: "GB-ENG"
+    colors: {primary: "#132257", secondary: "#FFFFFF"}
+  - id: newcastle
+    name: "Newcastle United"
+    short_name: "Newcastle"
+    aliases: ["Newcastle United FC"]
+    country: "GB-ENG"
+    colors: {primary: "#241F20", secondary: "#FFFFFF"}
+  - id: aston-villa
+    name: "Aston Villa"
+    short_name: "Aston Villa"
+    aliases: ["Aston Villa FC"]
+    country: "GB-ENG"
+    colors: {primary: "#670E36", secondary: "#95BFE5"}
+  - id: bournemouth
+    name: "Bournemouth"
+    short_name: "Bournemouth"
+    aliases: ["AFC Bournemouth"]
+    country: "GB-ENG"
+    colors: {primary: "#DA291C", secondary: "#000000"}
+  - id: brentford
+    name: "Brentford"
+    short_name: "Brentford"
+    aliases: ["Brentford FC"]
+    country: "GB-ENG"
+    colors: {primary: "#E30613", secondary: "#FFFFFF"}
+  - id: brighton
+    name: "Brighton"
+    short_name: "Brighton"
+    aliases: ["Brighton & Hove Albion FC", "Brighton Hove"]
+    country: "GB-ENG"
+    colors: {primary: "#0057B8", secondary: "#FFFFFF"}
+  - id: coventry-city
+    name: "Coventry City"
+    short_name: "Coventry"
+    aliases: ["Coventry City FC"]
+    country: "GB-ENG"
+    colors: {primary: "#59CBE8", secondary: "#FFFFFF"}
+  - id: crystal-palace
+    name: "Crystal Palace"
+    short_name: "Crystal Palace"
+    aliases: ["Crystal Palace FC"]
+    country: "GB-ENG"
+    colors: {primary: "#1B458F", secondary: "#C4122E"}
+  - id: everton
+    name: "Everton"
+    short_name: "Everton"
+    aliases: ["Everton FC"]
+    country: "GB-ENG"
+    colors: {primary: "#003399", secondary: "#FFFFFF"}
+  - id: fulham
+    name: "Fulham"
+    short_name: "Fulham"
+    aliases: ["Fulham FC"]
+    country: "GB-ENG"
+    colors: {primary: "#FFFFFF", secondary: "#000000"}
+  - id: hull-city
+    name: "Hull City"
+    short_name: "Hull City"
+    aliases: ["Hull City AFC"]
+    country: "GB-ENG"
+    colors: {primary: "#F5A12D", secondary: "#000000"}
+  - id: ipswich-town
+    name: "Ipswich Town"
+    short_name: "Ipswich"
+    aliases: ["Ipswich Town FC"]
+    country: "GB-ENG"
+    colors: {primary: "#3A64A3", secondary: "#FFFFFF"}
+  - id: leeds-united
+    name: "Leeds United"
+    short_name: "Leeds"
+    aliases: ["Leeds United FC"]
+    country: "GB-ENG"
+    colors: {primary: "#FFFFFF", secondary: "#1D428A"}
+  - id: nottingham-forest
+    name: "Nottingham Forest"
+    short_name: "Nott'm Forest"
+    aliases: ["Nottingham Forest FC", "Nottingham"]
+    country: "GB-ENG"
+    colors: {primary: "#DD0000", secondary: "#FFFFFF"}
+  - id: sunderland
+    name: "Sunderland"
+    short_name: "Sunderland"
+    aliases: ["Sunderland AFC"]
+    country: "GB-ENG"
+    colors: {primary: "#EB172B", secondary: "#FFFFFF"}
+
+  # --- Germany: Bundesliga -----------------------------------------------------------------------
+  - id: bayern-munchen
+    name: "Bayern de Munique"
+    short_name: "Bayern"
+    aliases: ["FC Bayern München", "Bayern Munich", "Bayern Munchen"]
+    country: "DE"
+    colors: {primary: "#DC052D", secondary: "#0066B2"}
+  - id: borussia-dortmund
+    name: "Borussia Dortmund"
+    short_name: "Dortmund"
+    aliases: []
+    country: "DE"
+    colors: {primary: "#FDE100", secondary: "#000000"}
+  - id: bayer-leverkusen
+    name: "Bayer Leverkusen"
+    short_name: "Leverkusen"
+    aliases: ["Bayer 04 Leverkusen"]
+    country: "DE"
+    colors: {primary: "#E32221", secondary: "#000000"}
+  - id: rb-leipzig
+    name: "RB Leipzig"
+    short_name: "Leipzig"
+    aliases: []
+    country: "DE"
+    colors: {primary: "#DD0741", secondary: "#FFFFFF"}
+  - id: eintracht-frankfurt
+    name: "Eintracht Frankfurt"
+    short_name: "Frankfurt"
+    aliases: []
+    country: "DE"
+    colors: {primary: "#E1000F", secondary: "#000000"}
+  - id: vfb-stuttgart
+    name: "Stuttgart"
+    short_name: "Stuttgart"
+    aliases: ["VfB Stuttgart"]
+    country: "DE"
+    colors: {primary: "#E32219", secondary: "#FFFFFF"}
+  - id: werder-bremen
+    name: "Werder Bremen"
+    short_name: "Bremen"
+    aliases: ["SV Werder Bremen"]
+    country: "DE"
+    colors: {primary: "#1D9053", secondary: "#FFFFFF"}
+  - id: hoffenheim
+    name: "Hoffenheim"
+    short_name: "Hoffenheim"
+    aliases: ["TSG 1899 Hoffenheim"]
+    country: "DE"
+    colors: {primary: "#1961B5", secondary: "#FFFFFF"}
+  - id: borussia-monchengladbach
+    name: "Borussia Mönchengladbach"
+    short_name: "Gladbach"
+    aliases: ["M'gladbach"]
+    country: "DE"
+    colors: {primary: "#00A650", secondary: "#FFFFFF"}
+  - id: fc-koln
+    name: "Köln"
+    short_name: "Köln"
+    aliases: ["1. FC Köln", "FC Koln", "FC Cologne"]
+    country: "DE"
+    colors: {primary: "#ED1C24", secondary: "#FFFFFF"}
+  - id: union-berlin
+    name: "Union Berlin"
+    short_name: "Union Berlin"
+    aliases: ["1. FC Union Berlin"]
+    country: "DE"
+    colors: {primary: "#EB1923", secondary: "#FFD500"}
+  - id: mainz
+    name: "Mainz 05"
+    short_name: "Mainz"
+    aliases: ["1. FSV Mainz 05"]
+    country: "DE"
+    colors: {primary: "#C3141E", secondary: "#FFFFFF"}
+  - id: augsburg
+    name: "Augsburg"
+    short_name: "Augsburg"
+    aliases: ["FC Augsburg"]
+    country: "DE"
+    colors: {primary: "#BA3733", secondary: "#46714D"}
+  - id: schalke
+    name: "Schalke 04"
+    short_name: "Schalke"
+    aliases: ["FC Schalke 04"]
+    country: "DE"
+    colors: {primary: "#004D9D", secondary: "#FFFFFF"}
+  - id: hamburger-sv
+    name: "Hamburger SV"
+    short_name: "HSV"
+    aliases: []
+    country: "DE"
+    colors: {primary: "#005CA9", secondary: "#FFFFFF"}
+  - id: freiburg
+    name: "Freiburg"
+    short_name: "Freiburg"
+    aliases: ["SC Freiburg"]
+    country: "DE"
+    colors: {primary: "#E2001A", secondary: "#000000"}
+  - id: paderborn
+    name: "Paderborn"
+    short_name: "Paderborn"
+    aliases: ["SC Paderborn 07", "SC Paderborn"]
+    country: "DE"
+    colors: {primary: "#005CA9", secondary: "#000000"}
+  - id: elversberg
+    name: "Elversberg"
+    short_name: "Elversberg"
+    aliases: ["SV 07 Elversberg"]
+    country: "DE"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+
+  # --- Italy: Serie A ----------------------------------------------------------------------------
+  - id: inter
+    name: "Inter de Milão"
+    short_name: "Inter"
+    aliases: ["FC Internazionale Milano", "Inter Milan", "Internazionale"]
+    country: "IT"
+    colors: {primary: "#0068A8", secondary: "#000000"}
+  - id: milan
+    name: "Milan"
+    short_name: "Milan"
+    aliases: ["AC Milan"]
+    country: "IT"
+    colors: {primary: "#FB090B", secondary: "#000000"}
+  - id: juventus
+    name: "Juventus"
+    short_name: "Juventus"
+    aliases: ["Juventus FC"]
+    country: "IT"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: napoli
+    name: "Napoli"
+    short_name: "Napoli"
+    aliases: ["SSC Napoli"]
+    country: "IT"
+    colors: {primary: "#12A0D7", secondary: "#FFFFFF"}
+  - id: roma
+    name: "Roma"
+    short_name: "Roma"
+    aliases: ["AS Roma"]
+    country: "IT"
+    colors: {primary: "#8E1F2F", secondary: "#F0BC42"}
+  - id: lazio
+    name: "Lazio"
+    short_name: "Lazio"
+    aliases: ["SS Lazio"]
+    country: "IT"
+    colors: {primary: "#87CEEB", secondary: "#FFFFFF"}
+  - id: atalanta
+    name: "Atalanta"
+    short_name: "Atalanta"
+    aliases: ["Atalanta BC"]
+    country: "IT"
+    colors: {primary: "#1E71B8", secondary: "#000000"}
+  - id: fiorentina
+    name: "Fiorentina"
+    short_name: "Fiorentina"
+    aliases: ["ACF Fiorentina"]
+    country: "IT"
+    colors: {primary: "#482E92", secondary: "#FFFFFF"}
+  - id: bologna
+    name: "Bologna"
+    short_name: "Bologna"
+    aliases: ["Bologna FC 1909"]
+    country: "IT"
+    colors: {primary: "#A21C26", secondary: "#1A2F48"}
+  - id: torino
+    name: "Torino"
+    short_name: "Torino"
+    aliases: ["Torino FC"]
+    country: "IT"
+    colors: {primary: "#8A1E41", secondary: "#FFFFFF"}
+  - id: monza
+    name: "Monza"
+    short_name: "Monza"
+    aliases: ["AC Monza"]
+    country: "IT"
+    colors: {primary: "#E31B23", secondary: "#FFFFFF"}
+  - id: cagliari
+    name: "Cagliari"
+    short_name: "Cagliari"
+    aliases: ["Cagliari Calcio"]
+    country: "IT"
+    colors: {primary: "#B01C2E", secondary: "#002F6C"}
+  - id: como
+    name: "Como"
+    short_name: "Como"
+    aliases: ["Como 1907"]
+    country: "IT"
+    colors: {primary: "#0059A9", secondary: "#FFFFFF"}
+  - id: frosinone
+    name: "Frosinone"
+    short_name: "Frosinone"
+    aliases: ["Frosinone Calcio"]
+    country: "IT"
+    colors: {primary: "#F8D200", secondary: "#0B4EA2"}
+  - id: genoa
+    name: "Genoa"
+    short_name: "Genoa"
+    aliases: ["Genoa CFC"]
+    country: "IT"
+    colors: {primary: "#A6192E", secondary: "#002F6C"}
+  - id: parma
+    name: "Parma"
+    short_name: "Parma"
+    aliases: ["Parma Calcio 1913"]
+    country: "IT"
+    colors: {primary: "#FFD700", secondary: "#0B3F8C"}
+  - id: udinese
+    name: "Udinese"
+    short_name: "Udinese"
+    aliases: ["Udinese Calcio"]
+    country: "IT"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: lecce
+    name: "Lecce"
+    short_name: "Lecce"
+    aliases: ["US Lecce"]
+    country: "IT"
+    colors: {primary: "#F5D800", secondary: "#E31B23"}
+  - id: sassuolo
+    name: "Sassuolo"
+    short_name: "Sassuolo"
+    aliases: ["US Sassuolo Calcio"]
+    country: "IT"
+    colors: {primary: "#00A651", secondary: "#000000"}
+  - id: venezia
+    name: "Venezia"
+    short_name: "Venezia"
+    aliases: ["Venezia FC"]
+    country: "IT"
+    colors: {primary: "#FF6F00", secondary: "#00843D"}
+
+  # --- France: Ligue 1 ---------------------------------------------------------------------------
+  - id: psg
+    name: "Paris Saint-Germain"
+    short_name: "PSG"
+    aliases: ["Paris Saint-Germain FC"]
+    country: "FR"
+    colors: {primary: "#004170", secondary: "#DA291C"}
+  - id: marseille
+    name: "Olympique de Marseille"
+    short_name: "Marseille"
+    aliases: []
+    country: "FR"
+    colors: {primary: "#2FAEE0", secondary: "#FFFFFF"}
+  - id: lyon
+    name: "Olympique Lyonnais"
+    short_name: "Lyon"
+    aliases: ["Olympique Lyon"]
+    country: "FR"
+    colors: {primary: "#1D428A", secondary: "#E31B23"}
+  - id: monaco
+    name: "Monaco"
+    short_name: "Monaco"
+    aliases: ["AS Monaco FC"]
+    country: "FR"
+    colors: {primary: "#E51B22", secondary: "#FFFFFF"}
+  - id: lille
+    name: "Lille"
+    short_name: "Lille"
+    aliases: ["Lille OSC"]
+    country: "FR"
+    colors: {primary: "#E01E13", secondary: "#1D2D5B"}
+  - id: nice
+    name: "Nice"
+    short_name: "Nice"
+    aliases: ["OGC Nice"]
+    country: "FR"
+    colors: {primary: "#E30613", secondary: "#000000"}
+  - id: lens
+    name: "Lens"
+    short_name: "Lens"
+    aliases: ["Racing Club de Lens", "RC Lens"]
+    country: "FR"
+    colors: {primary: "#FFD500", secondary: "#E30613"}
+  - id: rennes
+    name: "Rennes"
+    short_name: "Rennes"
+    aliases: ["Stade Rennais FC 1901", "Stade Rennais"]
+    country: "FR"
+    colors: {primary: "#E13327", secondary: "#000000"}
+  - id: strasbourg
+    name: "Strasbourg"
+    short_name: "Strasbourg"
+    aliases: ["RC Strasbourg Alsace"]
+    country: "FR"
+    colors: {primary: "#009FE3", secondary: "#FFFFFF"}
+  - id: brest
+    name: "Brest"
+    short_name: "Brest"
+    aliases: ["Stade Brestois 29"]
+    country: "FR"
+    colors: {primary: "#E30613", secondary: "#FFFFFF"}
+  - id: toulouse
+    name: "Toulouse"
+    short_name: "Toulouse"
+    aliases: ["Toulouse FC"]
+    country: "FR"
+    colors: {primary: "#5B2C83", secondary: "#FFFFFF"}
+  - id: auxerre
+    name: "Auxerre"
+    short_name: "Auxerre"
+    aliases: ["AJ Auxerre"]
+    country: "FR"
+    colors: {primary: "#0F4C9C", secondary: "#FFFFFF"}
+  - id: angers
+    name: "Angers"
+    short_name: "Angers"
+    aliases: ["Angers SCO"]
+    country: "FR"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: troyes
+    name: "Troyes"
+    short_name: "Troyes"
+    aliases: ["ES Troyes AC"]
+    country: "FR"
+    colors: {primary: "#0066B2", secondary: "#FFFFFF"}
+  - id: lorient
+    name: "Lorient"
+    short_name: "Lorient"
+    aliases: ["FC Lorient"]
+    country: "FR"
+    colors: {primary: "#F58220", secondary: "#000000"}
+  - id: le-havre
+    name: "Le Havre"
+    short_name: "Le Havre"
+    aliases: ["Le Havre AC"]
+    country: "FR"
+    colors: {primary: "#00A0DF", secondary: "#002F6C"}
+  - id: le-mans
+    name: "Le Mans"
+    short_name: "Le Mans"
+    aliases: ["Le Mans FC"]
+    country: "FR"
+    colors: {primary: "#E30613", secondary: "#FFD500"}
+  - id: paris-fc
+    name: "Paris FC"
+    short_name: "Paris FC"
+    aliases: []
+    country: "FR"
+    colors: {primary: "#003DA5", secondary: "#FFFFFF"}
+
+  # --- Europe: other Champions League clubs ------------------------------------------------------
+  - id: sporting-cp
+    name: "Sporting"
+    short_name: "Sporting CP"
+    aliases: ["Sporting Clube de Portugal", "Sporting Lisbon"]
+    country: "PT"
+    colors: {primary: "#00954C", secondary: "#FFFFFF"}
+  - id: porto
+    name: "Porto"
+    short_name: "Porto"
+    aliases: ["FC Porto"]
+    country: "PT"
+    colors: {primary: "#003A8F", secondary: "#FFFFFF"}
+  - id: psv
+    name: "PSV Eindhoven"
+    short_name: "PSV"
+    aliases: []
+    country: "NL"
+    colors: {primary: "#E30613", secondary: "#FFFFFF"}
+  - id: feyenoord
+    name: "Feyenoord"
+    short_name: "Feyenoord"
+    aliases: ["Feyenoord Rotterdam"]
+    country: "NL"
+    colors: {primary: "#D5001C", secondary: "#FFFFFF"}
+  - id: club-brugge
+    name: "Club Brugge"
+    short_name: "Club Brugge"
+    aliases: ["Club Brugge KV"]
+    country: "BE"
+    colors: {primary: "#0057B8", secondary: "#000000"}
+  - id: galatasaray
+    name: "Galatasaray"
+    short_name: "Galatasaray"
+    aliases: ["Galatasaray SK"]
+    country: "TR"
+    colors: {primary: "#A90432", secondary: "#FDB913"}
+  - id: fenerbahce
+    name: "Fenerbahçe"
+    short_name: "Fenerbahçe"
+    aliases: ["Fenerbahçe SK"]
+    country: "TR"
+    colors: {primary: "#FFED00", secondary: "#002D72"}
+  - id: bodo-glimt
+    name: "Bodø/Glimt"
+    short_name: "Bodø/Glimt"
+    aliases: ["FK Bodø/Glimt"]
+    country: "NO"
+    colors: {primary: "#FFD500", secondary: "#000000"}
+  - id: viking
+    name: "Viking"
+    short_name: "Viking"
+    aliases: ["Viking FK"]
+    country: "NO"
+    colors: {primary: "#0057B8", secondary: "#FFFFFF"}
+  - id: shakhtar
+    name: "Shakhtar Donetsk"
+    short_name: "Shaktar"
+    aliases: ["FK Shakhtar Donetsk"]
+    country: "UA"
+    colors: {primary: "#F58220", secondary: "#000000"}
+  - id: lask
+    name: "LASK"
+    short_name: "LASK"
+    aliases: ["LASK Linz"]
+    country: "AT"
+    colors: {primary: "#000000", secondary: "#FFFFFF"}
+  - id: aek-athens
+    name: "AEK Atenas"
+    short_name: "AEK"
+    aliases: ["PAE AEK", "AEK Athens"]
+    country: "GR"
+    colors: {primary: "#FFD500", secondary: "#000000"}
+  - id: slavia-praha
+    name: "Slavia Praga"
+    short_name: "Slavia Praha"
+    aliases: ["SK Slavia Praha", "Slavia Prague"]
+    country: "CZ"
+    colors: {primary: "#D6001C", secondary: "#FFFFFF"}
+  - id: slovan-bratislava
+    name: "Slovan Bratislava"
+    short_name: "Sl. Bratislava"
+    aliases: ["ŠK Slovan Bratislava"]
+    country: "SK"
+    colors: {primary: "#00A0E3", secondary: "#FFFFFF"}
+  - id: sabah
+    name: "Sabah"
+    short_name: "Sabah"
+    aliases: ["Sabah FK"]
+    country: "AZ"
+    colors: {primary: "#E30613", secondary: "#FFFFFF"}
