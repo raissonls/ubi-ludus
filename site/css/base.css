@@ -39,6 +39,22 @@ p {
   margin: 0 0 var(--space-4);
 }
 
+button {
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  min-height: 2.5rem; /* a comfortable target, well over 24 px (WCAG 2.2, 2.5.8) */
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--motion-ease);
+}
+
+button:hover {
+  background: var(--color-bg);
+}
+
 a {
   color: var(--color-link);
   text-underline-offset: 0.2em;

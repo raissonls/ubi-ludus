@@ -7,18 +7,33 @@ there, else Chrome or Edge, and skip when there is none.
 
 import functools
 import http.server
+import json
 import os
 import threading
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 from axe_playwright_python.sync_playwright import Axe  # type: ignore[import-untyped]
-from playwright.sync_api import Browser, Page, Playwright, sync_playwright
+from playwright.sync_api import Browser, Page, Playwright, Request, Route, sync_playwright
 
 pytestmark = pytest.mark.browser
 
 SITE = Path(__file__).resolve().parents[2] / "site"
+# The published files the site loads from /data/. The pipeline writes the real ones; the tests
+# serve the valid examples of the schemas.
+DATA = Path(__file__).resolve().parents[1] / "fixtures" / "schemas" / "valid"
+STORAGE_KEY = "ubi-ludus:preferences"
+SECRET_TEAM = "time-secreto-xyz"  # noqa: S105 - a marker that must never leave the browser
+SECRET_SERVICE = "servico-secreto-xyz"  # noqa: S105 - same
+CHOICES = {
+    STORAGE_KEY: json.dumps({"version": 1, "teams": [SECRET_TEAM], "services": [SECRET_SERVICE]})
+}
+STORAGE_BLOCKED = (
+    "Object.defineProperty(window, 'localStorage',"
+    " { get() { throw new DOMException('denied', 'SecurityError'); } });"
+)
 WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]
 WATCH_VIOLATIONS = (
     "window.__violations = [];"
@@ -31,6 +46,12 @@ VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:  # noqa: A002 - the base class name
         return
+
+    def translate_path(self, path: str) -> str:
+        clean = urlparse(path).path
+        if clean.startswith("/data/"):
+            return str(DATA / clean.removeprefix("/data/"))
+        return super().translate_path(path)
 
 
 @pytest.fixture(scope="module")
@@ -65,6 +86,10 @@ def browser() -> Iterator[Browser]:
         found.close()
 
 
+def answer_with(status: int) -> Callable[[Route], None]:
+    return lambda route: route.fulfill(status=status)
+
+
 class Visit:
     """One page load, with everything the browser reported while it happened."""
 
@@ -73,11 +98,16 @@ class Visit:
         self.origin = origin
         self.console: list[str] = []
         self.requests: list[str] = []
+        self.details: list[Request] = []
         self.failed: list[str] = []
         page.on("console", lambda m: self.console.append(f"{m.type}: {m.text}"))
         page.on("pageerror", lambda e: self.console.append(f"pageerror: {e}"))
-        page.on("request", lambda r: self.requests.append(r.url))
+        page.on("request", self._saw)
         page.on("requestfailed", lambda r: self.failed.append(r.url))
+
+    def _saw(self, request: Request) -> None:
+        self.requests.append(request.url)
+        self.details.append(request)
 
     def open(self) -> None:
         self.page.goto(self.origin + "/index.html")
@@ -90,7 +120,14 @@ def visit(
     scheme: str = "light",
     size: str = "desktop",
     reduced_motion: str = "no-preference",
+    saved: dict[str, str] | None = None,
+    storage_blocked: bool = False,
+    broken: dict[str, int] | None = None,
+    newer_format: str | None = None,
 ) -> Iterator[Visit]:
+    """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
+    data file to the HTTP status it answers with, `newer_format` names a data file served as if
+    it were in a format the site does not know."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
@@ -98,7 +135,26 @@ def visit(
         viewport={"width": width, "height": height},
     )
     try:
-        current = Visit(context.new_page(), origin)
+        if saved:
+            items = json.dumps(saved)
+            context.add_init_script(
+                f"for (const [k, v] of Object.entries({items})) localStorage.setItem(k, v);"
+            )
+        if storage_blocked:
+            context.add_init_script(STORAGE_BLOCKED)
+        page = context.new_page()
+        for name, status in (broken or {}).items():
+            page.route(f"**/data/{name}.json", answer_with(status))
+        if newer_format:
+            document = json.loads((DATA / f"{newer_format}.json").read_text(encoding="utf-8"))
+            document["schema_version"] = "2.0"
+            page.route(
+                f"**/data/{newer_format}.json",
+                lambda route: route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps(document)
+                ),
+            )
+        current = Visit(page, origin)
         current.open()
         yield current
     finally:
@@ -181,6 +237,90 @@ def test_every_focusable_thing_shows_a_focus_ring(browser: Browser, origin: str)
             )
             assert style[0] != "none", page.evaluate("document.activeElement.outerHTML")
             assert style[1] != "0px"
+
+
+# --- the data and the visitor's choices (FR-22) -----------------------------------------------
+
+
+def loaded_text() -> str:
+    count = len(json.loads((DATA / "matches.json").read_text(encoding="utf-8"))["matches"])
+    return f"{count} jogo carregado." if count == 1 else f"{count} jogos carregados."
+
+
+def test_the_published_files_are_loaded_and_counted(browser: Browser, origin: str) -> None:
+    for current in visit(browser, origin):
+        assert current.page.locator("#data-status").inner_text() == loaded_text()
+        fetched = sorted(urlparse(u).path for u in current.requests if "/data/" in u)
+        assert fetched == [
+            f"/data/{n}.json"
+            for n in sorted(["matches", "teams", "competitions", "broadcasters", "status"])
+        ]
+
+
+def test_no_request_carries_the_visitors_choices(browser: Browser, origin: str) -> None:
+    """The choices sit in localStorage before the page runs; no request may mention them."""
+    for current in visit(browser, origin, saved=CHOICES):
+        current.page.click("#reset-data")
+        current.page.wait_for_function("document.querySelector('#reset-result').textContent !== ''")
+        assert current.details
+        for request in current.details:
+            text = " ".join([request.url, str(request.post_data), json.dumps(request.headers)])
+            assert SECRET_TEAM not in text and SECRET_SERVICE not in text, request.url
+            assert request.method == "GET", request.url
+            assert request.post_data is None, request.url
+            assert "?" not in request.url, "no query string"
+            assert "cookie" not in request.headers, "no cookie is ever sent"
+        assert current.page.context.cookies() == []
+        assert current.page.evaluate("document.cookie") == ""
+
+
+def test_the_reset_control_erases_the_saved_choices_and_says_so(
+    browser: Browser, origin: str
+) -> None:
+    for current in visit(browser, origin, saved=CHOICES):
+        page = current.page
+        assert page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')") is not None
+        page.get_by_role("button", name="Apagar meus dados").click()
+        assert page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')") is None
+        assert "apagadas" in page.locator("#reset-result").inner_text()
+
+
+def test_the_reset_control_works_from_the_keyboard(browser: Browser, origin: str) -> None:
+    for current in visit(browser, origin, saved=CHOICES):
+        page = current.page
+        page.locator("#reset-data").focus()
+        page.keyboard.press("Enter")
+        assert "apagadas" in page.locator("#reset-result").inner_text()
+        assert page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')") is None
+
+
+def test_with_storage_blocked_the_page_still_works_and_reset_still_answers(
+    browser: Browser, origin: str
+) -> None:
+    for current in visit(browser, origin, storage_blocked=True):
+        assert current.console == []
+        assert current.page.locator("#data-status").inner_text() == loaded_text()
+        current.page.click("#reset-data")
+        assert "apagadas" in current.page.locator("#reset-result").inner_text()
+
+
+def test_when_the_data_cannot_be_loaded_the_page_says_so_and_stays_accessible(
+    browser: Browser, origin: str
+) -> None:
+    for current in visit(browser, origin, broken={"matches": 500}):
+        message = current.page.locator("#data-status").inner_text()
+        assert message.startswith("Não foi possível carregar os jogos")
+        assert any("matches.json" in line for line in current.console)
+        results = Axe().run(current.page, options={"runOnly": {"type": "tag", "values": WCAG_TAGS}})
+        assert results.response["violations"] == []
+
+
+def test_a_data_file_in_a_newer_format_is_refused_the_same_way(
+    browser: Browser, origin: str
+) -> None:
+    for current in visit(browser, origin, newer_format="teams"):
+        assert current.page.locator("#data-status").inner_text().startswith("Não foi possível")
+        assert any("this site reads 1.x" in line for line in current.console)
 
 
 # --- themes and motion ---------------------------------------------------------------------------

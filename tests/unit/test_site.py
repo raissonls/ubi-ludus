@@ -189,12 +189,32 @@ def test_the_code_never_builds_html_or_runs_text_as_code() -> None:
         assert not forbidden.search(path.read_text(encoding="utf-8")), path.name
 
 
-def test_the_code_stores_nothing_and_sets_no_cookie_yet() -> None:
-    """Preferences arrive in M3-02, in one module; until then nothing may touch storage."""
+def test_only_the_preferences_module_touches_storage_and_nothing_sets_a_cookie() -> None:
+    """FR-22: the visitor's choices stay in this browser, kept by one module."""
     for path in site_files(".js"):
         text = path.read_text(encoding="utf-8")
         assert "document.cookie" not in text, path.name
-        assert not re.search(r"localStorage|sessionStorage|indexedDB", text), path.name
+        assert not re.search(r"sessionStorage|indexedDB|\bcaches\b|cookieStore", text), path.name
+        if path.name != "preferences.js":
+            assert "localStorage" not in text, f"{path.name} must go through preferences.js"
+    assert "localStorage" in (SITE / "js" / "preferences.js").read_text(encoding="utf-8")
+
+
+def test_the_page_can_only_ask_for_its_own_files_by_fetch_and_cannot_send_anything_else() -> None:
+    """Choices cannot leave through a request the code never makes."""
+    for path in site_files(".js"):
+        text = path.read_text(encoding="utf-8")
+        assert not re.search(
+            r"sendBeacon|XMLHttpRequest|WebSocket|EventSource|navigator\.share", text
+        ), path.name
+        if path.name not in {"data.js", "i18n.js"}:
+            assert not re.search(r"\bfetch\b", text), f"{path.name} must not make requests"
+        assert not re.search(r"method\s*:|body\s*:|credentials\s*:|headers\s*:", text), path.name
+
+
+def test_the_requests_the_code_makes_carry_no_query_string_or_body() -> None:
+    data = (SITE / "js" / "data.js").read_text(encoding="utf-8")
+    assert "new URL(`${name}.json`, baseUrl)" in data, "a file name and nothing else"
 
 
 # --- page structure ------------------------------------------------------------------------------
@@ -266,7 +286,15 @@ def test_every_string_in_the_file_is_used_by_the_page_or_the_code(
     """Dead strings pile up. Strings for views that do not exist yet are added with the view."""
     used = {attrs["data-i18n"] for _, attrs in page.tags if "data-i18n" in attrs}
     code = "\n".join(p.read_text(encoding="utf-8") for p in site_files(".js"))
-    unused = [k for k in strings if k not in used and f"'{k}'" not in code]
+
+    def referenced(key: str) -> bool:
+        # A plural is a group of forms read by the key of the group: home.matchesLoaded.one is
+        # used through 'home.matchesLoaded'.
+        parts = key.split(".")
+        groups = [".".join(parts[:n]) for n in range(1, len(parts) + 1)]
+        return any(g in used or f"'{g}'" in code for g in groups)
+
+    unused = [k for k in strings if not referenced(k)]
     assert unused == []
 
 

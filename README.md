@@ -90,7 +90,8 @@ pre-commit install
 | Fast tests while you work (about 8 seconds) | `pytest -m "not dbt" --no-cov` |
 | All tests with coverage, in parallel (about 2 minutes; what CI runs) | `pytest -n auto --dist loadfile` |
 | All tests, one process (about 3 to 4 minutes) | `pytest` |
-| Preview the site | `python -m http.server -d site 8000`, then open http://localhost:8000 |
+| Write the data the site loads, from live providers (needs the keys in `.env`) | `python -m ubi_ludus.pipeline.publish --run --cache-dir .cache` fills `site/data/` (git-ignored) |
+| Preview the site (after the line above) | `python -m http.server -d site 8000`, then open http://localhost:8000 |
 | The site's JavaScript tests (Node, no install) | `cd site && npm test` |
 | The site in a real browser (axe, security policy) | `pytest -m browser` (uses Chromium, Chrome or Edge) |
 | Everything pre-commit runs, on all files | `pre-commit run --all-files` |
