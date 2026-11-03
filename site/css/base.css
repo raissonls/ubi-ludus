@@ -469,3 +469,56 @@ input[type="text"] {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
+
+/* --- The lists on the home page ------------------------------------------------------------ */
+
+.view-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* The chosen list is told apart by weight and a filled background, not by colour alone. */
+.view-switch button[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+}
+
+.matches-group + .matches-group {
+  margin-top: var(--space-6);
+}
+
+.matches-group__title {
+  margin: 0 0 var(--space-2);
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+/* A followed team's match stands out a little more than the rest. */
+.match-card[data-followed="true"] {
+  border-color: var(--color-border-strong);
+  border-inline-start-color: var(--team-primary, var(--color-border-strong));
+}
+
+/* Calm entrance: a short rise and fade, the first cards a beat apart. No motion is asked of
+   anyone who prefers less: the tokens make the duration 0 and the animation is removed. */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+.match-card--enter {
+  animation: card-enter var(--motion-base) var(--motion-ease) both;
+  animation-delay: calc(var(--enter-step, 0) * 40ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .match-card--enter {
+    animation: none;
+  }
+}

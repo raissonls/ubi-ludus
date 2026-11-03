@@ -37,6 +37,20 @@
     <h1 data-i18n="home.title"></h1>
     <p data-i18n="home.intro"></p>
 
+    <!-- The lists of matches come first, so the next match of the followed teams is on screen
+         without scrolling. js/matches-view.js draws the cards and switches between the lists. -->
+    <section aria-labelledby="matches-title">
+      <h2 id="matches-title" data-i18n="matches.title"></h2>
+      <div id="view-switch" class="view-switch" role="group" aria-labelledby="matches-title">
+        <button type="button" data-view="mine" aria-pressed="false" data-i18n="views.mine"></button>
+        <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
+        <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
+      </div>
+      <div id="matches-list" hidden></div>
+      <p id="matches-empty"></p>
+      <p id="matches-status" class="visually-hidden" role="status"></p>
+    </section>
+
     <!-- Which teams do you follow? The script (js/teams-picker.js) adds the behaviour and draws
          the options and the chosen teams. -->
     <section class="picker" aria-labelledby="teams-title">
@@ -62,12 +76,6 @@
         <ul id="service-options" class="services"></ul>
       </div>
       <p id="services-summary" role="status"></p>
-    </section>
-
-    <section aria-labelledby="matches-title">
-      <h2 id="matches-title" data-i18n="matches.title"></h2>
-      <ul id="matches-list" class="matches" hidden></ul>
-      <p id="matches-empty"></p>
     </section>
 
     <!-- Filled in by the script: how many matches were loaded, or that they could not be. -->
