@@ -6,8 +6,7 @@
 # Answers of 2026-11-02 (PRD question Q1). Edit this file when they change.
 version: 1
 
-# Teams whose matches come first. Ids are the ones data/teams.yml will use (issue #77); the
-# check that each id exists in that file starts once the file does.
+# Teams whose matches come first, by their id in data/teams.yml (a test checks that each exists).
 # Supported: palmeiras and the national team. Followed: the others.
 teams:
   - palmeiras

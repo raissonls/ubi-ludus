@@ -35,7 +35,7 @@ def registry_of(*adapters: Callable[[], ProviderAdapter]) -> AdapterRegistry:
     return registry
 
 
-def test_the_pipeline_goes_from_provider_answers_to_a_tested_warehouse(
+def test_the_pipeline_goes_from_provider_answers_to_a_tested_warehouse_with_the_real_teams(
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
     caplog.set_level(logging.INFO)
@@ -43,7 +43,7 @@ def test_the_pipeline_goes_from_provider_answers_to_a_tested_warehouse(
         tmp_path / "w.duckdb",
         now=NOW,
         registry=fixture_registry(),
-        teams_path=TEAMS,
+        teams_path=DEFAULT_TEAMS_PATH,  # the curated file: its unique-alias tests run on it too
         rights=rights_with(),
         work_dir=tmp_path / "dbt-work",
     )

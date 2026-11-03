@@ -60,15 +60,22 @@ def test_the_review_can_only_write_issues_and_gives_its_keys_to_one_step() -> No
     workflow = load(WORKFLOWS / "review-report.yml")
     [job] = workflow["jobs"].values()
     assert job["permissions"] == {"contents": "read", "issues": "write"}
-    with_secrets = [s for s in job["steps"] if "secrets." in str(s.get("env", {}))]
-    assert [s["name"] for s in with_secrets] == ["Build the report"]
+
+    # A secret's value goes to one step. The check before it only asks whether one exists.
+    def uses_a_value(step: dict[str, Any]) -> bool:
+        env = step.get("env", {})
+        return any("secrets." in str(v) and "!= ''" not in str(v) for v in env.values())
+
+    assert [s["name"] for s in job["steps"] if uses_a_value(s)] == ["Build the report"]
     assert "secrets." not in str(job.get("env", {}))
 
 
-def test_the_review_stops_quietly_while_the_teams_file_is_missing() -> None:
+def test_the_review_stops_quietly_while_the_teams_file_or_a_key_is_missing() -> None:
     steps = load(WORKFLOWS / "review-report.yml")["jobs"]["report"]["steps"]
     gate = next(s for s in steps if s.get("id") == "ready")
     assert "data/teams.yml" in gate["run"]
+    assert "FOOTBALL_DATA_TOKEN" in gate["run"]
+    assert "API_FOOTBALL_KEY" in gate["run"]
     later = [s for s in steps if "if" in s]
     assert later
     assert all(s["if"] == "steps.ready.outputs.ready == 'true'" for s in later)
