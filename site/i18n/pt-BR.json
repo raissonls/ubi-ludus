@@ -15,6 +15,38 @@
     },
     "loadFailed": "Não foi possível carregar os jogos agora. Tente de novo em alguns minutos."
   },
+  "picker": {
+    "title": "Quais times você segue?",
+    "hint": "Digite o nome do time e escolha na lista. Você pode escolher quantos quiser.",
+    "label": "Buscar time",
+    "noResults": "Nenhum time encontrado para “{query}”.",
+    "found": {
+      "one": "{count} time encontrado.",
+      "other": "{count} times encontrados."
+    },
+    "chosenTitle": "Times escolhidos",
+    "none": "Nenhum time escolhido ainda.",
+    "remove": "Remover {team}",
+    "added": {
+      "one": "{team} adicionado. {count} time escolhido.",
+      "other": "{team} adicionado. {count} times escolhidos."
+    },
+    "removedAll": "{team} removido. Nenhum time escolhido.",
+    "removed": {
+      "one": "{team} removido. {count} time escolhido.",
+      "other": "{team} removido. {count} times escolhidos."
+    }
+  },
+  "matches": {
+    "title": "Próximos jogos dos seus times",
+    "pickPrompt": "Escolha ao menos um time para ver os jogos dele.",
+    "empty": "Nenhum jogo dos seus times nos próximos dias.",
+    "versus": "{home} x {away}",
+    "tbd": "A definir"
+  },
+  "countries": {
+    "GB-ENG": "Inglaterra"
+  },
   "footer": {
     "privacy": "Sem cadastro, sem cookies e sem rastreadores. O que você escolher fica só neste navegador.",
     "reset": "Apagar meus dados",

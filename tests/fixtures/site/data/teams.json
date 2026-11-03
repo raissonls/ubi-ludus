@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-11-02T09:00:00Z",
+  "teams": [
+    {
+      "id": "palmeiras",
+      "name": "Palmeiras",
+      "short_name": "Palmeiras",
+      "aliases": [
+        "SE Palmeiras"
+      ],
+      "country": "BR",
+      "colors": {
+        "primary": "#006437",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "id": "flamengo",
+      "name": "Flamengo",
+      "short_name": "Flamengo",
+      "aliases": [
+        "CR Flamengo"
+      ],
+      "country": "BR",
+      "colors": {
+        "primary": "#C52613",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "id": "sao-paulo",
+      "name": "São Paulo",
+      "short_name": "São Paulo",
+      "aliases": [
+        "Sao Paulo",
+        "São Paulo FC"
+      ],
+      "country": "BR",
+      "colors": {
+        "primary": "#FE0000",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "id": "atletico-mineiro",
+      "name": "Atlético Mineiro",
+      "short_name": "Atlético-MG",
+      "aliases": [
+        "CA Mineiro",
+        "Atletico-MG"
+      ],
+      "country": "BR",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "id": "atletico-madrid",
+      "name": "Atlético de Madrid",
+      "short_name": "Atleti",
+      "aliases": [
+        "Club Atlético de Madrid"
+      ],
+      "country": "ES",
+      "colors": {
+        "primary": "#CB3524",
+        "secondary": "#272E61"
+      }
+    },
+    {
+      "id": "real-madrid",
+      "name": "Real Madrid",
+      "short_name": "Real Madrid",
+      "aliases": [
+        "Real Madrid CF"
+      ],
+      "country": "ES",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#FEBE10"
+      }
+    },
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "short_name": "Barça",
+      "aliases": [
+        "FC Barcelona"
+      ],
+      "country": "ES",
+      "colors": {
+        "primary": "#A50044",
+        "secondary": "#004D98"
+      }
+    },
+    {
+      "id": "chelsea",
+      "name": "Chelsea",
+      "short_name": "Chelsea",
+      "aliases": [
+        "Chelsea FC"
+      ],
+      "country": "GB-ENG",
+      "colors": {
+        "primary": "#034694",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "id": "brasil",
+      "name": "Brasil",
+      "short_name": "Brasil",
+      "aliases": [
+        "Brazil",
+        "Seleção Brasileira"
+      ],
+      "country": "BR",
+      "colors": {
+        "primary": "#FFDF00",
+        "secondary": "#009C3B"
+      }
+    }
+  ]
+}

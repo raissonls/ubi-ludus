@@ -36,6 +36,30 @@
   <main id="main" class="container" tabindex="-1">
     <h1 data-i18n="home.title"></h1>
     <p data-i18n="home.intro"></p>
+
+    <!-- Which teams do you follow? The script (js/teams-picker.js) adds the behaviour and draws
+         the options and the chosen teams. -->
+    <section class="picker" aria-labelledby="teams-title">
+      <h2 id="teams-title" data-i18n="picker.title"></h2>
+      <p id="teams-hint" data-i18n="picker.hint"></p>
+      <label for="team-search" data-i18n="picker.label"></label>
+      <div class="picker__field">
+        <input id="team-search" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="team-options" aria-describedby="teams-hint">
+        <ul id="team-options" role="listbox" aria-labelledby="teams-title" hidden></ul>
+      </div>
+      <p id="team-no-results" hidden></p>
+      <h3 id="chosen-title" data-i18n="picker.chosenTitle"></h3>
+      <ul id="chosen-teams" class="chips" aria-labelledby="chosen-title"></ul>
+      <p id="chosen-empty" data-i18n="picker.none"></p>
+      <p id="picker-announcer" class="visually-hidden" role="status"></p>
+    </section>
+
+    <section aria-labelledby="matches-title">
+      <h2 id="matches-title" data-i18n="matches.title"></h2>
+      <ul id="matches-list" class="matches" hidden></ul>
+      <p id="matches-empty"></p>
+    </section>
+
     <!-- Filled in by the script: how many matches were loaded, or that they could not be. -->
     <p id="data-status" role="status"></p>
     <!-- Shown only when scripts are off; the one string that lives outside the strings file. -->
