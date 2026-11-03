@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -41,8 +42,16 @@ def build(tmp_path: Path, teams_file: str) -> Path:
     return database
 
 
-def test_teams_go_from_yaml_through_dbt_to_a_valid_teams_json(tmp_path: Path) -> None:
-    database = build(tmp_path, "teams.yml")
+@pytest.fixture(scope="module")
+def teams_database(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One build of the good teams file, read by the tests that do not change it."""
+    return build(tmp_path_factory.mktemp("teams"), "teams.yml")
+
+
+def test_teams_go_from_yaml_through_dbt_to_a_valid_teams_json(
+    teams_database: Path, tmp_path: Path
+) -> None:
+    database = teams_database
     out = tmp_path / "out" / "teams.json"
 
     assert export_teams(database, out, NOW) == 4
@@ -89,9 +98,12 @@ def test_the_database_setting_is_put_back_after_a_run(
     assert os.environ["UBI_LUDUS_DB"] == "/somewhere/else.duckdb"
 
 
-def test_export_still_checks_the_schema_after_dbt_passed(tmp_path: Path) -> None:
+def test_export_still_checks_the_schema_after_dbt_passed(
+    teams_database: Path, tmp_path: Path
+) -> None:
     """dbt tests check consistency; the schema checks the published shape. Both must pass."""
-    database = build(tmp_path, "teams.yml")
+    database = tmp_path / "copy.duckdb"  # a copy: the shared warehouse must stay as dbt built it
+    shutil.copy(teams_database, database)
     con = connect(database)
     con.execute("update teams set country = 'Brazil' where id = 'flamengo'")
     con.close()

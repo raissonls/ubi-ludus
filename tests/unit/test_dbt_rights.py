@@ -161,27 +161,17 @@ def test_the_repositorys_own_rights_table_gives_the_fixture_matches_their_broadc
     assert all(None not in broadcasters for broadcasters in rows.values())
 
 
-def test_with_no_rules_at_all_every_match_is_unknown(tmp_path: Path) -> None:
-    database = build(tmp_path)
-    rows = query(
-        database,
-        "select id, len(broadcasts), broadcasts[1].broadcaster_id, broadcasts[1].confidence "
-        "from matches",
+def test_rules_that_point_at_nothing_stop_the_build(tmp_path: Path) -> None:
+    """One build with two mistakes: an unknown broadcaster and an unfollowed competition."""
+    rights = rights_with(
+        rule(SERIE_A, "all", ["ghost"]),
+        rule("made-up-cup", "all", ["globo"]),
     )
-    assert rows
-    assert all(count == 1 and who is None and how == "unknown" for _id, count, who, how in rows)
-
-
-def test_a_rule_naming_a_broadcaster_that_does_not_exist_stops_the_build(tmp_path: Path) -> None:
     with pytest.raises(DbtBuildError) as caught:
-        build(tmp_path, rights=rights_with(rule(SERIE_A, "all", ["ghost"])))
-    assert any("stg_rights_rule_broadcasters" in name for name in caught.value.failed)
-
-
-def test_a_rule_for_a_competition_we_do_not_follow_stops_the_build(tmp_path: Path) -> None:
-    with pytest.raises(DbtBuildError) as caught:
-        build(tmp_path, rights=rights_with(rule("made-up-cup", "all", ["globo"])))
-    assert any("stg_rights_rule_broadcasters" in name for name in caught.value.failed)
+        build(tmp_path, rights=rights)
+    failed = caught.value.failed
+    assert any("stg_rights_rule_broadcasters_broadcaster_id" in name for name in failed)
+    assert any("stg_rights_rule_broadcasters_competition_id" in name for name in failed)
 
 
 # --- the dbt unit tests ---------------------------------------------------------------------------
@@ -209,7 +199,9 @@ def test_the_dbt_unit_tests_run_with_every_build_and_pass(database: Path) -> Non
     }
 
 
-def test_a_change_that_breaks_the_window_is_caught_by_the_unit_tests(tmp_path: Path) -> None:
+def test_a_change_that_breaks_the_window_is_caught_by_the_unit_tests(
+    database: Path, tmp_path: Path
+) -> None:
     """Make the end of the window exclusive in a copy of the project: a unit test must fail."""
     project = tmp_path / "project"
     shutil.copytree(DBT_DIR, project, ignore=shutil.ignore_patterns("target", "logs", "*.duckdb"))
@@ -223,7 +215,9 @@ def test_a_change_that_breaks_the_window_is_caught_by_the_unit_tests(tmp_path: P
         ),
         encoding="utf-8",
     )
-    database = build(tmp_path / "healthy")  # a warehouse with every raw table in place
+    healthy = database
+    database = tmp_path / "copy.duckdb"  # a copy, so the shared warehouse stays as dbt built it
+    shutil.copy(healthy, database)
     with pytest.raises(DbtBuildError) as caught:
         run_dbt(
             database, project_dir=project, work_dir=tmp_path / "broken", run_at=NOW, today=TODAY

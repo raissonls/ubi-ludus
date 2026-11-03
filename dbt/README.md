@@ -93,7 +93,7 @@ The database file, `dbt/target/` and `dbt/logs/` are git-ignored.
 
 ## Tests
 
-`tests/unit/test_dbt_foundation.py` builds this project on small hand-written fixtures in `tests/fixtures/dbt/`. It runs inside the normal `pytest` run, so CI fails a pull request when a dbt model or test fails. To run only those tests: `pytest -m dbt`.
+`tests/unit/test_dbt_foundation.py` builds this project on small hand-written fixtures in `tests/fixtures/dbt/`. It runs inside the normal `pytest` run, so CI fails a pull request when a dbt model or test fails. To run only those tests: `pytest -m dbt`; to skip them while you work: `pytest -m "not dbt"`. A dbt build takes 10 to 15 seconds, so the tests share builds (module-scoped fixtures); see the README.
 
 A deliberately broken fixture (two teams sharing one alias) proves that a failing dbt test stops the build.
 

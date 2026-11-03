@@ -82,6 +82,18 @@ def test_local_dates_follow_the_sao_paulo_zone_around_midnight(database: Path) -
     assert local["football-data-910005"] == (date(2018, 12, 1), "00:30")
 
 
+def test_with_no_rights_rules_every_match_is_unknown_and_names_no_broadcaster(
+    database: Path,
+) -> None:
+    rows = query(
+        database,
+        "select id, len(broadcasts), broadcasts[1].broadcaster_id, broadcasts[1].confidence "
+        "from matches",
+    )
+    assert rows
+    assert all(count == 1 and who is None and how == "unknown" for _id, count, who, how in rows)
+
+
 def test_kickoff_is_published_in_utc(database: Path) -> None:
     kickoffs = query(database, "select kickoff_utc from matches where id = 'football-data-910003'")
     assert kickoffs == [("2026-11-03T02:30:00Z",)]
@@ -104,29 +116,50 @@ def test_a_match_with_an_unknown_club_is_held_back_and_reported(database: Path) 
     ) == [("Clube Desconhecido", "unmapped", 1)]
 
 
-def test_adding_the_clubs_spelling_as_an_alias_brings_the_match_back(tmp_path: Path) -> None:
-    def rename(payloads: Payloads) -> None:
-        for match in payloads["brasileirao-serie-a"]["matches"]:
+@pytest.fixture(scope="module")
+def variants(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One build of the fixtures changed in three independent ways, one per match:
+
+    * 910006: the unknown club gets a spelling our alias list knows;
+    * 910002: a newer copy of it arrives in a second response, saying postponed;
+    * 910001: the away side's full name fits Flamengo and its short name fits Grêmio.
+    """
+
+    def change(payloads: Payloads) -> list[RawResponse]:
+        matches = payloads["brasileirao-serie-a"]["matches"]
+        for match in matches:
             if match["homeTeam"]["name"] == "Clube Desconhecido":
                 match["homeTeam"]["name"] = "SE PALMEIRAS"  # case and accents never matter
                 match["homeTeam"]["shortName"] = "Verdão"
+        away = matches[0]["awayTeam"]
+        away["name"] = "Flamengo"
+        away["shortName"] = "Grêmio"
+        newer = {**matches[1], "status": "POSTPONED", "lastUpdated": "2026-11-02T08:00:00Z"}
+        return [response("brasileirao-serie-a", {"matches": [newer]}, fetched_hour=8)]
 
-    database = build(tmp_path, rename)
+    return build(tmp_path_factory.mktemp("variants"), change)
+
+
+def test_adding_the_clubs_spelling_as_an_alias_brings_the_match_back(variants: Path) -> None:
     assert query(
-        database, "select home_team_id from matches where id = 'football-data-910006'"
+        variants, "select home_team_id from matches where id = 'football-data-910006'"
     ) == [("palmeiras",)]
 
 
-def test_the_same_match_in_two_responses_keeps_the_freshest(tmp_path: Path) -> None:
-    def add_newer_copy(payloads: Payloads) -> list[RawResponse]:
-        original = payloads["brasileirao-serie-a"]["matches"][1]
-        newer = {**original, "status": "POSTPONED", "lastUpdated": "2026-11-02T08:00:00Z"}
-        return [response("brasileirao-serie-a", {"matches": [newer]}, fetched_hour=8)]
-
-    database = build(tmp_path, add_newer_copy)
-    assert query(database, "select status from matches where id = 'football-data-910002'") == [
+def test_the_same_match_in_two_responses_keeps_the_freshest(variants: Path) -> None:
+    assert query(variants, "select status from matches where id = 'football-data-910002'") == [
         ("postponed",)
     ]
+
+
+def test_a_name_that_fits_two_teams_is_ambiguous_and_the_match_is_held_back(
+    variants: Path,
+) -> None:
+    """The provider's full name fits Flamengo and its short name fits Grêmio: never guess."""
+    assert query(variants, "select 1 from matches where id = 'football-data-910001'") == []
+    assert query(variants, "select team_name, resolution from int_unmapped_teams") == [
+        ("Flamengo", "ambiguous")
+    ]  # the unknown club of the fixture was given a spelling, so it is no longer reported
 
 
 def test_a_status_we_do_not_know_stops_the_build(tmp_path: Path) -> None:
@@ -136,24 +169,6 @@ def test_a_status_we_do_not_know_stops_the_build(tmp_path: Path) -> None:
     with pytest.raises(DbtBuildError) as caught:
         build(tmp_path, invent_status)
     assert any("accepted_values_stg_football_data_matches" in n for n in caught.value.failed)
-
-
-def test_a_name_that_fits_two_teams_is_ambiguous_and_the_match_is_held_back(
-    tmp_path: Path,
-) -> None:
-    """The provider's full name fits Flamengo and its short name fits Grêmio: never guess."""
-
-    def fit_two_teams(payloads: Payloads) -> None:
-        away = payloads["brasileirao-serie-a"]["matches"][0]["awayTeam"]
-        away["name"] = "Flamengo"
-        away["shortName"] = "Grêmio"
-
-    database = build(tmp_path, fit_two_teams)
-    assert query(database, "select 1 from matches where id = 'football-data-910001'") == []
-    assert query(database, "select resolution from int_unmapped_teams order by resolution") == [
-        ("ambiguous",),
-        ("unmapped",),
-    ]  # the second is the unknown club of the fixture
 
 
 def test_competitions_are_published_with_their_provider_ids_and_coverage(
