@@ -10,6 +10,7 @@ import re
 from collections.abc import Iterator
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 
@@ -280,9 +281,8 @@ def test_the_footer_carries_the_data_attributions(page: Page, strings: dict[str,
         == "Football data provided by the Football-Data.org API"
     )
     assert "API-Football" in str(strings["footer.attribution.apiFootball"])
-    links = [attrs.get("href") for attrs in page.find("a")]
-    assert "https://www.football-data.org/" in links
-    assert "https://www.api-football.com/" in links
+    hosts = {urlparse(attrs.get("href") or "").hostname for attrs in page.find("a")}
+    assert {"www.football-data.org", "www.api-football.com"} <= hosts
 
 
 def test_the_footer_has_a_privacy_notice_and_the_repository_has_a_privacy_file(
