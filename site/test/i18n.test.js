@@ -98,3 +98,10 @@ test('the real strings file is valid and has no empty string', async () => {
   })(real, '');
   assert.deepEqual(empty, []);
 });
+
+test('has() says whether a string exists, and a group or a missing key is not one', () => {
+  const { has } = createTranslator(strings);
+  assert.equal(has('greeting.hello'), true);
+  assert.equal(has('greeting'), false);
+  assert.equal(has('nothing.here'), false);
+});

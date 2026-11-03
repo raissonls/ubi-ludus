@@ -1,0 +1,390 @@
+{
+  "extra_teams": [
+    {
+      "id": "xss-fc",
+      "name": "<img src=x onerror=window.__xss=1>FC",
+      "short_name": "<b onmouseover=window.__xss=2>FC</b>",
+      "aliases": [],
+      "country": "BR",
+      "colors": {
+        "primary": "#112233",
+        "secondary": "#445566"
+      }
+    }
+  ],
+  "cases": [
+    {
+      "case": "scheduled-rule",
+      "match": {
+        "id": "gallery-scheduled-rule",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "premiere",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "scheduled-confirmed",
+      "match": {
+        "id": "gallery-scheduled-confirmed",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "scheduled-mixed",
+      "match": {
+        "id": "gallery-scheduled-mixed",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "globo",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "cazetv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "scheduled-unknown",
+      "match": {
+        "id": "gallery-scheduled-unknown",
+        "competition_id": "uefa-champions-league",
+        "season": "2026",
+        "round": "3",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "real-madrid",
+        "away_team_id": "barcelona",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": null,
+            "confidence": "unknown",
+            "source": "none",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "scheduled-many-broadcasters",
+      "match": {
+        "id": "gallery-scheduled-many-broadcasters",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "premiere",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "globoplay",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "disney-plus",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "espn",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "cazetv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "live",
+      "match": {
+        "id": "gallery-live",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-02T11:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "live",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "premiere",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "finished",
+      "match": {
+        "id": "gallery-finished",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "33",
+        "kickoff_utc": "2026-10-30T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "finished",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "postponed",
+      "match": {
+        "id": "gallery-postponed",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "postponed",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "cancelled",
+      "match": {
+        "id": "gallery-cancelled",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "cancelled",
+        "broadcasts": [
+          {
+            "broadcaster_id": null,
+            "confidence": "unknown",
+            "source": "none",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "rescheduled",
+      "match": {
+        "id": "gallery-rescheduled",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "rescheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ],
+        "rescheduled_at": "2026-11-02T09:00:00Z"
+      }
+    },
+    {
+      "case": "teams-not-decided",
+      "match": {
+        "id": "gallery-teams-not-decided",
+        "competition_id": "amistosos-selecoes",
+        "season": "2026",
+        "round": null,
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "brasil",
+        "away_team_id": null,
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": null,
+            "confidence": "unknown",
+            "source": "none",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "knockout-final",
+      "match": {
+        "id": "gallery-knockout-final",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "final",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "knockout-unknown-stage",
+      "match": {
+        "id": "gallery-knockout-unknown-stage",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "last-8",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "case": "hostile-names",
+      "match": {
+        "id": "gallery-hostile-names",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "xss-fc",
+        "away_team_id": "sao-paulo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

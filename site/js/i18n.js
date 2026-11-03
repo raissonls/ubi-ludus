@@ -28,6 +28,7 @@ function find(strings, key) {
  * Build the functions the rest of the site uses to read strings.
  *
  * t(key, values)        a string, with {name} replaced from values
+ * has(key)              whether the strings file has a string at that key
  * plural(key, n, values) the form for n ("one", "other", ...) of an object of forms, with
  *                       {count} set to n; the form is chosen by Intl.PluralRules
  */
@@ -58,7 +59,11 @@ export function createTranslator(strings, locale = LOCALE) {
     return typeof form === 'string' ? fill(form, { ...values, count }) : `[${key}]`;
   }
 
-  return { t, plural };
+  function has(key) {
+    return typeof find(strings, key) === 'string';
+  }
+
+  return { t, plural, has };
 }
 
 /**

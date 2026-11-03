@@ -287,10 +287,11 @@ input[type="text"] {
   gap: var(--space-2);
 }
 
-.match {
+/* --- The match card ----------------------------------------------------------------------- */
+
+.match-card {
   display: grid;
-  gap: var(--space-1) var(--space-4);
-  grid-template-columns: 1fr;
+  gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   background: var(--color-surface);
   border: var(--border-width) solid var(--color-border);
@@ -298,21 +299,134 @@ input[type="text"] {
   border-radius: var(--radius-sm);
 }
 
-.match__teams {
-  font-weight: var(--font-weight-bold);
+/* A match that is over is flatter and quieter: no surface, muted text. */
+.match-card[data-state="finished"] {
+  background: transparent;
+  color: var(--color-text-muted);
 }
 
-.match__competition,
-.match time {
+.match-card[data-state="cancelled"] .match-card__teams {
+  text-decoration: line-through;
+}
+
+.match-card__when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
 
-@media (min-width: 40rem) {
-  .match {
-    grid-template-columns: 11rem 1fr auto;
-    align-items: baseline;
-  }
+.match-card__teams {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.match-card__competition {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* What state the match is in: always a word, with a colour to help. */
+.state {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  font-weight: var(--font-weight-bold);
+}
+
+.state--live {
+  background: var(--color-live-bg);
+  color: var(--color-live-fg);
+}
+
+.state--cancelled {
+  background: var(--color-live-bg);
+  color: var(--color-live-fg);
+}
+
+.state--postponed,
+.state--rescheduled {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-fg);
+}
+
+.state--finished {
+  background: var(--color-unknown-bg);
+  color: var(--color-unknown-fg);
+}
+
+.match-card__watch {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.match-card__label {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.badges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.badge {
+  padding: var(--space-1) var(--space-3);
+  border-radius: 999px;
+  font-size: var(--font-size-sm);
+}
+
+.badge[hidden] {
+  display: none;
+}
+
+.badge--confirmed {
+  background: var(--color-confirmed-bg);
+  color: var(--color-confirmed-fg);
+  font-weight: var(--font-weight-bold);
+}
+
+.badge--rule {
+  background: var(--color-rule-bg);
+  color: var(--color-rule-fg);
+}
+
+.badges__more {
+  justify-self: start;
+  min-height: 2rem;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+/* How sure we are, in words under the badges. "Unknown" names nobody. */
+.confidence {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.confidence--confirmed {
+  color: var(--color-confirmed-fg);
+}
+
+.confidence--rule {
+  color: var(--color-text-muted);
+}
+
+.confidence--unknown {
+  justify-self: start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-unknown-bg);
+  color: var(--color-unknown-fg);
 }
 /* --- Services picker ---------------------------------------------------------------------- */
 

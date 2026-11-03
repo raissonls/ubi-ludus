@@ -11,6 +11,7 @@ SITE = Path(__file__).resolve().parents[2] / "site"
 # The published files the site loads from /data/. The pipeline writes the real ones; the tests
 # serve small hand-written ones (tests/fixtures/site/data, valid against the schemas).
 DATA = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "data"
+GALLERY = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "gallery"
 NOW = "2026-11-02T12:00:00Z"  # the matches of the fixtures are in the days after this
 STORAGE_KEY = "ubi-ludus:preferences"
 SECRET_TEAM = "time-secreto-xyz"  # noqa: S105 - a marker that must never leave the browser

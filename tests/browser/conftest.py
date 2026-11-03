@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 import pytest
 from playwright.sync_api import Browser, Playwright, sync_playwright
-from site_browser import DATA, SITE
+from site_browser import DATA, GALLERY, SITE
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -25,6 +25,8 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
         clean = urlparse(path).path
         if clean.startswith("/data/"):
             return str(DATA / clean.removeprefix("/data/"))
+        if clean.startswith("/gallery/"):  # the test-only page that draws every card
+            return str(GALLERY / clean.removeprefix("/gallery/"))
         return super().translate_path(path)
 
 
