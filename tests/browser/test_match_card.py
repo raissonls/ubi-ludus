@@ -39,6 +39,14 @@ SIGNATURE = """
     out[card.dataset.case] = {
       state: card.dataset.state,
       confidence: card.dataset.confidence,
+      access: card.dataset.access ?? null,
+      accessLine: card.querySelector('.match-card__access')
+        ? {
+            text: card.querySelector('.match-card__access').textContent,
+            ...read(card.querySelector('.match-card__access'), colours),
+          }
+        : null,
+      cardBorder: read(card, ['border-top-style', 'border-inline-start-style']),
       card: read(card, [...colours, 'border-inline-start-color', 'border-inline-start-width']),
       teams: read(
         card.querySelector('.match-card__teams'),
@@ -52,6 +60,8 @@ SIGNATURE = """
           name: badge.querySelector('span:not([aria-hidden]):not(.visually-hidden)').textContent,
           tick: badge.querySelector('[aria-hidden]') !== null,
           kind: badge.className,
+          access: badge.dataset.access ?? null,
+          outline: read(badge, ['border-top-style', 'border-top-width']),
           ...read(badge, [...colours, 'font-weight']),
         })),
       hiddenBadges: [...card.querySelectorAll('.badge')].filter((badge) => badge.hidden).length,
@@ -311,8 +321,8 @@ def test_names_that_look_like_html_are_shown_as_text_and_run_nothing(
 def test_the_gallery_loads_cleanly_from_this_origin_only(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, path=GALLERY):
         page = current.page
-        assert page.locator("[data-case]").count() == 14
-        assert page.locator("[data-case] time[datetime]").count() == 14
+        assert page.locator("[data-case]").count() == 15
+        assert page.locator("[data-case] time[datetime]").count() == 15
         assert current.console == []
         assert current.failed == []
         assert all(url.startswith(origin + "/") for url in current.requests)
@@ -378,18 +388,24 @@ def test_the_states_and_confidences_are_told_apart_by_more_than_colour(
         assert badge["confirmed"]["tick"] is True and badge["rule"]["tick"] is False
 
 
+@pytest.mark.parametrize("variant", ["", "+services"])
 @pytest.mark.parametrize("scheme", ["light", "dark"])
-def test_every_card_still_looks_as_recorded(browser: Browser, origin: str, scheme: str) -> None:
+def test_every_card_still_looks_as_recorded(
+    browser: Browser, origin: str, scheme: str, variant: str
+) -> None:
     """Colours, borders, fonts weights and words of every state against the recorded ones.
 
-    A deliberate change of look is recorded with UBI_LUDUS_UPDATE_SNAPSHOTS=1 and the diff of
-    snapshots/match_card_styles.json is reviewed with the code.
+    "+services" is the same cards for a visitor who has Premiere. A deliberate change of look is
+    recorded with UBI_LUDUS_UPDATE_SNAPSHOTS=1 and the diff of snapshots/match_card_styles.json
+    is reviewed with the code.
     """
-    for current in visit(browser, origin, scheme, path=GALLERY):
+    key = scheme + variant
+    path = GALLERY + ("?services=premiere" if variant else "")
+    for current in visit(browser, origin, scheme, path=path):
         found = signature(current.page)
     recorded = json.loads(SNAPSHOT.read_text(encoding="utf-8")) if SNAPSHOT.exists() else {}
     if os.environ.get("UBI_LUDUS_UPDATE_SNAPSHOTS") == "1":
-        recorded[scheme] = found
+        recorded[key] = found
         SNAPSHOT.parent.mkdir(exist_ok=True)
         SNAPSHOT.write_text(
             json.dumps(recorded, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
@@ -397,7 +413,7 @@ def test_every_card_still_looks_as_recorded(browser: Browser, origin: str, schem
             newline="\n",  # the same bytes on Windows and Linux
         )
         return
-    assert scheme in recorded, "no recorded look yet: run once with UBI_LUDUS_UPDATE_SNAPSHOTS=1"
-    assert set(found) == set(recorded[scheme]), "a card was added or removed"
-    changed = [name for name in found if found[name] != recorded[scheme][name]]
+    assert key in recorded, "no recorded look yet: run once with UBI_LUDUS_UPDATE_SNAPSHOTS=1"
+    assert set(found) == set(recorded[key]), "a card was added or removed"
+    changed = [name for name in found if found[name] != recorded[key][name]]
     assert changed == [], f"these cards look different from the recorded ones: {changed}"

@@ -522,3 +522,61 @@ input[type="text"] {
     animation: none;
   }
 }
+
+/* --- What the visitor can watch (FR-25) ---------------------------------------------------- */
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-1);
+}
+
+.filter input {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.filter__hint {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* A broadcaster the visitor has is outlined solid, one they do not have dashed. */
+.badge[data-access] {
+  border: 2px solid transparent;
+}
+
+.badge[data-access="yours"] {
+  border-color: currentColor;
+}
+
+.badge[data-access="other"] {
+  border-style: dashed;
+  border-color: currentColor;
+}
+
+.match-card__access {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.match-card__access--yes {
+  color: var(--color-confirmed-fg);
+}
+
+/* A match the visitor cannot watch is set apart: a dashed edge and the words, not colour alone. */
+.match-card[data-access="no"] {
+  border-style: dashed;
+  border-inline-start-style: solid;
+}
+
+.match-card__access--no {
+  justify-self: start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-fg);
+}

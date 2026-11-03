@@ -35,12 +35,15 @@ try {
     onChange: (ids) => preferences.setServices(ids),
   });
   const matches = createMatchesView({ data, translator });
+  const onlyWatchable = document.getElementById('only-watchable');
+  onlyWatchable.addEventListener('change', () => preferences.setOnlyWatchable(onlyWatchable.checked));
 
   function show() {
-    const { teams, services } = chosen();
-    picker.update(teams);
-    servicesPicker.update(services);
-    matches.render(teams);
+    const choices = chosen();
+    picker.update(choices.teams);
+    servicesPicker.update(choices.services);
+    onlyWatchable.checked = choices.onlyWatchable;
+    matches.render(choices);
   }
   preferences.subscribe(show);
   show();

@@ -5,7 +5,7 @@
 import { el } from './dom.js';
 import { defaultView, selectMatches } from './home-views.js';
 import { renderMatchCard } from './match-card.js';
-import { describeMatch } from './match-model.js';
+import { accessibleBroadcasters, describeMatch } from './match-model.js';
 
 /** Cards after this one enter together, so a long list does not take long to appear. */
 const ENTER_STEPS = 6;
@@ -16,12 +16,14 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
   const status = document.getElementById('matches-status');
   const buttons = [...document.querySelectorAll('#view-switch [data-view]')];
   let teamIds = [];
+  let accessible = accessibleBroadcasters([], data);
+  let onlyWatchable = false;
   let chosen = null; // the list the visitor picked, if they have
 
   const current = () => chosen ?? defaultView(teamIds);
 
   function card(match, index, followedTeam) {
-    const item = renderMatchCard(describeMatch(match, data), {
+    const item = renderMatchCard(describeMatch(match, data, { accessible }), {
       translator,
       accentTeam: followedTeam,
     });
@@ -47,7 +49,12 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
 
   function draw() {
     const view = current();
-    const { followed, others } = selectMatches(view, data.matches, teamIds, clock());
+    const now = clock();
+    // Only a match we know the visitor cannot watch is hidden: with no broadcaster known, nothing
+    // is known, and a match that is over has nothing to watch either way.
+    const canBeWatched = (match) => describeMatch(match, data, { accessible }).access !== 'no';
+    const keep = onlyWatchable ? canBeWatched : undefined;
+    const { followed, others } = selectMatches(view, data.matches, teamIds, now, keep);
     const total = followed.length + others.length;
     const titled = followed.length > 0 && others.length > 0;
     const groups = [];
@@ -60,12 +67,18 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
     list.replaceChildren(...groups);
     list.hidden = total === 0;
     empty.hidden = total > 0;
-    empty.textContent = translator.t(emptyKey(view));
+    const allHidden = onlyWatchable && total === 0 && hasMatches(view, now);
+    empty.textContent = translator.t(allHidden ? 'matches.emptyFiltered' : emptyKey(view));
     for (const button of buttons) {
       button.setAttribute('aria-pressed', String(button.dataset.view === view));
     }
     const label = buttons.find((button) => button.dataset.view === view)?.textContent ?? '';
     status.textContent = translator.plural('matches.shown', total, { view: label });
+  }
+
+  function hasMatches(view, now) {
+    const { followed, others } = selectMatches(view, data.matches, teamIds, now);
+    return followed.length + others.length > 0;
   }
 
   function emptyKey(view) {
@@ -83,9 +96,11 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
   }
 
   return {
-    /** Draw the list for the teams the visitor follows now. */
-    render(ids) {
-      teamIds = ids;
+    /** Draw the list for the teams and services the visitor has chosen now. */
+    render({ teams, services, onlyWatchable: only }) {
+      teamIds = teams;
+      accessible = accessibleBroadcasters(services, data);
+      onlyWatchable = only;
       draw();
     },
   };

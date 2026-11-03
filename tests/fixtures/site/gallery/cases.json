@@ -47,6 +47,33 @@
       }
     },
     {
+      "case": "pay-only",
+      "match": {
+        "id": "gallery-pay-only",
+        "competition_id": "brasileirao-serie-a",
+        "season": "2026",
+        "round": "34",
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "premiere",
+            "confidence": "rule",
+            "source": "rights_rule",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
+    },
+    {
       "case": "scheduled-confirmed",
       "match": {
         "id": "gallery-scheduled-confirmed",

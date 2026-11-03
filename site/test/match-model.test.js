@@ -4,6 +4,7 @@ import { test } from 'node:test';
 
 import {
   STATES,
+  accessibleBroadcasters,
   describeBadges,
   describeMatch,
   describeRound,
@@ -12,8 +13,10 @@ import {
 
 const broadcastersById = new Map([
   ['globo', { id: 'globo', name: 'TV Globo', kind: 'free_tv' }],
-  ['sportv', { id: 'sportv', name: 'SporTV', kind: 'pay_tv' }],
-  ['premiere', { id: 'premiere', name: 'Premiere', kind: 'ppv' }],
+  ['sportv', { id: 'sportv', name: 'SporTV', kind: 'pay_tv', service_id: 'tv-por-assinatura' }],
+  ['premiere', { id: 'premiere', name: 'Premiere', kind: 'ppv', service_id: 'premiere' }],
+  ['espn', { id: 'espn', name: 'ESPN', kind: 'pay_tv', service_id: 'tv-por-assinatura' }],
+  ['caze', { id: 'caze', name: 'CazéTV', kind: 'youtube', service_id: null }],
 ]);
 const data = {
   teamsById: new Map([
@@ -22,6 +25,11 @@ const data = {
   ]),
   competitionsById: new Map([['serie-a', { id: 'serie-a', name: 'Campeonato Brasileiro Série A' }]]),
   broadcastersById,
+  servicesById: new Map([
+    ['tv-por-assinatura', { id: 'tv-por-assinatura', includes_broadcasters: ['sportv', 'espn'] }],
+    ['premiere', { id: 'premiere', includes_broadcasters: ['premiere'] }],
+    ['disney-plus', { id: 'disney-plus', includes_broadcasters: ['disney-plus', 'espn'] }],
+  ]),
 };
 const rule = (id) => ({ broadcaster_id: id, confidence: 'rule', source: 'rights_rule' });
 const confirmed = (id) => ({ broadcaster_id: id, confidence: 'confirmed', source: 'override' });
@@ -152,4 +160,48 @@ test('a rescheduled match carries the time it was noticed', () => {
 test('a match with no broadcasts list at all is unknown, not an error', () => {
   const { broadcasts: _gone, ...bare } = match();
   assert.equal(describeMatch(bare, data).confidence, 'unknown');
+});
+
+// --- what the visitor can watch (FR-25) ----------------------------------------------------
+
+test('free TV and YouTube are for everybody, the rest needs a ticked service', () => {
+  assert.deepEqual([...accessibleBroadcasters([], data)].sort(), ['caze', 'globo']);
+  assert.deepEqual([...accessibleBroadcasters(['premiere'], data)].sort(), ['caze', 'globo', 'premiere']);
+});
+
+test('a ticked service gives every broadcaster it includes, even one of another service', () => {
+  const found = accessibleBroadcasters(['disney-plus'], data);
+  assert.equal(found.has('espn'), true); // Disney+ includes ESPN
+  assert.equal(found.has('sportv'), false);
+  assert.equal(accessibleBroadcasters(['tv-por-assinatura'], data).has('sportv'), true);
+  assert.deepEqual([...accessibleBroadcasters(['gone-service'], data)].sort(), ['caze', 'globo']);
+});
+
+test('a card says nothing about access unless the services are known', () => {
+  const card = describeMatch(match(), data);
+  assert.equal(card.access, null);
+  assert.equal('accessible' in card.badges[0], false);
+});
+
+test('a match is "yes" when one listed broadcaster is the visitor’s, "no" when none is', () => {
+  const both = match({ broadcasts: [rule('globo'), rule('sportv')] });
+  const onlyPay = match({ broadcasts: [rule('sportv'), rule('premiere')] });
+  const free = accessibleBroadcasters([], data);
+  assert.equal(describeMatch(both, data, { accessible: free }).access, 'yes');
+  assert.equal(describeMatch(onlyPay, data, { accessible: free }).access, 'no');
+  const withPremiere = accessibleBroadcasters(['premiere'], data);
+  assert.equal(describeMatch(onlyPay, data, { accessible: withPremiere }).access, 'yes');
+  const badges = describeMatch(onlyPay, data, { accessible: withPremiere }).badges;
+  assert.deepEqual(badges.map((b) => [b.id, b.accessible]), [['premiere', true], ['sportv', false]]);
+});
+
+test('an unknown match is never "no": nothing is known, so nothing is denied', () => {
+  const card = describeMatch(match({ broadcasts: [unknown] }), data, { accessible: new Set() });
+  assert.equal(card.access, 'unknown');
+});
+
+test('a match that is over or off has no access to speak of', () => {
+  for (const status of ['finished', 'postponed', 'cancelled']) {
+    assert.equal(describeMatch(match({ status }), data, { accessible: new Set() }).access, null, status);
+  }
 });

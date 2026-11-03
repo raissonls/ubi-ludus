@@ -46,6 +46,11 @@
         <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
         <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
       </div>
+      <p class="filter">
+        <input type="checkbox" id="only-watchable" aria-describedby="only-watchable-hint">
+        <label for="only-watchable" data-i18n="matches.onlyWatchable"></label>
+      </p>
+      <p id="only-watchable-hint" class="filter__hint" data-i18n="matches.onlyWatchableHint"></p>
       <div id="matches-list" hidden></div>
       <p id="matches-empty"></p>
       <p id="matches-status" class="visually-hidden" role="status"></p>

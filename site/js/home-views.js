@@ -31,8 +31,11 @@ function byKickoff(a, b) {
 /**
  * The matches of one view: `followed` are the ones with a team the visitor follows, `others` the
  * rest (empty for "mine"); each group soonest first, so followed teams always come before the rest.
+ * `keep` says which matches may be listed at all (the "only what I can watch" filter).
  */
-export function selectMatches(view, matches, teamIds, now) {
+export function selectMatches(view, allMatches, teamIds, now, keep = () => true) {
+  // The filter comes first, so "my teams" still gives ten matches when some were filtered out.
+  const matches = allMatches.filter(keep);
   if (view === 'mine') {
     return { followed: upcomingMatches(matches, teamIds, now, MINE_LIMIT), others: [] };
   }
