@@ -16,7 +16,8 @@ js/services-picker.js  the "Which services do you have?" checkboxes
 js/matches-preview.js  which matches of the followed teams are still to come; pure
 js/match-model.js  turns a match and the data into what a card shows (state, confidence, badges); pure
 js/match-card.js   draws one match card from that model
-js/matches-view.js  draws the upcoming matches of the followed teams as cards
+js/home-views.js   which matches each home list shows (my teams, today, this week), followed teams first; pure
+js/matches-view.js  draws the chosen list as cards and switches between the lists
 js/dom.js          safe element building and team colours as CSS variables
 js/format.js      dates and times in Brazil's time zone (Intl)
 i18n/pt-BR.json   every string the visitor reads
@@ -75,3 +76,11 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - More than four broadcasters wait behind a "+N" button (`aria-expanded`, works with Enter and Space).
 - Names come from the data and are always set as text, never as markup.
 - Tests: `tests/fixtures/site/gallery/cards.html` draws all 14 cases (every state, confidence, a long list, a hostile name) with the site's own modules. `tests/browser/test_match_card.py` checks them, runs axe in both themes and three sizes, and compares colours, borders and words with `tests/browser/snapshots/match_card_styles.json` (computed styles rather than pixels, so Windows and Linux agree). After a deliberate change of look, record again with `UBI_LUDUS_UPDATE_SNAPSHOTS=1` and review the diff.
+
+## The home lists
+- Three lists, chosen with three buttons (`aria-pressed`, so the chosen one is also bold): **Meus times** (the next ten matches of the followed teams), **Hoje** and **Esta semana**.
+- Days are calendar days in Brazil (`America/Sao_Paulo`), not UTC: a match at 01:00 UTC still belongs to the evening before. "This week" is today and the six days after it. A match still marked "to come" whose kickoff was more than three hours ago is old data and is left out.
+- In Hoje and Esta semana the matches of followed teams come first, then the others, each soonest first. When both groups have matches they get a title ("Jogos dos seus times", "Outros jogos"); followed cards also carry `data-followed` and a stronger border.
+- Until the visitor presses a button the page chooses: **Meus times** if they follow a team, else **Hoje**. A button they pressed is kept while the page is open (nothing about it is saved).
+- The lists come before the pickers, so a returning visitor's next match is on screen on a phone without scrolling (tested at 375x812).
+- Cards enter with a short rise and fade, the first six a beat apart; with reduced motion there is no animation at all.

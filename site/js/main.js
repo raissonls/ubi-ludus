@@ -1,5 +1,5 @@
 // Entry point: the strings, the visitor's choices and the published data, and the views that use
-// them. More views come in the next tasks (M3-04 onwards).
+// them.
 
 import { loadData } from './data.js';
 import { applyStrings, createTranslator, loadStrings } from './i18n.js';

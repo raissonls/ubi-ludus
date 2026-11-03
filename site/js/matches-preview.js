@@ -6,6 +6,14 @@ export const STILL_RELEVANT_MS = 3 * 60 * 60 * 1000;
 
 const OPEN = new Set(['scheduled', 'rescheduled', 'live']);
 
+/** A match still marked as to come whose kickoff was long ago: old data, not a match to show. */
+export function isStale(match, now) {
+  return (
+    (match.status === 'scheduled' || match.status === 'rescheduled') &&
+    Date.parse(match.kickoff_utc) < now.getTime() - STILL_RELEVANT_MS
+  );
+}
+
 /**
  * The matches of `teamIds` that are live or still to come, soonest first, at most `limit`.
  * A match that is "scheduled" but started long ago is stale data, not an upcoming match.

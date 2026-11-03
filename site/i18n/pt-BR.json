@@ -8,7 +8,7 @@
   },
   "home": {
     "title": "Onde assistir futebol no Brasil",
-    "intro": "Os jogos de hoje e dos próximos dias, com a emissora de cada um e o quanto temos certeza dela. Em breve aqui.",
+    "intro": "Os jogos de hoje e dos próximos dias, com a emissora de cada um e o quanto temos certeza dela.",
     "matchesLoaded": {
       "one": "{count} jogo carregado.",
       "other": "{count} jogos carregados."
@@ -48,9 +48,17 @@
     }
   },
   "matches": {
-    "title": "Próximos jogos dos seus times",
-    "pickPrompt": "Escolha ao menos um time para ver os jogos dele.",
+    "title": "Jogos",
+    "pickPrompt": "Escolha ao menos um time, logo abaixo, para ver os jogos dele.",
     "empty": "Nenhum jogo dos seus times nos próximos dias.",
+    "emptyToday": "Nenhum jogo hoje.",
+    "emptyWeek": "Nenhum jogo nos próximos sete dias.",
+    "groupMine": "Jogos dos seus times",
+    "groupOthers": "Outros jogos",
+    "shown": {
+      "one": "{count} jogo em “{view}”.",
+      "other": "{count} jogos em “{view}”."
+    },
     "tbd": "A definir"
   },
   "card": {
@@ -107,5 +115,10 @@
       "footballData": "Football data provided by the Football-Data.org API",
       "apiFootball": "Dados também de API-Football"
     }
+  },
+  "views": {
+    "mine": "Meus times",
+    "today": "Hoje",
+    "week": "Esta semana"
   }
 }
