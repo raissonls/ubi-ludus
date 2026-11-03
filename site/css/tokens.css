@@ -1,0 +1,99 @@
+/*
+ * Design tokens: colour, type, spacing, shape and motion. Every other style reads these, so a
+ * theme or a scale changes in one place.
+ *
+ * Themes follow the visitor's system setting (prefers-color-scheme). The colour pairs below are
+ * checked for WCAG AA contrast by tests/unit/test_site.py, in both themes.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Type: the system fonts, so nothing is downloaded and nothing third-party is contacted. */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --line-height-tight: 1.25;
+  --line-height-base: 1.55;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  /* Space: a 4 px step. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+
+  /* Shape. */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --border-width: 1px;
+  --content-width: 60rem;
+
+  /* Motion: short, and none at all when the visitor asks for less (see below). */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Colour, light theme. */
+  --color-bg: #f6f7f4;
+  --color-surface: #ffffff;
+  --color-text: #14171c;
+  --color-text-muted: #4a5160;
+  --color-border: #cfd4dc;
+  --color-border-strong: #7a8294; /* the edge of a control: at least 3:1 against its surface */
+  --color-accent: #0b6e4f;
+  --color-on-accent: #ffffff;
+  --color-link: #0a5c9e;
+  --color-focus: #1a56db;
+
+  /* How sure we are about a broadcast, and a match's state (used by the match card, M3-05). */
+  --color-confirmed-bg: #dff3e8;
+  --color-confirmed-fg: #0b4a33;
+  --color-rule-bg: #e3ecfb;
+  --color-rule-fg: #1b3a7a;
+  --color-unknown-bg: #ebedf1;
+  --color-unknown-fg: #3d4452;
+  --color-live-bg: #fde3e1;
+  --color-live-fg: #8a1410;
+  --color-warning-bg: #fff1cc;
+  --color-warning-fg: #5c3b00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0e1013;
+    --color-surface: #171a1f;
+    --color-text: #eceff4;
+    --color-text-muted: #a9b1bf;
+    --color-border: #2a2f39;
+    --color-border-strong: #7d8798;
+    --color-accent: #46c28f;
+    --color-on-accent: #04261a;
+    --color-link: #7db4f0;
+    --color-focus: #8ab4ff;
+
+    --color-confirmed-bg: #123a2a;
+    --color-confirmed-fg: #9ee6c3;
+    --color-rule-bg: #172a52;
+    --color-rule-fg: #b5ccff;
+    --color-unknown-bg: #232831;
+    --color-unknown-fg: #c3cad6;
+    --color-live-bg: #4a1714;
+    --color-live-fg: #ffb4ae;
+    --color-warning-bg: #4a3600;
+    --color-warning-fg: #ffe08a;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0ms;
+    --motion-base: 0ms;
+  }
+}

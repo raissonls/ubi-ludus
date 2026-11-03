@@ -1,0 +1,9 @@
+{
+  "name": "ubi-ludus-site",
+  "private": true,
+  "type": "module",
+  "description": "The static site. No dependencies and no build step: this file only tells Node that the .js files are ES modules, so the unit tests in test/ can import them.",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

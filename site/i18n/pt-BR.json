@@ -1,0 +1,23 @@
+{
+  "app": {
+    "name": "Ubi Ludus",
+    "tagline": "Onde assistir futebol no Brasil"
+  },
+  "skip": {
+    "toContent": "Pular para o conteúdo"
+  },
+  "home": {
+    "title": "Onde assistir futebol no Brasil",
+    "intro": "Os jogos de hoje e dos próximos dias, com a emissora de cada um e o quanto temos certeza dela. Em breve aqui."
+  },
+  "footer": {
+    "privacy": "Sem cadastro, sem cookies e sem rastreadores. O que você escolher fica só neste navegador.",
+    "privacyLink": "Aviso de privacidade",
+    "sourceCode": "Código-fonte",
+    "dataSources": "Fontes dos dados",
+    "attribution": {
+      "footballData": "Football data provided by the Football-Data.org API",
+      "apiFootball": "Dados também de API-Football"
+    }
+  }
+}
