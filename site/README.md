@@ -84,3 +84,10 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - Until the visitor presses a button the page chooses: **Meus times** if they follow a team, else **Hoje**. A button they pressed is kept while the page is open (nothing about it is saved).
 - The lists come before the pickers, so a returning visitor's next match is on screen on a phone without scrolling (tested at 375x812).
 - Cards enter with a short rise and fade, the first six a beat apart; with reduced motion there is no animation at all.
+
+## What the visitor can watch
+- A broadcaster is the visitor's if it is free TV or YouTube (no subscription needed), or belongs to a ticked service, or is included by one (Disney+ includes ESPN). With nothing ticked that is "free TV and YouTube only", as the services picker says (`accessibleBroadcasters` in `match-model.js`).
+- On a card: each badge is outlined solid when it is the visitor's and dashed when it is not (and says so to a screen reader), and a line says "Dá para assistir com os seus serviços." or "Nenhuma dessas emissoras está nos seus serviços." A match that cannot be watched also gets a dashed edge. Words, not colour alone.
+- A match with no known broadcaster is neither: it says "Transmissão ainda não confirmada" and nothing about access (FR-13). Finished, postponed and cancelled matches say nothing either.
+- **Só o que dá para assistir** hides only the matches known not to be watchable; matches with no confirmed broadcaster stay, since nothing says the visitor cannot watch them. The filter is applied before the ten-match limit of "Meus times". It is saved with the other choices (`onlyWatchable`, in localStorage only) and cleared by "Reset my data".
+- Tests: `tests/browser/test_watchable.py` serves changed fixture matches so every case exists; the card gallery takes `?services=premiere,globoplay` to draw the cards for a visitor with those services.

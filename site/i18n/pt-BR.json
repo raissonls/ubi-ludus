@@ -59,7 +59,10 @@
       "one": "{count} jogo em “{view}”.",
       "other": "{count} jogos em “{view}”."
     },
-    "tbd": "A definir"
+    "tbd": "A definir",
+    "emptyFiltered": "Nenhum jogo desta lista dá para assistir com os seus serviços.",
+    "onlyWatchable": "Só o que dá para assistir",
+    "onlyWatchableHint": "Jogos sem emissora confirmada continuam na lista."
   },
   "card": {
     "versus": "x",
@@ -99,7 +102,13 @@
       "one": "Mostrar mais {count} emissora",
       "other": "Mostrar mais {count} emissoras"
     },
-    "lessLabel": "Mostrar menos emissoras"
+    "lessLabel": "Mostrar menos emissoras",
+    "access": {
+      "yes": "Dá para assistir com os seus serviços.",
+      "no": "Nenhuma dessas emissoras está nos seus serviços.",
+      "badgeYes": "(você tem)",
+      "badgeNo": "(fora dos seus serviços)"
+    }
   },
   "countries": {
     "GB-ENG": "Inglaterra"

@@ -88,9 +88,19 @@ def test_services_and_teams_are_saved_together_and_neither_loses_the_other(
         page.fill("#team-search", "palm")
         page.keyboard.press("Enter")
         box(page, "Globoplay").check()
-        assert saved(page) == {"version": 1, "teams": ["palmeiras"], "services": ["globoplay"]}
+        assert saved(page) == {
+            "version": 1,
+            "teams": ["palmeiras"],
+            "services": ["globoplay"],
+            "onlyWatchable": False,
+        }
         page.get_by_role("button", name="Remover Palmeiras").click()
-        assert saved(page) == {"version": 1, "teams": [], "services": ["globoplay"]}
+        assert saved(page) == {
+            "version": 1,
+            "teams": [],
+            "services": ["globoplay"],
+            "onlyWatchable": False,
+        }
 
 
 def test_the_keyboard_ticks_a_service_with_space(browser: Browser, origin: str) -> None:

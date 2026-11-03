@@ -21,6 +21,9 @@ const STATE_KEY = {
 };
 // What a screen reader adds after a broadcaster's name; short, because it repeats on every badge.
 const BADGE_KEY = { confirmed: 'card.badge.confirmed', rule: 'card.badge.rule' };
+// Whether the visitor can watch: on a badge for a screen reader, and as a line on the card.
+const ACCESS_BADGE_KEY = { true: 'card.access.badgeYes', false: 'card.access.badgeNo' };
+const ACCESS_LINE_KEY = { yes: 'card.access.yes', no: 'card.access.no' };
 const CONFIDENCE_KEY = {
   confirmed: 'card.confidence.confirmed',
   rule: 'card.confidence.rule',
@@ -45,13 +48,19 @@ function team(side, translator) {
 
 function badge(item, translator) {
   const sure = item.confidence === 'confirmed';
-  return el('li', { class: `badge badge--${item.confidence}` }, [
+  // `accessible` is only there when the services are known. Yours: a solid outline; not yours: a
+  // dashed one, and the words for a screen reader.
+  const known = typeof item.accessible === 'boolean';
+  const attributes = { class: `badge badge--${item.confidence}` };
+  if (known) attributes['data-access'] = item.accessible ? 'yours' : 'other';
+  return el('li', attributes, [
     sure ? el('span', { 'aria-hidden': 'true', text: '✓ ' }) : '',
     el('span', { text: item.name }),
     el('span', {
       class: 'visually-hidden',
       text: ` (${translator.t(BADGE_KEY[item.confidence])})`,
     }),
+    known ? el('span', { class: 'visually-hidden', text: ` ${translator.t(ACCESS_BADGE_KEY[item.accessible])}` }) : '',
   ]);
 }
 
@@ -79,6 +88,14 @@ function watch(model, translator, cardId) {
       label(open);
     });
     children.push(more);
+  }
+  if (ACCESS_LINE_KEY[model.access]) {
+    children.push(
+      el('p', {
+        class: `match-card__access match-card__access--${model.access}`,
+        text: translator.t(ACCESS_LINE_KEY[model.access]),
+      }),
+    );
   }
   children.push(el('p', { class: `confidence confidence--${model.confidence}`, text: translator.t(CONFIDENCE_KEY[model.confidence]) }));
   return el('div', { class: 'match-card__watch' }, children);
@@ -117,11 +134,14 @@ export function renderMatchCard(model, { translator, accentTeam = null }) {
     text: round ? `${model.competition} · ${round}` : model.competition,
   });
 
-  const card = el(
-    'li',
-    { class: 'match-card', id: cardId, 'data-state': model.state, 'data-confidence': model.confidence },
-    [when, title, competition],
-  );
+  const attributes = {
+    class: 'match-card',
+    id: cardId,
+    'data-state': model.state,
+    'data-confidence': model.confidence,
+  };
+  if (model.access) attributes['data-access'] = model.access;
+  const card = el('li', attributes, [when, title, competition]);
   if (model.showBroadcasts) card.append(watch(model, translator, cardId));
   if (accentTeam) setAccent(card, accentTeam);
   return card;

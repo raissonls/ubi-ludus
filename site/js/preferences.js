@@ -1,4 +1,5 @@
-// The visitor's choices: the teams they follow and the services they have (PRD FR-22).
+// The visitor's choices: the teams they follow, the services they have and whether to hide what
+// they cannot watch (PRD FR-22, FR-25).
 //
 // They are saved in this browser's localStorage and nowhere else. Nothing here, or anywhere in the
 // site, sends them over the network. This is the only module that touches storage.
@@ -35,6 +36,7 @@ export function restrictTo(preferences, { teams, services }) {
   return {
     teams: preferences.teams.filter((id) => teams.has(id)),
     services: preferences.services.filter((id) => services.has(id)),
+    onlyWatchable: preferences.onlyWatchable,
   };
 }
 
@@ -48,7 +50,11 @@ function parse(text) {
   if (stored === null || typeof stored !== 'object' || stored.version !== VERSION) {
     return null;
   }
-  return { teams: cleanIds(stored.teams), services: cleanIds(stored.services) };
+  return {
+    teams: cleanIds(stored.teams),
+    services: cleanIds(stored.services),
+    onlyWatchable: stored.onlyWatchable === true,
+  };
 }
 
 /**
@@ -58,7 +64,7 @@ function parse(text) {
 export function createPreferences(getStorage = () => globalThis.localStorage) {
   const listeners = new Set();
   let persistent = true;
-  let state = { teams: [], services: [] };
+  let state = { teams: [], services: [], onlyWatchable: false };
 
   function storage() {
     try {
@@ -109,7 +115,7 @@ export function createPreferences(getStorage = () => globalThis.localStorage) {
   }
 
   function get() {
-    return { teams: [...state.teams], services: [...state.services] };
+    return { teams: [...state.teams], services: [...state.services], onlyWatchable: state.onlyWatchable };
   }
 
   load();
@@ -126,9 +132,15 @@ export function createPreferences(getStorage = () => globalThis.localStorage) {
       save();
       changed();
     },
+    /** Hide the matches the visitor has no way to watch ("only what I can watch"). */
+    setOnlyWatchable(value) {
+      state = { ...state, onlyWatchable: value === true };
+      save();
+      changed();
+    },
     /** Forget everything: the saved copy and the one in memory ("Reset my data"). */
     reset() {
-      state = { teams: [], services: [] };
+      state = { teams: [], services: [], onlyWatchable: false };
       const store = storage();
       if (store) {
         try {

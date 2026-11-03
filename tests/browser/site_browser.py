@@ -36,6 +36,11 @@ def answer_with(status: int) -> Callable[[Route], None]:
     return lambda route: route.fulfill(status=status)
 
 
+def serve_json(document: object) -> Callable[[Route], None]:
+    body = json.dumps(document)
+    return lambda route: route.fulfill(status=200, content_type="application/json", body=body)
+
+
 class Visit:
     """One page load, with everything the browser reported while it happened."""
 
@@ -71,11 +76,13 @@ def visit(
     storage_blocked: bool = False,
     broken: dict[str, int] | None = None,
     newer_format: str | None = None,
+    changed_data: dict[str, dict[str, object]] | None = None,
     path: str = "/index.html",
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
-    it were in a format the site does not know."""
+    it were in a format the site does not know, `changed_data` maps a data file to the document
+    served in its place."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
@@ -94,6 +101,8 @@ def visit(
         page.clock.set_fixed_time(NOW)
         for name, status in (broken or {}).items():
             page.route(f"**/data/{name}.json", answer_with(status))
+        for name, document in (changed_data or {}).items():
+            page.route(f"**/data/{name}.json", serve_json(document))
         if newer_format:
             document = json.loads((DATA / f"{newer_format}.json").read_text(encoding="utf-8"))
             document["schema_version"] = "2.0"

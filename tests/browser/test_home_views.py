@@ -183,14 +183,14 @@ def test_the_next_match_of_my_teams_is_on_screen_without_scrolling_on_a_phone(
         assert page.evaluate("window.scrollY") == 0
 
 
-def test_the_same_holds_at_320_px_and_with_all_the_broadcasters(
+def test_on_the_smallest_phone_the_next_match_and_its_teams_are_on_screen(
     browser: Browser, origin: str
 ) -> None:
     height = VIEWPORTS["narrow"][1]
     for current in visit(browser, origin, size="narrow", saved=following("palmeiras")):
-        box = current.page.locator("#matches-list .match-card").first.bounding_box()
-        assert box is not None
-        assert box["y"] + box["height"] <= height + 120, box  # at least the top of the card
+        teams = current.page.locator("#matches-list .match-card__teams").first.bounding_box()
+        assert teams is not None
+        assert teams["y"] + teams["height"] <= height, teams  # the card starts above the fold
 
 
 # --- motion --------------------------------------------------------------------------------------

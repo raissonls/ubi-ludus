@@ -1,12 +1,18 @@
 {
   "dark": {
     "cancelled": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(23, 26, 31)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "unknown",
       "confidenceLine": null,
@@ -25,12 +31,18 @@
       "watchLabel": null
     },
     "finished": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgba(0, 0, 0, 0)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(169, 177, 191)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": null,
@@ -49,13 +61,20 @@
       "watchLabel": null
     },
     "hostile-names": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -64,6 +83,10 @@
         "border-inline-start-color": "rgb(17, 34, 51)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -82,13 +105,20 @@
       "watchLabel": "Onde assistir"
     },
     "knockout-final": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(18, 58, 42)",
           "color": "rgb(158, 230, 195)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         }
       ],
@@ -97,6 +127,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "confirmed",
       "confidenceLine": {
@@ -115,13 +149,20 @@
       "watchLabel": "Onde assistir"
     },
     "knockout-unknown-stage": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -130,6 +171,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -148,21 +193,33 @@
       "watchLabel": "Onde assistir"
     },
     "live": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Premiere",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -171,6 +228,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -192,13 +253,76 @@
       },
       "watchLabel": "Onde assistir"
     },
+    "pay-only": {
+      "access": null,
+      "accessLine": null,
+      "badges": [
+        {
+          "access": null,
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": false
+        },
+        {
+          "access": null,
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
     "postponed": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(23, 26, 31)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": null,
@@ -217,21 +341,33 @@
       "watchLabel": null
     },
     "rescheduled": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(18, 58, 42)",
           "color": "rgb(158, 230, 195)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -240,6 +376,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -262,21 +402,33 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-confirmed": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(18, 58, 42)",
           "color": "rgb(158, 230, 195)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         },
         {
+          "access": null,
           "background-color": "rgb(18, 58, 42)",
           "color": "rgb(158, 230, 195)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         }
       ],
@@ -285,6 +437,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "confirmed",
       "confidenceLine": {
@@ -303,37 +459,59 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-many-broadcasters": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "CazéTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Disney+",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "ESPN",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Globoplay",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -342,6 +520,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -360,29 +542,46 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-mixed": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(18, 58, 42)",
           "color": "rgb(158, 230, 195)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "CazéTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -391,6 +590,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -409,29 +612,46 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-rule": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Premiere",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(23, 42, 82)",
           "color": "rgb(181, 204, 255)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -440,6 +660,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -458,12 +682,18 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-unknown": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(23, 26, 31)",
         "border-inline-start-color": "rgb(255, 255, 255)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "unknown",
       "confidenceLine": {
@@ -482,12 +712,801 @@
       "watchLabel": null
     },
     "teams-not-decided": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(23, 26, 31)",
         "border-inline-start-color": "rgb(255, 223, 0)",
         "border-inline-start-width": "6px",
         "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "unknown",
+      "confidenceLine": {
+        "background-color": "rgb(35, 40, 49)",
+        "color": "rgb(195, 202, 214)",
+        "text": "Transmissão ainda não confirmada"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    }
+  },
+  "dark+services": {
+    "cancelled": {
+      "access": null,
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "unknown",
+      "confidenceLine": null,
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "cancelled",
+      "stateLabel": {
+        "background-color": "rgb(74, 23, 20)",
+        "color": "rgb(255, 180, 174)",
+        "text": "Cancelado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "line-through"
+      },
+      "watchLabel": null
+    },
+    "finished": {
+      "access": null,
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(169, 177, 191)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": null,
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "finished",
+      "stateLabel": {
+        "background-color": "rgb(35, 40, 49)",
+        "color": "rgb(195, 202, 214)",
+        "text": "Encerrado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    },
+    "hostile-names": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(17, 34, 51)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "knockout-final": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "knockout-unknown-stage": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "live": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "live",
+      "stateLabel": {
+        "background-color": "rgb(74, 23, 20)",
+        "color": "rgb(255, 180, 174)",
+        "text": "● Ao vivo"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "pay-only": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "postponed": {
+      "access": null,
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": null,
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "postponed",
+      "stateLabel": {
+        "background-color": "rgb(74, 54, 0)",
+        "color": "rgb(255, 224, 138)",
+        "text": "Adiado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    },
+    "rescheduled": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "rescheduled",
+      "stateLabel": {
+        "background-color": "rgb(74, 54, 0)",
+        "color": "rgb(255, 224, 138)",
+        "text": "Remarcado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-confirmed": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "other",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-many-broadcasters": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "CazéTV",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Disney+",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "ESPN",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Globoplay",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 3,
+      "more": "+3",
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-mixed": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "CazéTV",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-rule": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(23, 42, 82)",
+          "color": "rgb(181, 204, 255)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-unknown": {
+      "access": "unknown",
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(255, 255, 255)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "unknown",
+      "confidenceLine": {
+        "background-color": "rgb(35, 40, 49)",
+        "color": "rgb(195, 202, 214)",
+        "text": "Transmissão ainda não confirmada"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    },
+    "teams-not-decided": {
+      "access": "unknown",
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(255, 223, 0)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "unknown",
       "confidenceLine": {
@@ -508,12 +1527,18 @@
   },
   "light": {
     "cancelled": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "unknown",
       "confidenceLine": null,
@@ -532,12 +1557,18 @@
       "watchLabel": null
     },
     "finished": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgba(0, 0, 0, 0)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(74, 81, 96)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": null,
@@ -556,13 +1587,20 @@
       "watchLabel": null
     },
     "hostile-names": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -571,6 +1609,10 @@
         "border-inline-start-color": "rgb(17, 34, 51)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -589,13 +1631,20 @@
       "watchLabel": "Onde assistir"
     },
     "knockout-final": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(223, 243, 232)",
           "color": "rgb(11, 74, 51)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         }
       ],
@@ -604,6 +1653,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "confirmed",
       "confidenceLine": {
@@ -622,13 +1675,20 @@
       "watchLabel": "Onde assistir"
     },
     "knockout-unknown-stage": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -637,6 +1697,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -655,21 +1719,33 @@
       "watchLabel": "Onde assistir"
     },
     "live": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Premiere",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -678,6 +1754,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -699,13 +1779,76 @@
       },
       "watchLabel": "Onde assistir"
     },
+    "pay-only": {
+      "access": null,
+      "accessLine": null,
+      "badges": [
+        {
+          "access": null,
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": false
+        },
+        {
+          "access": null,
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
     "postponed": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": null,
@@ -724,21 +1867,33 @@
       "watchLabel": null
     },
     "rescheduled": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(223, 243, 232)",
           "color": "rgb(11, 74, 51)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -747,6 +1902,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -769,21 +1928,33 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-confirmed": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(223, 243, 232)",
           "color": "rgb(11, 74, 51)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         },
         {
+          "access": null,
           "background-color": "rgb(223, 243, 232)",
           "color": "rgb(11, 74, 51)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         }
       ],
@@ -792,6 +1963,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "confirmed",
       "confidenceLine": {
@@ -810,37 +1985,59 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-many-broadcasters": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "CazéTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Disney+",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "ESPN",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Globoplay",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -849,6 +2046,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -867,29 +2068,46 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-mixed": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(223, 243, 232)",
           "color": "rgb(11, 74, 51)",
           "font-weight": "700",
           "kind": "badge badge--confirmed",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": true
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "CazéTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -898,6 +2116,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -916,29 +2138,46 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-rule": {
+      "access": null,
+      "accessLine": null,
       "badges": [
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "Premiere",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         },
         {
+          "access": null,
           "background-color": "rgb(227, 236, 251)",
           "color": "rgb(27, 58, 122)",
           "font-weight": "400",
           "kind": "badge badge--rule",
           "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
           "tick": false
         }
       ],
@@ -947,6 +2186,10 @@
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "rule",
       "confidenceLine": {
@@ -965,12 +2208,18 @@
       "watchLabel": "Onde assistir"
     },
     "scheduled-unknown": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(255, 255, 255)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "unknown",
       "confidenceLine": {
@@ -989,12 +2238,801 @@
       "watchLabel": null
     },
     "teams-not-decided": {
+      "access": null,
+      "accessLine": null,
       "badges": [],
       "card": {
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(255, 223, 0)",
         "border-inline-start-width": "6px",
         "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "unknown",
+      "confidenceLine": {
+        "background-color": "rgb(235, 237, 241)",
+        "color": "rgb(61, 68, 82)",
+        "text": "Transmissão ainda não confirmada"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    }
+  },
+  "light+services": {
+    "cancelled": {
+      "access": null,
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "unknown",
+      "confidenceLine": null,
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "cancelled",
+      "stateLabel": {
+        "background-color": "rgb(253, 227, 225)",
+        "color": "rgb(138, 20, 16)",
+        "text": "Cancelado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "line-through"
+      },
+      "watchLabel": null
+    },
+    "finished": {
+      "access": null,
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(74, 81, 96)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": null,
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "finished",
+      "stateLabel": {
+        "background-color": "rgb(235, 237, 241)",
+        "color": "rgb(61, 68, 82)",
+        "text": "Encerrado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    },
+    "hostile-names": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(17, 34, 51)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "knockout-final": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "knockout-unknown-stage": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "live": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "live",
+      "stateLabel": {
+        "background-color": "rgb(253, 227, 225)",
+        "color": "rgb(138, 20, 16)",
+        "text": "● Ao vivo"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "pay-only": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "postponed": {
+      "access": null,
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": null,
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "postponed",
+      "stateLabel": {
+        "background-color": "rgb(255, 241, 204)",
+        "color": "rgb(92, 59, 0)",
+        "text": "Adiado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    },
+    "rescheduled": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "rescheduled",
+      "stateLabel": {
+        "background-color": "rgb(255, 241, 204)",
+        "color": "rgb(92, 59, 0)",
+        "text": "Remarcado"
+      },
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-confirmed": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "other",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-many-broadcasters": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "CazéTV",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Disney+",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "ESPN",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Globoplay",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 3,
+      "more": "+3",
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-mixed": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "CazéTV",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-rule": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "Premiere",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "other",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(227, 236, 251)",
+          "color": "rgb(27, 58, 122)",
+          "font-weight": "400",
+          "kind": "badge badge--rule",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": false
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "rule",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "text": "Pela tabela de direitos: confira antes do jogo."
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
+    },
+    "scheduled-unknown": {
+      "access": "unknown",
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(255, 255, 255)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "unknown",
+      "confidenceLine": {
+        "background-color": "rgb(235, 237, 241)",
+        "color": "rgb(61, 68, 82)",
+        "text": "Transmissão ainda não confirmada"
+      },
+      "hiddenBadges": 0,
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": null
+    },
+    "teams-not-decided": {
+      "access": "unknown",
+      "accessLine": null,
+      "badges": [],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(255, 223, 0)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
       },
       "confidence": "unknown",
       "confidenceLine": {

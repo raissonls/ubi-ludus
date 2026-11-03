@@ -30,10 +30,16 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
         return super().translate_path(path)
 
 
+class Server(http.server.ThreadingHTTPServer):
+    # The default queue holds 5 connections; a page loads some twenty files at once, and under
+    # load a refused connection left the page without its scripts and the test waiting for nothing.
+    request_queue_size = 128
+
+
 @pytest.fixture(scope="module")
 def origin() -> Iterator[str]:
     handler = functools.partial(QuietHandler, directory=str(SITE))
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    server = Server(("127.0.0.1", 0), handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     yield f"http://127.0.0.1:{server.server_address[1]}"
