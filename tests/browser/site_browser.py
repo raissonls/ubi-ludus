@@ -115,7 +115,7 @@ def axe_violations(page: Page) -> list[str]:
 
     It waits for the entrance animations first: a card half faded in is not what a visitor reads.
     """
-    page.evaluate("Promise.all(document.getAnimations().map((a) => a.finished))")
+    page.evaluate("Promise.allSettled(document.getAnimations().map((a) => a.finished))")
     results = Axe().run(page, options={"runOnly": {"type": "tag", "values": WCAG_TAGS}})
     return [
         f"{v['id']} ({v['impact']}): {[n['target'] for n in v['nodes']]}"
