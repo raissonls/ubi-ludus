@@ -12,6 +12,7 @@ js/data.js        loads the five published files from data/ and indexes them by 
 js/preferences.js  the visitor's teams and services, in localStorage and nowhere else
 js/search.js       finds a team as you type (no accents, aliases, ranked); pure
 js/teams-picker.js  the "Which teams do you follow?" combobox and the chosen teams
+js/services-picker.js  the "Which services do you have?" checkboxes
 js/matches-preview.js  which matches of the followed teams are still to come; pure
 js/matches-view.js  draws them as a plain list (the match card replaces it in M3-05)
 js/dom.js          safe element building and team colours as CSS variables
@@ -58,3 +59,9 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - Choosing a team saves it at once and shows its next matches, so a new visitor is two or three interactions from a result (click, type, pick; or just type and press Enter).
 - The suggestions close after a choice and when a chosen team is removed, so they never cover the chosen teams the visitor may want to reach.
 - A team's two colours are only an accent (a small square and a bar), set as CSS variables from script (the policy allows that, not a `style` attribute). There is no crest or logo, and the name is always next to the colour.
+
+## The services picker
+
+- One native checkbox for each service in `broadcasters.json` (pay TV, Premiere, Globoplay, Disney+, ...), each with what it includes ("Inclui: SporTV e ESPN."), tied to the checkbox with `aria-describedby`. Native checkboxes with real labels are the most accessible control there is.
+- **Nothing is ticked by default.** Free TV and YouTube need no subscription, so no choice at all means "only free TV and YouTube", and the page says so in a live region that also reports how many are ticked.
+- Choices are saved with the teams in one record, each change at once, and a service the data no longer has is ignored. How a match is marked "watchable with my services" is M3-07.
