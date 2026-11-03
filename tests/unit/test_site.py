@@ -23,6 +23,10 @@ CSS_BUDGET_GZIP = 20 * 1024
 PAGE_BUDGET_GZIP = 150 * 1024
 
 
+# Tags whose content the visitor does not read as page text (noscript is the one allowed notice).
+NOT_SHOWN = {"head", "script", "style", "noscript"}
+
+
 class Page(HTMLParser):
     """Collects what the checks below need from one HTML file."""
 
@@ -34,13 +38,19 @@ class Page(HTMLParser):
         self._in_title = False
         self.title = ""
         self.comments: list[str] = []
+        self.visible_text: list[str] = []
+        self._hidden_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         self.tags.append((tag, dict(attrs)))
+        if tag in NOT_SHOWN:
+            self._hidden_depth += 1
         self._in_script = tag == "script"
         self._in_title = tag == "title"
 
     def handle_endtag(self, tag: str) -> None:
+        if tag in NOT_SHOWN:
+            self._hidden_depth -= 1
         self._in_script = False
         self._in_title = False
 
@@ -49,6 +59,8 @@ class Page(HTMLParser):
             self.inline_script_text = True
         if self._in_title:
             self.title += data
+        if not self._hidden_depth and data.strip():
+            self.visible_text.append(data.strip())
 
     def handle_comment(self, data: str) -> None:
         self.comments.append(data)
@@ -257,30 +269,20 @@ def test_every_string_in_the_file_is_used_by_the_page_or_the_code(
     assert unused == []
 
 
-def test_the_page_holds_no_visible_text_of_its_own_except_the_no_script_notice(
-    page: Page,
-) -> None:
-    visible = re.sub(
-        r"<!--.*?-->|<head>.*?</head>|<script.*?</script>",
-        "",
-        INDEX.read_text(encoding="utf-8"),
-        flags=re.S,
-    )
-    visible = re.sub(r"<noscript>.*?</noscript>", "", visible, flags=re.S)
-    text = re.sub(r"<[^>]+>", " ", visible)
-    assert text.split() == [], "visible text belongs in i18n/pt-BR.json"
+def test_the_page_holds_no_visible_text_of_its_own_except_the_no_script_notice(page: Page) -> None:
+    assert page.visible_text == [], "visible text belongs in i18n/pt-BR.json"
 
 
-def test_the_footer_carries_the_data_attributions(strings: dict[str, object]) -> None:
+def test_the_footer_carries_the_data_attributions(page: Page, strings: dict[str, object]) -> None:
     """football-data.org's terms require this exact line; API-Football is a courtesy."""
     assert (
         strings["footer.attribution.footballData"]
         == "Football data provided by the Football-Data.org API"
     )
     assert "API-Football" in str(strings["footer.attribution.apiFootball"])
-    html = INDEX.read_text(encoding="utf-8")
-    assert "https://www.football-data.org/" in html
-    assert "https://www.api-football.com/" in html
+    links = [attrs.get("href") for attrs in page.find("a")]
+    assert "https://www.football-data.org/" in links
+    assert "https://www.api-football.com/" in links
 
 
 def test_the_footer_has_a_privacy_notice_and_the_repository_has_a_privacy_file(
