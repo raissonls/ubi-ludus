@@ -16,6 +16,8 @@ js/services-picker.js  the "Which services do you have?" checkboxes
 js/matches-preview.js  which matches of the followed teams are still to come; pure
 js/match-model.js  turns a match and the data into what a card shows (state, confidence, badges); pure
 js/match-card.js   draws one match card from that model
+js/freshness.js     how old the data is, from status.json (today / yesterday / a date / stale after 36 h / unknown); pure
+js/report.js        the pre-filled "report a wrong broadcast" GitHub issue links; pure
 js/home-views.js   which matches each home list shows (my teams, today, this week), followed teams first; pure
 js/matches-view.js  draws the chosen list as cards and switches between the lists
 js/dom.js          safe element building and team colours as CSS variables
@@ -91,3 +93,8 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - A match with no known broadcaster is neither: it says "Transmissão ainda não confirmada" and nothing about access (FR-13). Finished, postponed and cancelled matches say nothing either.
 - **Só o que dá para assistir** hides only the matches known not to be watchable; matches with no confirmed broadcaster stay, since nothing says the visitor cannot watch them. The filter is applied before the ten-match limit of "Meus times". It is saved with the other choices (`onlyWatchable`, in localStorage only) and cleared by "Reset my data".
 - Tests: `tests/browser/test_watchable.py` serves changed fixture matches so every case exists; the card gallery takes `?services=premiere,globoplay` to draw the cards for a visitor with those services.
+
+## Freshness and reports
+- The header says when the data was last updated, from `last_success_at` in `status.json`, in Brazil's time: "Atualizado hoje às 06:12", "ontem" or a date. Older than 36 hours, or no success on record, it becomes a warning ("Atenção: os dados podem estar desatualizados…"): a mark and words on a warning background, not colour alone. The clock is the visitor's; a few minutes of skew into the future still reads as today.
+- Each card that lists broadcasters (or says none is known) has a "Reportar transmissão errada" link to a new GitHub issue from `.github/ISSUE_TEMPLATE/wrong-broadcast.yml`, with the match and what the site shows already filled in (`match`, `shown`, `title`). The footer has the same link with nothing filled in. The links carry the match and nothing about the visitor; they are the only way out of the site to GitHub, and only when the visitor clicks. Cards of matches that are over, postponed or cancelled have no link.
+- Tests: `tests/browser/test_freshness_report.py` serves changed `status.json` files for every state.

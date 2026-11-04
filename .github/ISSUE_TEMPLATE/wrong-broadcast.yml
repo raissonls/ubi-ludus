@@ -1,0 +1,33 @@
+name: Transmissão errada
+description: A emissora de um jogo está errada, faltando ou sobrando no site.
+title: "Transmissão errada: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por avisar! Quando você chega aqui pelo link do site, o jogo e o que mostramos já vêm preenchidos. Não coloque dados pessoais.
+  - type: input
+    id: match
+    attributes:
+      label: Jogo
+      description: Times, competição e horário.
+    validations:
+      required: true
+  - type: input
+    id: shown
+    attributes:
+      label: O que o site mostra
+      description: As emissoras que aparecem no jogo.
+  - type: textarea
+    id: correct
+    attributes:
+      label: O que está certo
+      description: Em que emissora ou serviço o jogo passa de verdade.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Onde você viu
+      description: Um link (site oficial da emissora ou do clube) ou uma foto da programação. Ajuda a conferir mais rápido.

@@ -6,6 +6,7 @@ import { el } from './dom.js';
 import { defaultView, selectMatches } from './home-views.js';
 import { renderMatchCard } from './match-card.js';
 import { accessibleBroadcasters, describeMatch } from './match-model.js';
+import { matchReportUrl } from './report.js';
 
 /** Cards after this one enter together, so a long list does not take long to appear. */
 const ENTER_STEPS = 6;
@@ -23,9 +24,11 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
   const current = () => chosen ?? defaultView(teamIds);
 
   function card(match, index, followedTeam) {
-    const item = renderMatchCard(describeMatch(match, data, { accessible }), {
+    const model = describeMatch(match, data, { accessible });
+    const item = renderMatchCard(model, {
       translator,
       accentTeam: followedTeam,
+      reportHref: matchReportUrl(model, translator),
     });
     item.classList.add('match-card--enter');
     item.style.setProperty('--enter-step', String(Math.min(index, ENTER_STEPS)));

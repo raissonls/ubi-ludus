@@ -107,8 +107,9 @@ function watch(model, translator, cardId) {
  * @param model     from describeMatch()
  * @param translator  from i18n.js
  * @param accentTeam a team whose colours become the card's accent bar (the followed team), or null
+ * @param reportHref where "report a wrong broadcast" goes, or null for no link (see report.js)
  */
-export function renderMatchCard(model, { translator, accentTeam = null }) {
+export function renderMatchCard(model, { translator, accentTeam = null, reportHref = null }) {
   const cardId = `card-${model.id}`;
   const when = el('p', { class: 'match-card__when' }, [
     el('time', { datetime: model.kickoff, text: formatDateTime(model.kickoff) }),
@@ -143,6 +144,15 @@ export function renderMatchCard(model, { translator, accentTeam = null }) {
   if (model.access) attributes['data-access'] = model.access;
   const card = el('li', attributes, [when, title, competition]);
   if (model.showBroadcasts) card.append(watch(model, translator, cardId));
+  if (model.showBroadcasts && reportHref) {
+    const teams = title.textContent.replace(/\s+/g, ' ').trim();
+    card.append(
+      el('a', { class: 'match-card__report', href: reportHref, rel: 'noopener noreferrer' }, [
+        translator.t('report.link'),
+        el('span', { class: 'visually-hidden', text: ` ${translator.t('report.linkFor', { teams })}` }),
+      ]),
+    );
+  }
   if (accentTeam) setAccent(card, accentTeam);
   return card;
 }

@@ -129,5 +129,19 @@
     "mine": "Meus times",
     "today": "Hoje",
     "week": "Esta semana"
+  },
+  "freshness": {
+    "today": "Atualizado hoje às {time}",
+    "yesterday": "Atualizado ontem às {time}",
+    "date": "Atualizado em {date} às {time}",
+    "stale": "Atenção: os dados podem estar desatualizados. Última atualização em {date} às {time}.",
+    "unknown": "Ainda não há registro de uma atualização dos dados."
+  },
+  "report": {
+    "title": "Transmissão errada",
+    "nothingShown": "nenhuma emissora (transmissão não confirmada)",
+    "link": "Reportar transmissão errada",
+    "linkFor": "de {teams}",
+    "footer": "Viu uma transmissão errada? Avise no GitHub"
   }
 }
