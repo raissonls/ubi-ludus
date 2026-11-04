@@ -205,7 +205,7 @@ def test_following_the_link_goes_to_the_new_issue_form_and_only_then(
             "https://github.com/**", lambda route: route.fulfill(body="<title>issue</title>")
         )
         week(page)
-        before = [r for r in current.requests if "github.com" in r]
+        before = [r for r in current.requests if urlparse(r).hostname == SHOWN_HOST]
         assert before == []  # drawing the page and the cards sends nothing to GitHub
         page.locator(".match-card", has_text="Palmeiras").get_by_role("link").click()
         page.wait_for_url("https://github.com/**")

@@ -8,7 +8,6 @@
   },
   "home": {
     "title": "Onde assistir futebol no Brasil",
-    "intro": "Os jogos de hoje e dos próximos dias, com a emissora de cada um e o quanto temos certeza dela.",
     "matchesLoaded": {
       "one": "{count} jogo carregado.",
       "other": "{count} jogos carregados."
