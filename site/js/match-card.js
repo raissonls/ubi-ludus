@@ -148,6 +148,10 @@ export function renderMatchCard(
   };
   if (model.access) attributes['data-access'] = model.access;
   const card = el('li', attributes, [when, title, competition]);
+  if (model.shortHorizon) {
+    card.dataset.horizon = 'short';
+    card.append(el('p', { class: 'match-card__horizon', text: translator.t('horizon.card') }));
+  }
   if (model.showBroadcasts) card.append(watch(model, translator, cardId));
   if (model.showBroadcasts && (reportHref || onCalendar)) {
     const teams = title.textContent.replace(/\s+/g, ' ').trim();

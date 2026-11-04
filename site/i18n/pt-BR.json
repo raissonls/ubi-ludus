@@ -58,6 +58,14 @@
     "onlyWatchableHint": "Jogos sem emissora confirmada continuam na lista.",
     "emptyFilters": "Nenhum jogo desta lista com esses filtros."
   },
+  "horizon": {
+    "some": {
+      "one": "Para {competitions}, só temos dados até amanhã. Jogos depois disso ainda não aparecem aqui.",
+      "other": "Para {competitions}, só temos dados até amanhã. Jogos depois disso ainda não aparecem aqui."
+    },
+    "empty": "Para algumas competições só temos dados até amanhã. Por isso, pode haver jogos que ainda não aparecem aqui.",
+    "card": "Dados desta competição só até amanhã"
+  },
   "card": {
     "versus": "x",
     "round": "Rodada {number}",

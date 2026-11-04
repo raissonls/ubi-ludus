@@ -5,6 +5,7 @@
 import { el } from './dom.js';
 import { EMPTY_FILTERS, activeCount, createMatchFilter } from './filters.js';
 import { defaultView, selectMatches } from './home-views.js';
+import { describeHorizonNotice } from './horizon.js';
 import { createCalendar } from './calendar.js';
 import { createLiveClock } from './live-clock.js';
 import { renderMatchCard } from './match-card.js';
@@ -37,6 +38,7 @@ export function createMatchesView({
   });
   const empty = document.getElementById('matches-empty');
   const status = document.getElementById('matches-status');
+  const horizon = document.getElementById('horizon-notice');
   const buttons = [...document.querySelectorAll('#view-switch [data-view]')];
   // Cards say where their match stands (a countdown, live, probably over) and keep saying it as
   // time passes.
@@ -100,6 +102,7 @@ export function createMatchesView({
       groups.push(group(others, false, titled ? translator.t('matches.groupOthers') : ''));
     }
     list.replaceChildren(...groups);
+    showHorizonNotice([...followed, ...others]);
     liveClock.update();
     showCalendarAll();
     list.hidden = total === 0;
@@ -115,6 +118,21 @@ export function createMatchesView({
     }
     const label = buttons.find((button) => button.dataset.view === view)?.textContent ?? '';
     status.textContent = translator.plural('matches.shown', total, { view: label });
+  }
+
+  // FR-34: say it when a competition we only know until tomorrow is in the list, or is the one
+  // being looked at, or when the list is empty and some competitions are like that. The text is
+  // only replaced when it changes, so a screen reader does not read it again at every redraw.
+  function showHorizonNotice(shown) {
+    const notice = describeHorizonNotice({ shown, data, selectedId: filters.competition });
+    let text = '';
+    if (notice !== null) {
+      text = translator.has(notice.key)
+        ? translator.t(notice.key, notice.values)
+        : translator.plural(notice.key, notice.count, notice.values);
+    }
+    horizon.hidden = text === '';
+    if (horizon.textContent !== text) horizon.textContent = text;
   }
 
   // "All my teams" in one file: offered when the visitor follows teams that have matches to come.
