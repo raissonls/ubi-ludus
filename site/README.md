@@ -18,6 +18,10 @@ js/match-model.js  turns a match and the data into what a card shows (state, con
 js/match-card.js   draws one match card from that model
 js/freshness.js     how old the data is, from status.json (today / yesterday / a date / stale after 36 h / unknown); pure
 js/report.js        the pre-filled "report a wrong broadcast" GitHub issue links; pure
+js/filters.js       which matches pass the competition, broadcaster and team-search filters; pure
+js/filters-view.js  the "Filtros" box
+js/url-state.js     reads and writes the view in the address, checked against allow-lists; pure
+js/share.js         "Copiar link desta visão"
 js/home-views.js   which matches each home list shows (my teams, today, this week), followed teams first; pure
 js/matches-view.js  draws the chosen list as cards and switches between the lists
 js/dom.js          safe element building and team colours as CSS variables
@@ -91,10 +95,17 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - A broadcaster is the visitor's if it is free TV or YouTube (no subscription needed), or belongs to a ticked service, or is included by one (Disney+ includes ESPN). With nothing ticked that is "free TV and YouTube only", as the services picker says (`accessibleBroadcasters` in `match-model.js`).
 - On a card: each badge is outlined solid when it is the visitor's and dashed when it is not (and says so to a screen reader), and a line says "Dá para assistir com os seus serviços." or "Nenhuma dessas emissoras está nos seus serviços." A match that cannot be watched also gets a dashed edge. Words, not colour alone.
 - A match with no known broadcaster is neither: it says "Transmissão ainda não confirmada" and nothing about access (FR-13). Finished, postponed and cancelled matches say nothing either.
-- **Só o que dá para assistir** hides only the matches known not to be watchable; matches with no confirmed broadcaster stay, since nothing says the visitor cannot watch them. The filter is applied before the ten-match limit of "Meus times". It is saved with the other choices (`onlyWatchable`, in localStorage only) and cleared by "Reset my data".
+- **Só o que dá para assistir** (a checkbox inside the Filtros box, which opens by itself when it is on and counts in its summary) hides only the matches known not to be watchable; matches with no confirmed broadcaster stay, since nothing says the visitor cannot watch them. The filter is applied before the ten-match limit of "Meus times". It is saved with the other choices (`onlyWatchable`, in localStorage only) and cleared by "Reset my data".
 - Tests: `tests/browser/test_watchable.py` serves changed fixture matches so every case exists; the card gallery takes `?services=premiere,globoplay` to draw the cards for a visitor with those services.
 
 ## Freshness and reports
-- The header says when the data was last updated, from `last_success_at` in `status.json`, in Brazil's time: "Atualizado hoje às 06:12", "ontem" or a date. Older than 36 hours, or no success on record, it becomes a warning ("Atenção: os dados podem estar desatualizados…"): a mark and words on a warning background, not colour alone. The clock is the visitor's; a few minutes of skew into the future still reads as today.
+- The header says when the data was last updated, from `last_success_at` in `status.json`, in Brazil's time: "Atualizado hoje às 06:12", "ontem" or a date. Older than 36 hours, or no success on record, it becomes a warning ("Dados possivelmente desatualizados. Última atualização: …"): a mark and words on a warning background, not colour alone. The clock is the visitor's; a few minutes of skew into the future still reads as today.
 - Each card that lists broadcasters (or says none is known) has a "Reportar transmissão errada" link to a new GitHub issue from `.github/ISSUE_TEMPLATE/wrong-broadcast.yml`, with the match and what the site shows already filled in (`match`, `shown`, `title`). The footer has the same link with nothing filled in. The links carry the match and nothing about the visitor; they are the only way out of the site to GitHub, and only when the visitor clicks. Cards of matches that are over, postponed or cancelled have no link.
 - Tests: `tests/browser/test_freshness_report.py` serves changed `status.json` files for every state.
+
+## Filters and sharing
+- **Filtros** (a box, closed until wanted; its summary counts the filters set): a competition, a broadcaster and a few letters of a team's name. They combine (AND) with each other, with the chosen list and with "Só o que dá para assistir", and are applied before the ten-match limit of "Meus times". The choices offered are the competitions and the named broadcasters that some match has; the team search ignores case and accents and finds short names and aliases ("barca").
+- The filters and the list the visitor picked are always in the address (`?view=week&competition=…&broadcaster=…&q=…`, replaced in place, so Back is not filled with keystrokes), so a view can be bookmarked or reloaded. **The visitor's own teams and services are never in the address** unless they press "Copiar link desta visão", which builds a link with `teams`, `services` and `watchable` too and copies it (or shows it to copy by hand when the browser refuses the clipboard).
+- Reading an address is the careful part. Every value is checked against an allow-list built from the data: lists must be one of the three, competitions and broadcasters must be ones offered, team and service ids must exist (at most 50 each, ids must also look like ids). The search text loses control characters and is cut at 60 characters, and is only ever put in a field as text. What does not fit is ignored.
+- Opening a shared link shows its teams, services and filter **for that visit only** and saves nothing: a notice says so. The first time the visitor changes their teams or services the shown choices become their own and are saved, and the choices leave the address.
+- Tests: `tests/browser/test_filters_share.py` (read the address with `location.href`; Playwright's `page.url` learns of `history.replaceState` a moment later).

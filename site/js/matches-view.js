@@ -3,6 +3,7 @@
 // buttons; until they do, the page picks it: their teams if they follow any, else today.
 
 import { el } from './dom.js';
+import { EMPTY_FILTERS, activeCount, createMatchFilter } from './filters.js';
 import { defaultView, selectMatches } from './home-views.js';
 import { renderMatchCard } from './match-card.js';
 import { accessibleBroadcasters, describeMatch } from './match-model.js';
@@ -11,7 +12,17 @@ import { matchReportUrl } from './report.js';
 /** Cards after this one enter together, so a long list does not take long to appear. */
 const ENTER_STEPS = 6;
 
-export function createMatchesView({ data, translator, clock = () => new Date() }) {
+/**
+ * @param initial        {view, filters} from the address, if it said anything
+ * @param onStateChange  called after the visitor picks a list or a filter changes
+ */
+export function createMatchesView({
+  data,
+  translator,
+  clock = () => new Date(),
+  initial = {},
+  onStateChange = () => {},
+}) {
   const list = document.getElementById('matches-list');
   const empty = document.getElementById('matches-empty');
   const status = document.getElementById('matches-status');
@@ -19,7 +30,8 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
   let teamIds = [];
   let accessible = accessibleBroadcasters([], data);
   let onlyWatchable = false;
-  let chosen = null; // the list the visitor picked, if they have
+  let chosen = initial.view ?? null; // the list the visitor picked, if they have
+  let filters = { ...EMPTY_FILTERS, ...initial.filters };
 
   const current = () => chosen ?? defaultView(teamIds);
 
@@ -56,7 +68,8 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
     // Only a match we know the visitor cannot watch is hidden: with no broadcaster known, nothing
     // is known, and a match that is over has nothing to watch either way.
     const canBeWatched = (match) => describeMatch(match, data, { accessible }).access !== 'no';
-    const keep = onlyWatchable ? canBeWatched : undefined;
+    const passesFilters = createMatchFilter(data, filters);
+    const keep = (match) => passesFilters(match) && (!onlyWatchable || canBeWatched(match));
     const { followed, others } = selectMatches(view, data.matches, teamIds, now, keep);
     const total = followed.length + others.length;
     const titled = followed.length > 0 && others.length > 0;
@@ -70,8 +83,12 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
     list.replaceChildren(...groups);
     list.hidden = total === 0;
     empty.hidden = total > 0;
-    const allHidden = onlyWatchable && total === 0 && hasMatches(view, now);
-    empty.textContent = translator.t(allHidden ? 'matches.emptyFiltered' : emptyKey(view));
+    const allHidden = total === 0 && hasMatches(view, now);
+    let emptyText = emptyKey(view);
+    if (allHidden) {
+      emptyText = activeCount(filters) > 0 ? 'matches.emptyFilters' : 'matches.emptyFiltered';
+    }
+    empty.textContent = translator.t(emptyText);
     for (const button of buttons) {
       button.setAttribute('aria-pressed', String(button.dataset.view === view));
     }
@@ -95,10 +112,23 @@ export function createMatchesView({ data, translator, clock = () => new Date() }
     button.addEventListener('click', () => {
       chosen = button.dataset.view;
       draw();
+      onStateChange(state());
     });
   }
 
+  function state() {
+    return { view: chosen, filters: { ...filters } };
+  }
+
   return {
+    /** The list the visitor picked (null if they have not) and the filters now set. */
+    state,
+    /** Set the filters (competition, broadcaster, team search) and draw again. */
+    setFilters(next) {
+      filters = { ...EMPTY_FILTERS, ...next };
+      draw();
+      onStateChange(state());
+    },
     /** Draw the list for the teams and services the visitor has chosen now. */
     render({ teams, services, onlyWatchable: only }) {
       teamIds = teams;

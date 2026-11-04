@@ -2,12 +2,17 @@
 // them.
 
 import { loadData } from './data.js';
+import { filterOptions } from './filters.js';
+import { createFiltersView } from './filters-view.js';
 import { describeFreshness } from './freshness.js';
+import { VIEWS } from './home-views.js';
 import { applyStrings, createTranslator, loadStrings } from './i18n.js';
 import { createMatchesView } from './matches-view.js';
 import { createPreferences, restrictTo } from './preferences.js';
 import { createServicesPicker } from './services-picker.js';
+import { createShare } from './share.js';
 import { createTeamPicker } from './teams-picker.js';
+import { buildSearch, parseUrlState } from './url-state.js';
 
 const strings = await loadStrings(new URL('../i18n/pt-BR.json', import.meta.url));
 const translator = createTranslator(strings);
@@ -36,7 +41,57 @@ try {
     translator,
     onChange: (ids) => preferences.setServices(ids),
   });
-  const matches = createMatchesView({ data, translator });
+  // The address may ask for a view: filters, a list, and (from a shared link) teams and services.
+  // Every value is checked against what the data has; what does not fit is ignored.
+  const options = filterOptions(data);
+  const fromAddress = parseUrlState(location.search, {
+    views: new Set(VIEWS),
+    competitions: new Set(options.competitions.map((option) => option.id)),
+    broadcasters: new Set(options.broadcasters.map((option) => option.id)),
+    teams: known.teams,
+    services: known.services,
+  });
+  // A shared link shows its teams and services for this visit and saves nothing, until the visitor
+  // changes their own choices.
+  let shared = fromAddress.teams !== null || fromAddress.services !== null || fromAddress.onlyWatchable !== null;
+  if (shared) {
+    preferences.adopt(fromAddress);
+  }
+  const notice = document.getElementById('shared-notice');
+  notice.hidden = !shared;
+
+  function syncAddress() {
+    const { view, filters } = matches.state();
+    const search = buildSearch({ view, filters, choices: shared ? chosen() : null });
+    try {
+      history.replaceState(null, '', `${location.pathname}${search}${location.hash}`);
+    } catch {
+      // Some embedding contexts refuse; the view still works, it just is not in the address.
+    }
+  }
+
+  const matches = createMatchesView({
+    data,
+    translator,
+    initial: { view: fromAddress.view, filters: fromAddress.filters },
+    onStateChange: (state) => {
+      filtersView.show(state.filters);
+      syncAddress();
+    },
+  });
+  const filtersView = createFiltersView({
+    data,
+    translator,
+    initial: fromAddress.filters,
+    onChange: (filters) => matches.setFilters(filters),
+  });
+  createShare({
+    translator,
+    link: () => {
+      const { view, filters } = matches.state();
+      return `${location.origin}${location.pathname}${buildSearch({ view, filters, choices: chosen() })}`;
+    },
+  });
   const onlyWatchable = document.getElementById('only-watchable');
   onlyWatchable.addEventListener('change', () => preferences.setOnlyWatchable(onlyWatchable.checked));
 
@@ -45,9 +100,17 @@ try {
     picker.update(choices.teams);
     servicesPicker.update(choices.services);
     onlyWatchable.checked = choices.onlyWatchable;
+    filtersView.setExtra(choices.onlyWatchable ? 1 : 0);
     matches.render(choices);
   }
-  preferences.subscribe(show);
+  preferences.subscribe(() => {
+    if (shared) {
+      shared = false; // the visitor made the choices their own
+      notice.hidden = true;
+    }
+    show();
+    syncAddress();
+  });
   show();
 } catch (error) {
   status.textContent = translator.t('home.loadFailed');

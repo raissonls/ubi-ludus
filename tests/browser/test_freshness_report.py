@@ -74,8 +74,8 @@ def test_data_older_than_36_hours_turns_into_a_warning_in_words(
         page = current.page
         assert state(page) == "stale"
         text = freshness(page)
-        assert text.startswith("⚠ Atenção: os dados podem estar desatualizados.")
-        assert text.endswith("às 06:00.")
+        assert text.startswith("⚠ Dados possivelmente desatualizados. Última atualização: ")
+        assert text.endswith(", 06:00.")
         assert page.locator("#freshness [aria-hidden]").count() == 1  # the mark is decoration
         background = page.locator("#freshness").evaluate("e => getComputedStyle(e).backgroundColor")
         assert background != "rgba(0, 0, 0, 0)"

@@ -285,6 +285,10 @@ def test_every_string_in_the_file_is_used_by_the_page_or_the_code(
 ) -> None:
     """Dead strings pile up. Strings for views that do not exist yet are added with the view."""
     used = {attrs["data-i18n"] for _, attrs in page.tags if "data-i18n" in attrs}
+    for _, attrs in page.tags:  # strings used for an attribute, such as an aria-label
+        for pair in (attrs.get("data-i18n-attr") or "").split(";"):
+            if ":" in pair:
+                used.add(pair.split(":")[1].strip())
     code = "\n".join(p.read_text(encoding="utf-8") for p in site_files(".js"))
 
     def referenced(key: str) -> bool:

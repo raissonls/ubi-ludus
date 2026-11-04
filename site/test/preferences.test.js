@@ -174,3 +174,24 @@ test('"only what I can watch" is saved, found again, and anything but true means
   preferences.reset();
   assert.equal(preferences.get().onlyWatchable, false);
 });
+
+test('adopting choices from a shared link shows them without saving anything', () => {
+  const storage = fakeStorage();
+  const preferences = createPreferences(() => storage);
+  preferences.setTeams(['palmeiras']);
+  const heard = [];
+  preferences.subscribe((choices) => heard.push(choices));
+  preferences.adopt({ teams: ['brasil'], services: ['globoplay'], onlyWatchable: true });
+  assert.deepEqual(preferences.get(), { teams: ['brasil'], services: ['globoplay'], onlyWatchable: true });
+  assert.deepEqual(saved(storage).teams, ['palmeiras']); // what was saved is untouched
+  assert.deepEqual(heard, []);
+  preferences.setServices(['premiere']); // the first real change saves what is shown
+  assert.deepEqual(saved(storage), { version: 1, teams: ['brasil'], services: ['premiere'], onlyWatchable: true });
+});
+
+test('adopting leaves out what the link does not mention and cleans what it does', () => {
+  const preferences = createPreferences(() => fakeStorage());
+  preferences.setTeams(['palmeiras']);
+  preferences.adopt({ teams: null, services: ['BAD ID', 'premiere'], onlyWatchable: null });
+  assert.deepEqual(preferences.get(), { teams: ['palmeiras'], services: ['premiere'], onlyWatchable: false });
+});

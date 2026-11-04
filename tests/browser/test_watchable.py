@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from playwright.sync_api import Browser, Page
+from playwright.sync_api import Browser, Locator, Page
 from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, visit
 
 pytestmark = pytest.mark.browser
@@ -43,6 +43,13 @@ def changed_matches() -> dict[str, dict[str, Any]]:
 def saved(*services: str, teams: tuple[str, ...] = (), only: bool = False) -> dict[str, str]:
     record = {"version": 1, "teams": list(teams), "services": list(services), "onlyWatchable": only}
     return {STORAGE_KEY: json.dumps(record)}
+
+
+def filter_box(page: Page) -> Locator:
+    """The "only what I can watch" checkbox, which lives in the Filtros box (opened if closed)."""
+    if not page.locator("#filters").evaluate("e => e.open"):
+        page.locator("#filters-summary").click()
+    return page.get_by_role("checkbox", name=FILTER)
 
 
 def week(page: Page) -> None:
@@ -146,7 +153,7 @@ def test_the_filter_hides_only_what_cannot_be_watched_and_keeps_unknown(
         page = current.page
         week(page)
         assert len(titles(page)) == 5
-        page.get_by_label(FILTER).check()
+        filter_box(page).check()
         assert titles(page) == [
             "Palmeiras x Flamengo",
             "São Paulo x Atlético-MG",
@@ -154,22 +161,22 @@ def test_the_filter_hides_only_what_cannot_be_watched_and_keeps_unknown(
         ]
         page.get_by_label("Premiere (pay-per-view)").check()
         assert len(titles(page)) == 4  # Chelsea's match is back
-        page.get_by_label(FILTER).uncheck()
+        filter_box(page).uncheck()
         assert len(titles(page)) == 5
 
 
 def test_the_filter_persists_and_comes_back_after_a_reload(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, changed_data=changed_matches()):
         page = current.page
-        page.get_by_label(FILTER).check()
+        filter_box(page).check()
         stored = json.loads(page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')"))
         assert stored["onlyWatchable"] is True
         page.reload()
         page.wait_for_selector("html[data-ready='true']")
-        assert page.get_by_label(FILTER).is_checked()
+        assert filter_box(page).is_checked()
         week(page)
         assert len(titles(page)) == 3
-        page.get_by_label(FILTER).uncheck()
+        filter_box(page).uncheck()
         stored = json.loads(page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')"))
         assert stored["onlyWatchable"] is False
 
@@ -177,9 +184,9 @@ def test_the_filter_persists_and_comes_back_after_a_reload(browser: Browser, ori
 def test_reset_my_data_turns_the_filter_off(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, saved=saved(only=True)):
         page = current.page
-        assert page.get_by_label(FILTER).is_checked()
+        assert filter_box(page).is_checked()
         page.click("#reset-data")
-        assert not page.get_by_label(FILTER).is_checked()
+        assert not filter_box(page).is_checked()
 
 
 def test_the_filter_comes_before_the_limit_so_my_teams_still_fills_up(
@@ -202,7 +209,7 @@ def test_when_the_filter_hides_everything_the_page_says_why(browser: Browser, or
 
 def test_the_filter_is_a_labelled_checkbox_with_its_hint(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin):
-        box = current.page.get_by_role("checkbox", name=FILTER)
+        box = filter_box(current.page)
         assert not box.is_checked()
         described = box.get_attribute("aria-describedby")
         hint = current.page.locator(f"#{described}").inner_text()
@@ -212,9 +219,10 @@ def test_the_filter_is_a_labelled_checkbox_with_its_hint(browser: Browser, origi
 def test_the_filter_sends_nothing_anywhere(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin):
         before = len(current.requests)
-        current.page.get_by_label(FILTER).check()
+        filter_box(current.page).check()
         current.page.get_by_label("Premiere (pay-per-view)").check()
-        assert current.requests[before:] == []
+        later = [r for r in current.requests[before:] if not r.endswith("/assets/favicon.svg")]
+        assert later == []
 
 
 # --- the gallery: the same on every state --------------------------------------------------------
@@ -258,7 +266,7 @@ def test_axe_finds_nothing_with_marks_and_the_filter(
         page = current.page
         week(page)
         assert axe_violations(page) == []
-        page.get_by_label(FILTER).check()
+        filter_box(page).check()
         assert axe_violations(page) == []
     for current in visit(browser, origin, scheme, size, path=GALLERY + "?services=premiere"):
         assert axe_violations(current.page) == []
