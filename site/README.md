@@ -27,6 +27,8 @@ js/data-source.js   the data from the network, else from that copy; never hides 
 js/states.js        the loading, problem, no-data and saved-copy screens
 js/home.js          mounts the home page (pickers, lists, filters, shared view) once the data is here
 js/live-clock.js     where each match stands by the clock (countdown, in progress, probably over) and the loop that keeps cards in step; the rules are pure
+js/ics.js           writes an iCalendar (RFC 5545) file: escaping, 75-octet folding, UTC times; pure
+js/calendar.js      the events for a match or for the followed teams, and saving the file
 js/home-views.js   which matches each home list shows (my teams, today, this week), followed teams first; pure
 js/matches-view.js  draws the chosen list as cards and switches between the lists
 js/dom.js          safe element building and team colours as CSS variables
@@ -129,3 +131,10 @@ The data is published once a day, so it can say "scheduled" for a match that is 
 - Past three hours a match the data still calls open shows "Provavelmente encerrado", and a stale "Ao vivo" label is hidden. The clock never claims more than the time can tell: no score, no minute of play.
 - Finished, postponed and cancelled matches get nothing. The pulse stops under reduced motion.
 - Tests: `tests/browser/test_live_clock.py` winds a mocked clock (`visit(..., ticking=True)`; Playwright's clock moves the page's dates and timers only with `run_for`) to the second around kickoff and three hours later.
+
+## Add to calendar (FR-28)
+- Each card that can still be watched has **Adicionar ao calendário** (its accessible name includes the teams), and below the lists **Baixar calendário dos meus times (N jogos)** saves every match still to come of the followed teams in one file. That one ignores the list's ten-match limit and the filters, and is hidden when there is nothing to add.
+- The `.ics` file is written in the browser from the data already on the page and handed to the browser as a download (a Blob; nothing is requested, nothing is sent). An event has a stable UID (`<match id>@ubi-ludus`, so importing again updates instead of duplicating), UTC start, two hours of length, the teams as title, and a description with the competition and round, where to watch exactly as the card says (the broadcasters with how sure we are, or "Transmissão ainda não confirmada" and no name: FR-13), and a reminder to check the broadcaster closer to the match. Events are marked as not blocking time (`TRANSP:TRANSPARENT`). The file says nothing about the visitor's choices.
+- Escaping: every text from the data goes through `escapeText` (backslash, semicolon, comma, line breaks as `
+`, control characters to spaces), so a name cannot end a property and begin another; addresses are kept to printable ASCII; lines are folded at 75 *octets* without cutting a character; line ends are CRLF.
+- Tests: `site/test/ics.test.js` and `calendar.test.js` for the rules, and `tests/browser/test_calendar.py` downloads the real files and reads them back with the `icalendar` library (a strict RFC 5545 parser, added as a dev dependency) after checking the bytes: CRLF, no byte order mark, no line over 75 octets. I could not import into Google Calendar or Apple Calendar from here; the file follows what they require (VERSION, PRODID, UID, DTSTAMP, DTSTART, SUMMARY, CRLF, UTC times).

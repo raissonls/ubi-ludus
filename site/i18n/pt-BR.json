@@ -190,5 +190,21 @@
     "soon": "Começa em instantes",
     "live": "Em andamento",
     "over": "Provavelmente encerrado"
+  },
+  "calendar": {
+    "add": "Adicionar ao calendário",
+    "addFor": "de {teams}",
+    "all": {
+      "one": "Baixar calendário dos meus times ({count} jogo)",
+      "other": "Baixar calendário dos meus times ({count} jogos)"
+    },
+    "saved": "Arquivo do calendário baixado.",
+    "savedAll": {
+      "one": "Arquivo do calendário baixado com {count} jogo.",
+      "other": "Arquivo do calendário baixado com {count} jogos."
+    },
+    "name": "Ubi Ludus: jogos dos meus times",
+    "check": "Confira a emissora perto do jogo.",
+    "from": "Horário de Brasília: {when}. Dados do Ubi Ludus."
   }
 }
