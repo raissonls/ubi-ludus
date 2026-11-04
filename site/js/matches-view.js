@@ -5,6 +5,7 @@
 import { el } from './dom.js';
 import { EMPTY_FILTERS, activeCount, createMatchFilter } from './filters.js';
 import { defaultView, selectMatches } from './home-views.js';
+import { createCalendar } from './calendar.js';
 import { createLiveClock } from './live-clock.js';
 import { renderMatchCard } from './match-card.js';
 import { accessibleBroadcasters, describeMatch } from './match-model.js';
@@ -25,6 +26,15 @@ export function createMatchesView({
   onStateChange = () => {},
 }) {
   const list = document.getElementById('matches-list');
+  const calendarRow = document.getElementById('calendar-all-row');
+  const calendarAll = document.getElementById('calendar-all');
+  const calendarStatus = document.getElementById('calendar-status');
+  const calendar = createCalendar({
+    data,
+    translator,
+    clock,
+    url: `${location.origin}${location.pathname}`,
+  });
   const empty = document.getElementById('matches-empty');
   const status = document.getElementById('matches-status');
   const buttons = [...document.querySelectorAll('#view-switch [data-view]')];
@@ -46,6 +56,10 @@ export function createMatchesView({
       translator,
       accentTeam: followedTeam,
       reportHref: matchReportUrl(model, translator),
+      onCalendar: () => {
+        calendar.saveMatch(match);
+        calendarStatus.textContent = translator.t('calendar.saved');
+      },
     });
     item.classList.add('match-card--enter');
     item.style.setProperty('--enter-step', String(Math.min(index, ENTER_STEPS)));
@@ -87,6 +101,7 @@ export function createMatchesView({
     }
     list.replaceChildren(...groups);
     liveClock.update();
+    showCalendarAll();
     list.hidden = total === 0;
     empty.hidden = total > 0;
     const allHidden = total === 0 && hasMatches(view, now);
@@ -102,6 +117,13 @@ export function createMatchesView({
     status.textContent = translator.plural('matches.shown', total, { view: label });
   }
 
+  // "All my teams" in one file: offered when the visitor follows teams that have matches to come.
+  function showCalendarAll() {
+    const count = teamIds.length === 0 ? 0 : calendar.upcoming(teamIds).length;
+    calendarRow.hidden = count === 0;
+    calendarAll.textContent = translator.plural('calendar.all', count);
+  }
+
   function hasMatches(view, now) {
     const { followed, others } = selectMatches(view, data.matches, teamIds, now);
     return followed.length + others.length > 0;
@@ -113,6 +135,11 @@ export function createMatchesView({
     }
     return view === 'today' ? 'matches.emptyToday' : 'matches.emptyWeek';
   }
+
+  calendarAll.addEventListener('click', () => {
+    const count = calendar.saveFollowed(teamIds);
+    calendarStatus.textContent = translator.plural('calendar.savedAll', count);
+  });
 
   for (const button of buttons) {
     button.addEventListener('click', () => {

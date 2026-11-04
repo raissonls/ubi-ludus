@@ -22,9 +22,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "axe-playwright-python>=0.1.7", # accessibility checks of the site (axe-core is inside the package)
+    "icalendar>=6", # reads back the calendar files the site writes, as a strict RFC 5545 parser
     "mypy>=1.10",
     "playwright>=1.49", # the site in a real browser
-    "pre-commit>=3.7",    "pytest>=8.2",
+    "pre-commit>=3.7",
+    "pytest>=8.2",
     "pytest-cov>=5.0",
     "pytest-xdist>=3.6", # runs the dbt tests in parallel: each builds its own warehouse
     "ruff>=0.5",

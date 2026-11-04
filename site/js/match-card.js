@@ -30,7 +30,7 @@ const CONFIDENCE_KEY = {
   unknown: 'card.confidence.unknown',
 };
 
-function roundText(round, translator) {
+export function roundText(round, translator) {
   if (!round) return null;
   if (round.kind === 'matchday') return translator.t('card.round', { number: round.number });
   const key = ['card.stages', round.slug].join('.');
@@ -108,8 +108,12 @@ function watch(model, translator, cardId) {
  * @param translator  from i18n.js
  * @param accentTeam a team whose colours become the card's accent bar (the followed team), or null
  * @param reportHref where "report a wrong broadcast" goes, or null for no link (see report.js)
+ * @param onCalendar called when "add to calendar" is pressed, or null for no button (calendar.js)
  */
-export function renderMatchCard(model, { translator, accentTeam = null, reportHref = null }) {
+export function renderMatchCard(
+  model,
+  { translator, accentTeam = null, reportHref = null, onCalendar = null },
+) {
   const cardId = `card-${model.id}`;
   const when = el('p', { class: 'match-card__when' }, [
     el('time', { datetime: model.kickoff, text: formatDateTime(model.kickoff) }),
@@ -145,14 +149,26 @@ export function renderMatchCard(model, { translator, accentTeam = null, reportHr
   if (model.access) attributes['data-access'] = model.access;
   const card = el('li', attributes, [when, title, competition]);
   if (model.showBroadcasts) card.append(watch(model, translator, cardId));
-  if (model.showBroadcasts && reportHref) {
+  if (model.showBroadcasts && (reportHref || onCalendar)) {
     const teams = title.textContent.replace(/\s+/g, ' ').trim();
-    card.append(
-      el('a', { class: 'match-card__report', href: reportHref, rel: 'noopener noreferrer' }, [
-        translator.t('report.link'),
-        el('span', { class: 'visually-hidden', text: ` ${translator.t('report.linkFor', { teams })}` }),
-      ]),
-    );
+    const actions = el('div', { class: 'match-card__actions' });
+    if (onCalendar) {
+      const add = el('button', { type: 'button', class: 'match-card__calendar' }, [
+        translator.t('calendar.add'),
+        el('span', { class: 'visually-hidden', text: ` ${translator.t('calendar.addFor', { teams })}` }),
+      ]);
+      add.addEventListener('click', onCalendar);
+      actions.append(add);
+    }
+    if (reportHref) {
+      actions.append(
+        el('a', { class: 'match-card__report', href: reportHref, rel: 'noopener noreferrer' }, [
+          translator.t('report.link'),
+          el('span', { class: 'visually-hidden', text: ` ${translator.t('report.linkFor', { teams })}` }),
+        ]),
+      );
+    }
+    card.append(actions);
   }
   if (accentTeam) setAccent(card, accentTeam);
   return card;
