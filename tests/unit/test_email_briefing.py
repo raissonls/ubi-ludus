@@ -18,7 +18,8 @@ from ubi_ludus.email.briefing import (
 from ubi_ludus.pipeline.owner import OwnerConfig
 from ubi_ludus.pipeline.validate import SchemaValidationError
 
-SITE_DATA = Path(__file__).resolve().parents[2] / "site" / "data"
+# The files the site's own tests use: committed, unlike site/data, which the pipeline makes.
+FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "data"
 NOW = datetime(2026, 11, 3, 11, 0, tzinfo=UTC)  # 08:00 in Brazil, 3 November
 
 
@@ -279,18 +280,18 @@ def test_data_older_than_36_hours_is_said_to_be_old() -> None:
 
 
 def test_the_published_files_are_read_and_the_briefing_builds_from_them() -> None:
-    loaded = load_documents(SITE_DATA)
+    loaded = load_documents(FIXTURES)
     assert loaded.matches and loaded.teams and loaded.broadcasters and loaded.services
     assert loaded.last_success_at is not None
-    briefing = build_briefing(loaded, owner(teams=("barcelona",), services=("hbo-max",)), NOW)
-    assert briefing.mine  # Barça plays that day in the data
+    briefing = build_briefing(loaded, owner(teams=("palmeiras",), services=("globoplay",)), NOW)
+    assert ids(briefing.mine) == ["fx-1"]  # Palmeiras x Flamengo, 3 November
     assert all(item.kickoff.date() == briefing.day for item in briefing.mine)
 
 
 def test_a_file_that_breaks_its_schema_is_refused(tmp_path: Path) -> None:
     for name in ("matches", "teams", "competitions", "broadcasters", "status"):
         (tmp_path / f"{name}.json").write_text(
-            (SITE_DATA / f"{name}.json").read_text("utf-8"), "utf-8"
+            (FIXTURES / f"{name}.json").read_text("utf-8"), "utf-8"
         )
     (tmp_path / "status.json").write_text('{"schema_version": "1.0"}', encoding="utf-8")
     with pytest.raises(SchemaValidationError):

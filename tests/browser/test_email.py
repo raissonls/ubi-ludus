@@ -5,6 +5,7 @@ colours, and axe (contrast included). Gmail and Apple Mail are checked by hand b
 preview command writes the files for that (``python -m ubi_ludus.email.render``).
 """
 
+from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -13,25 +14,34 @@ import pytest
 from playwright.sync_api import Browser, Page
 from site_browser import VIEWPORTS, axe_violations
 
-from ubi_ludus.email.briefing import BroadcasterLine, build_briefing, load_documents
+from ubi_ludus.email.briefing import BroadcasterLine, Documents, build_briefing, load_documents
 from ubi_ludus.email.render import render_briefing
 from ubi_ludus.pipeline.owner import OwnerConfig
 
 pytestmark = pytest.mark.browser
 
-DATA = Path(__file__).resolve().parents[2] / "site" / "data"
+DATA = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "data"
 NOW = datetime(2026, 11, 3, 11, 0, tzinfo=UTC)
 OWNER = OwnerConfig(
-    teams=("barcelona", "palmeiras"),
-    services=("hbo-max",),
+    teams=("palmeiras",),
+    services=("globoplay",),
     notable_competitions=("uefa-champions-league",),
     preferred_broadcasters=(),
     preferred_kinds=(),
 )
 
 
+def documents() -> Documents:
+    """The fixture files plus a Champions League match the same day, so both sections show."""
+    loaded = load_documents(DATA)
+    extra = {**next(m for m in loaded.matches if m["id"] == "fx-3"), "id": "fx-extra"}
+    extra["kickoff_utc"] = "2026-11-03T20:00:00Z"
+    extra["broadcasts"] = [{"broadcaster_id": "globo", "confidence": "confirmed", "source": "x"}]
+    return replace(loaded, matches=[*loaded.matches, extra])
+
+
 def full_email() -> str:
-    briefing = build_briefing(load_documents(DATA), OWNER, NOW)
+    briefing = build_briefing(documents(), OWNER, NOW)
     assert briefing.mine and briefing.notable
     return render_briefing(briefing, site_url="https://example.org/ubi-ludus/").html
 
@@ -68,7 +78,7 @@ def test_the_email_never_scrolls_sideways(browser: Browser, size: str) -> None:
 
 
 def test_long_names_wrap_instead_of_pushing_the_page_wide(browser: Browser) -> None:
-    briefing = build_briefing(load_documents(DATA), OWNER, NOW)
+    briefing = build_briefing(documents(), OWNER, NOW)
     long_word = "Supercalifragilisticoespialidoso" * 3
     first = briefing.mine[0]
     wide = first.__class__(

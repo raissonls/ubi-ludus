@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
-from test_email_briefing import NOW, SITE_DATA, broadcast, documents, match, owner
+from test_email_briefing import FIXTURES, NOW, broadcast, documents, match, owner
 
 from ubi_ludus.email.briefing import (
     Briefing,
@@ -332,10 +332,10 @@ def test_the_text_and_the_html_say_the_same_things() -> None:
 
 def test_the_real_published_data_renders() -> None:
     real = build_briefing(
-        load_documents(SITE_DATA), owner(teams=("barcelona",), services=("hbo-max",)), NOW
+        load_documents(FIXTURES), owner(teams=("palmeiras",), services=("globoplay",)), NOW
     )
     email = render_briefing(real)
-    assert "Barça" in email.html
+    assert "Palmeiras x Flamengo" in email.html
     assert not re.search(r"\$\w|\[\w+\.\w+\]", email.html + email.text)  # no hole left unfilled
 
 
@@ -343,7 +343,7 @@ def test_the_preview_command_writes_both_files(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     assert (
-        main(["--data", str(SITE_DATA), "--out", str(tmp_path), "--now", "2026-11-03T11:00:00Z"])
+        main(["--data", str(FIXTURES), "--out", str(tmp_path), "--now", "2026-11-03T11:00:00Z"])
         == 0
     )
     assert (tmp_path / "briefing.html").read_text("utf-8").startswith("<!doctype html>")
