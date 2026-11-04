@@ -645,3 +645,82 @@ input[type="text"] {
   border-radius: var(--radius-sm);
   background: var(--color-surface);
 }
+
+/* --- Loading, problems and no data (FR-32) ------------------------------------------------- */
+
+.loading p {
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.skeleton {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+/* Grey cards that only hint at the shape of what is coming. */
+.skeleton__card {
+  block-size: 7rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 0%,
+    var(--color-border) 50%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 100%;
+  border: var(--border-width) solid var(--color-border);
+  animation: skeleton-shimmer 1.6s linear infinite;
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton__card {
+    animation: none;
+  }
+}
+
+.state-panel {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.state-panel h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.state-panel p:last-child {
+  margin-bottom: 0;
+}
+
+/* A problem gets a stronger edge and the warning colours on its title: words and a border, not
+   colour alone. "No data yet" is calmer. */
+.state-panel[data-kind="offline"],
+.state-panel[data-kind="error"],
+.state-panel[data-kind="outdated"],
+.state-panel[data-kind="unexpected"] {
+  border-style: dashed;
+  border-width: 2px;
+}
+
+.state-panel[data-kind="offline"] h3,
+.state-panel[data-kind="error"] h3,
+.state-panel[data-kind="outdated"] h3,
+.state-panel[data-kind="unexpected"] h3 {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-fg);
+}

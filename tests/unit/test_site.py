@@ -189,15 +189,19 @@ def test_the_code_never_builds_html_or_runs_text_as_code() -> None:
         assert not forbidden.search(path.read_text(encoding="utf-8")), path.name
 
 
-def test_only_the_preferences_module_touches_storage_and_nothing_sets_a_cookie() -> None:
-    """FR-22: the visitor's choices stay in this browser, kept by one module."""
+def test_only_two_modules_touch_storage_and_nothing_sets_a_cookie() -> None:
+    """FR-22: the visitor's choices stay in this browser, kept by one module. The only other
+    storage is the copy of the published data kept for when it cannot load (data-cache.js)."""
     for path in site_files(".js"):
         text = path.read_text(encoding="utf-8")
         assert "document.cookie" not in text, path.name
-        assert not re.search(r"sessionStorage|indexedDB|\bcaches\b|cookieStore", text), path.name
+        assert not re.search(r"sessionStorage|indexedDB|cookieStore", text), path.name
         if path.name != "preferences.js":
             assert "localStorage" not in text, f"{path.name} must go through preferences.js"
+        if path.name != "data-cache.js":
+            assert not re.search(r"\bcaches\b", text), f"{path.name} must not use Cache Storage"
     assert "localStorage" in (SITE / "js" / "preferences.js").read_text(encoding="utf-8")
+    assert "localStorage" not in (SITE / "js" / "data-cache.js").read_text(encoding="utf-8")
 
 
 def test_the_page_can_only_ask_for_its_own_files_by_fetch_and_cannot_send_anything_else() -> None:
