@@ -113,11 +113,6 @@ main:focus {
   font-weight: var(--font-weight-bold);
 }
 
-.brand__tagline {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
 main {
   flex: 1;
   padding-block: var(--space-8);

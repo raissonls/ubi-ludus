@@ -116,7 +116,7 @@ def test_they_also_combine_with_the_only_what_i_can_watch_filter(
     for current in visit(browser, origin, path=HOME + WEEK):
         page = current.page
         open_filters(page)
-        page.get_by_label("Só o que dá para assistir").check()
+        page.get_by_role("checkbox", name="Só o que dá para assistir").check()
         page.get_by_label("Competição").select_option(CHAMPIONS)
         # Nothing is known about these two, so the filter keeps them; Globo is not theirs.
         assert titles(page) == ["Real Madrid x Barça", "Chelsea x Atleti"]
@@ -283,7 +283,7 @@ def test_opening_a_shared_link_shows_the_same_view_on_another_device(
         assert titles(page) == ["Palmeiras x Flamengo", "São Paulo x Atlético-MG"]
         assert page.get_by_role("button", name="Remover Palmeiras").count() == 1
         assert page.get_by_label("Globoplay").is_checked()
-        assert page.get_by_label("Só o que dá para assistir").is_checked()
+        assert page.get_by_role("checkbox", name="Só o que dá para assistir").is_checked()
         assert page.get_by_label("Emissora").input_value() == "globo"
         assert page.locator("#shared-notice").is_visible()
         assert saved_record(page) is None  # nothing was saved on this device

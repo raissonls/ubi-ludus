@@ -100,6 +100,7 @@ try {
     picker.update(choices.teams);
     servicesPicker.update(choices.services);
     onlyWatchable.checked = choices.onlyWatchable;
+    filtersView.setExtra(choices.onlyWatchable ? 1 : 0);
     matches.render(choices);
   }
   preferences.subscribe(() => {

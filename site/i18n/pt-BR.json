@@ -1,7 +1,6 @@
 {
   "app": {
-    "name": "Ubi Ludus",
-    "tagline": "Onde assistir futebol no Brasil"
+    "name": "Ubi Ludus"
   },
   "skip": {
     "toContent": "Pular para o conteúdo"
@@ -134,7 +133,7 @@
     "today": "Atualizado hoje às {time}",
     "yesterday": "Atualizado ontem às {time}",
     "date": "Atualizado em {date} às {time}",
-    "stale": "Atenção: os dados podem estar desatualizados. Última atualização em {date} às {time}.",
+    "stale": "Dados possivelmente desatualizados. Última atualização: {date}, {time}.",
     "unknown": "Ainda não há registro de uma atualização dos dados."
   },
   "report": {
