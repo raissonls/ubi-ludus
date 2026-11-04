@@ -182,5 +182,13 @@
       "title": "Algo deu errado",
       "body": "Não conseguimos mostrar a página. Recarregue; se continuar assim, avise o projeto."
     }
+  },
+  "clock": {
+    "hoursMinutes": "Começa em {hours} h {minutes} min",
+    "hours": "Começa em {hours} h",
+    "minutes": "Começa em {minutes} min",
+    "soon": "Começa em instantes",
+    "live": "Em andamento",
+    "over": "Provavelmente encerrado"
   }
 }

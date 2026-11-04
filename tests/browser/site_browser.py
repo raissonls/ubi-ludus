@@ -2,6 +2,7 @@
 
 import json
 from collections.abc import Callable, Iterator
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from axe_playwright_python.sync_playwright import Axe  # type: ignore[import-untyped]
@@ -81,11 +82,14 @@ def visit(
     path: str = "/index.html",
     wait_ready: bool = True,
     before_open: Callable[[Page], None] | None = None,
+    now: str = NOW,
+    ticking: bool = False,
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
     it were in a format the site does not know, `changed_data` maps a data file to the document
-    served in its place, `before_open` is called with the page just before it loads."""
+    served in its place, `before_open` is called with the page just before it loads, `now` is the
+    time the page sees (it stands still unless `ticking`, when the test moves it)."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
@@ -101,7 +105,13 @@ def visit(
         if storage_blocked:
             context.add_init_script(STORAGE_BLOCKED)
         page = context.new_page()
-        page.clock.set_fixed_time(NOW)
+        if ticking:
+            # A clock the test winds: the page's dates and its timers move only with run_for().
+            start = datetime.fromisoformat(now.replace("Z", "+00:00"))
+            page.clock.install(time=start - timedelta(seconds=1))
+            page.clock.pause_at(start)
+        else:
+            page.clock.set_fixed_time(now)
         for name, status in (broken or {}).items():
             page.route(f"**/data/{name}.json", answer_with(status))
         for name, document in (changed_data or {}).items():

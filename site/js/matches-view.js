@@ -5,6 +5,7 @@
 import { el } from './dom.js';
 import { EMPTY_FILTERS, activeCount, createMatchFilter } from './filters.js';
 import { defaultView, selectMatches } from './home-views.js';
+import { createLiveClock } from './live-clock.js';
 import { renderMatchCard } from './match-card.js';
 import { accessibleBroadcasters, describeMatch } from './match-model.js';
 import { matchReportUrl } from './report.js';
@@ -27,6 +28,10 @@ export function createMatchesView({
   const empty = document.getElementById('matches-empty');
   const status = document.getElementById('matches-status');
   const buttons = [...document.querySelectorAll('#view-switch [data-view]')];
+  // Cards say where their match stands (a countdown, live, probably over) and keep saying it as
+  // time passes.
+  const liveClock = createLiveClock({ root: list, translator, clock });
+  liveClock.start();
   let teamIds = [];
   let accessible = accessibleBroadcasters([], data);
   let onlyWatchable = false;
@@ -81,6 +86,7 @@ export function createMatchesView({
       groups.push(group(others, false, titled ? translator.t('matches.groupOthers') : ''));
     }
     list.replaceChildren(...groups);
+    liveClock.update();
     list.hidden = total === 0;
     empty.hidden = total > 0;
     const allHidden = total === 0 && hasMatches(view, now);
