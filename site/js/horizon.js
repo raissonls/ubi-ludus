@@ -31,7 +31,7 @@ export function joinNames(names, locale = 'pt-BR') {
 }
 
 /**
- * What the notice above a list of matches says, or null for nothing.
+ * What the notice below a list of matches says, or null for nothing.
  *
  * @param shown        the matches drawn
  * @param selectedId   the competition the visitor filtered on, if any

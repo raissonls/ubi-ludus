@@ -646,7 +646,7 @@ input[type="text"] {
   background: var(--color-surface);
 }
 
-/* A competition we only know until tomorrow (FR-34): said above the list, and on the card in words
+/* A competition we only know until tomorrow (FR-34): said below the list, and on the card in words
    with a dotted edge, so it never rests on colour alone. */
 .notice--horizon {
   margin-block: var(--space-3);
