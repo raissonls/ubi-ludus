@@ -38,6 +38,12 @@ SIGNATURE = """
     const more = card.querySelector('.badges__more');
     out[card.dataset.case] = {
       state: card.dataset.state,
+      horizon: card.querySelector('.match-card__horizon')
+        ? {
+            text: card.querySelector('.match-card__horizon').textContent,
+            ...read(card.querySelector('.match-card__horizon'), [...colours, 'font-weight']),
+          }
+        : null,
       confidence: card.dataset.confidence,
       access: card.dataset.access ?? null,
       accessLine: card.querySelector('.match-card__access')
@@ -321,8 +327,8 @@ def test_names_that_look_like_html_are_shown_as_text_and_run_nothing(
 def test_the_gallery_loads_cleanly_from_this_origin_only(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, path=GALLERY):
         page = current.page
-        assert page.locator("[data-case]").count() == 15
-        assert page.locator("[data-case] time[datetime]").count() == 15
+        assert page.locator("[data-case]").count() == 16
+        assert page.locator("[data-case] time[datetime]").count() == 16
         assert current.console == []
         assert current.failed == []
         assert all(url.startswith(origin + "/") for url in current.requests)

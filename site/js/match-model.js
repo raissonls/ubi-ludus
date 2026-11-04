@@ -1,6 +1,8 @@
 // What a match card says, as plain data. No DOM here, so every rule about states and about how
 // sure we are of a broadcaster (FR-12, FR-13) can be tested without a browser.
 
+import { isShortHorizon } from './horizon.js';
+
 /** The states of a match, as the pipeline publishes them. */
 export const STATES = ['scheduled', 'live', 'finished', 'postponed', 'cancelled', 'rescheduled'];
 
@@ -113,6 +115,8 @@ export function describeMatch(match, data, { accessible = null } = {}) {
     home: side(match.home_team_id, data),
     away: side(match.away_team_id, data),
     competition: competition ? competition.name : match.competition_id,
+    // The card of a match still to come in a competition we only know until tomorrow says so (FR-34).
+    shortHorizon: showBroadcasts && isShortHorizon(competition),
     round: describeRound(match.round),
     confidence,
     showBroadcasts,

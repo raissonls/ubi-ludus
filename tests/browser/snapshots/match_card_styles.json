@@ -17,6 +17,7 @@
       "confidence": "unknown",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "cancelled",
       "stateLabel": {
@@ -47,6 +48,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "finished",
       "stateLabel": {
@@ -95,6 +97,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -139,6 +142,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -183,6 +187,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -240,6 +245,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "live",
       "stateLabel": {
@@ -301,6 +307,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -327,6 +334,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "postponed",
       "stateLabel": {
@@ -388,6 +396,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "rescheduled",
       "stateLabel": {
@@ -449,6 +458,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -532,6 +542,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
+      "horizon": null,
       "more": "+3",
       "state": "scheduled",
       "stateLabel": null,
@@ -602,6 +613,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -672,6 +684,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -702,6 +715,7 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -710,6 +724,69 @@
         "text-decoration-line": "none"
       },
       "watchLabel": null
+    },
+    "short-horizon": {
+      "access": null,
+      "accessLine": null,
+      "badges": [
+        {
+          "access": null,
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": true
+        },
+        {
+          "access": null,
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
     },
     "teams-not-decided": {
       "access": null,
@@ -732,6 +809,12 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -760,6 +843,7 @@
       "confidence": "unknown",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "cancelled",
       "stateLabel": {
@@ -790,6 +874,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "finished",
       "stateLabel": {
@@ -842,6 +927,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -890,6 +976,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -938,6 +1025,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -999,6 +1087,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "live",
       "stateLabel": {
@@ -1064,6 +1153,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1090,6 +1180,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "postponed",
       "stateLabel": {
@@ -1155,6 +1246,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "rescheduled",
       "stateLabel": {
@@ -1220,6 +1312,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1307,6 +1400,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
+      "horizon": null,
       "more": "+3",
       "state": "scheduled",
       "stateLabel": null,
@@ -1381,6 +1475,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1455,6 +1550,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1485,6 +1581,7 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1493,6 +1590,73 @@
         "text-decoration-line": "none"
       },
       "watchLabel": null
+    },
+    "short-horizon": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "other",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(18, 58, 42)",
+          "color": "rgb(158, 230, 195)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(23, 26, 31)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(236, 239, 244)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(158, 230, 195)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
     },
     "teams-not-decided": {
       "access": "unknown",
@@ -1515,6 +1679,12 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(169, 177, 191)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1543,6 +1713,7 @@
       "confidence": "unknown",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "cancelled",
       "stateLabel": {
@@ -1573,6 +1744,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "finished",
       "stateLabel": {
@@ -1621,6 +1793,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1665,6 +1838,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1709,6 +1883,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1766,6 +1941,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "live",
       "stateLabel": {
@@ -1827,6 +2003,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -1853,6 +2030,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "postponed",
       "stateLabel": {
@@ -1914,6 +2092,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "rescheduled",
       "stateLabel": {
@@ -1975,6 +2154,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2058,6 +2238,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
+      "horizon": null,
       "more": "+3",
       "state": "scheduled",
       "stateLabel": null,
@@ -2128,6 +2309,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2198,6 +2380,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2228,6 +2411,7 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2236,6 +2420,69 @@
         "text-decoration-line": "none"
       },
       "watchLabel": null
+    },
+    "short-horizon": {
+      "access": null,
+      "accessLine": null,
+      "badges": [
+        {
+          "access": null,
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": true
+        },
+        {
+          "access": null,
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "none",
+            "border-top-width": "0px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
     },
     "teams-not-decided": {
       "access": null,
@@ -2258,6 +2505,12 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2286,6 +2539,7 @@
       "confidence": "unknown",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "cancelled",
       "stateLabel": {
@@ -2316,6 +2570,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "finished",
       "stateLabel": {
@@ -2368,6 +2623,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2416,6 +2672,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2464,6 +2721,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2525,6 +2783,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "live",
       "stateLabel": {
@@ -2590,6 +2849,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2616,6 +2876,7 @@
       "confidence": "rule",
       "confidenceLine": null,
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "postponed",
       "stateLabel": {
@@ -2681,6 +2942,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "rescheduled",
       "stateLabel": {
@@ -2746,6 +3008,7 @@
         "text": "Confirmado"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2833,6 +3096,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
+      "horizon": null,
       "more": "+3",
       "state": "scheduled",
       "stateLabel": null,
@@ -2907,6 +3171,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -2981,6 +3246,7 @@
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -3011,6 +3277,7 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": null,
       "more": null,
       "state": "scheduled",
       "stateLabel": null,
@@ -3019,6 +3286,73 @@
         "text-decoration-line": "none"
       },
       "watchLabel": null
+    },
+    "short-horizon": {
+      "access": "yes",
+      "accessLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Dá para assistir com os seus serviços."
+      },
+      "badges": [
+        {
+          "access": "other",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "SporTV",
+          "outline": {
+            "border-top-style": "dashed",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        },
+        {
+          "access": "yours",
+          "background-color": "rgb(223, 243, 232)",
+          "color": "rgb(11, 74, 51)",
+          "font-weight": "700",
+          "kind": "badge badge--confirmed",
+          "name": "TV Globo",
+          "outline": {
+            "border-top-style": "solid",
+            "border-top-width": "2px"
+          },
+          "tick": true
+        }
+      ],
+      "card": {
+        "background-color": "rgb(255, 255, 255)",
+        "border-inline-start-color": "rgb(0, 100, 55)",
+        "border-inline-start-width": "6px",
+        "color": "rgb(20, 23, 28)"
+      },
+      "cardBorder": {
+        "border-inline-start-style": "solid",
+        "border-top-style": "solid"
+      },
+      "confidence": "confirmed",
+      "confidenceLine": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(11, 74, 51)",
+        "text": "Confirmado"
+      },
+      "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
+      "more": null,
+      "state": "scheduled",
+      "stateLabel": null,
+      "teams": {
+        "font-weight": "700",
+        "text-decoration-line": "none"
+      },
+      "watchLabel": "Onde assistir"
     },
     "teams-not-decided": {
       "access": "unknown",
@@ -3041,6 +3375,12 @@
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
+      "horizon": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "color": "rgb(74, 81, 96)",
+        "font-weight": "700",
+        "text": "Dados desta competição só até amanhã"
+      },
       "more": null,
       "state": "scheduled",
       "stateLabel": null,

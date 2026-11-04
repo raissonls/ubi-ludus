@@ -646,6 +646,20 @@ input[type="text"] {
   background: var(--color-surface);
 }
 
+/* A competition we only know until tomorrow (FR-34): said below the list, and on the card in words
+   with a dotted edge, so it never rests on colour alone. */
+.notice--horizon {
+  margin-block: var(--space-3);
+  border-style: dotted;
+}
+
+.match-card__horizon {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
 /* --- Loading, problems and no data (FR-32) ------------------------------------------------- */
 
 .loading p {

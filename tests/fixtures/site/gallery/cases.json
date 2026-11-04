@@ -412,6 +412,33 @@
           }
         ]
       }
+    },
+    {
+      "case": "short-horizon",
+      "match": {
+        "id": "gallery-short-horizon",
+        "competition_id": "amistosos-selecoes",
+        "season": "2026",
+        "round": null,
+        "kickoff_utc": "2026-11-03T22:00:00Z",
+        "home_team_id": "palmeiras",
+        "away_team_id": "flamengo",
+        "status": "scheduled",
+        "broadcasts": [
+          {
+            "broadcaster_id": "globo",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          },
+          {
+            "broadcaster_id": "sportv",
+            "confidence": "confirmed",
+            "source": "override",
+            "updated_at": "2026-11-02T09:00:00Z"
+          }
+        ]
+      }
     }
   ]
 }
