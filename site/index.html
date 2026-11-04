@@ -30,12 +30,13 @@
         <span class="brand__name" data-i18n="app.name"></span>
         <span class="brand__tagline" data-i18n="app.tagline"></span>
       </p>
+      <!-- How old the data is; js/main.js fills it in from status.json. -->
+      <p id="freshness" class="freshness" hidden></p>
     </div>
   </header>
 
   <main id="main" class="container" tabindex="-1">
     <h1 data-i18n="home.title"></h1>
-    <p data-i18n="home.intro"></p>
 
     <!-- The lists of matches come first, so the next match of the followed teams is on screen
          without scrolling. js/matches-view.js draws the cards and switches between the lists. -->
@@ -93,6 +94,7 @@
     <div class="container">
       <p data-i18n="footer.privacy"></p>
       <p><button type="button" id="reset-data" data-i18n="footer.reset"></button></p>
+      <p><a href="https://github.com/raissonls/ubi-ludus/issues/new?template=wrong-broadcast.yml" rel="noopener noreferrer" data-i18n="report.footer"></a></p>
       <p id="reset-result" role="status"></p>
       <ul>
         <li><a href="https://github.com/raissonls/ubi-ludus/blob/main/PRIVACY.md" rel="noopener noreferrer" data-i18n="footer.privacyLink"></a></li>

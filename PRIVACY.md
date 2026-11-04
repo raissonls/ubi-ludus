@@ -15,6 +15,7 @@ The teams you follow, the services you have and whether you hide the matches you
 ## What others can see
 
 - **GitHub** hosts the site (GitHub Pages). Like any web host, GitHub receives your IP address and the usual request details when you open a page, and handles them under [its own privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement). This project does not receive or read those logs.
+- **The "report a wrong broadcast" links** open a new issue on the project's GitHub repository, with the match and the broadcasters the site showed already filled in. Nothing about you is in the link (not your teams or services), and nothing happens until you click it. What you then write on GitHub is public and governed by GitHub's terms and your GitHub account.
 - **The project's repository is public**, including the data files the site publishes (matches, teams, competitions, broadcasters). None of it is about visitors.
 - **The daily e-mail** is for the owner of the project only. Its address is stored as a repository secret, never in the code. Visitors are never e-mailed.
 

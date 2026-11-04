@@ -2,6 +2,7 @@
 // them.
 
 import { loadData } from './data.js';
+import { describeFreshness } from './freshness.js';
 import { applyStrings, createTranslator, loadStrings } from './i18n.js';
 import { createMatchesView } from './matches-view.js';
 import { createPreferences, restrictTo } from './preferences.js';
@@ -18,6 +19,7 @@ const status = document.getElementById('data-status');
 try {
   const data = await loadData(new URL('../data/', import.meta.url));
   status.textContent = translator.plural('home.matchesLoaded', data.matches.length);
+  showFreshness(data.status);
 
   // The choices that are saved may name a team that has since gone: keep only the ones we know.
   const known = { teams: new Set(data.teamsById.keys()), services: new Set(data.servicesById.keys()) };
@@ -50,6 +52,26 @@ try {
 } catch (error) {
   status.textContent = translator.t('home.loadFailed');
   console.error(error);
+}
+
+// How old the data is (FR-30). A warning when it is old or was never recorded.
+function showFreshness(statusDocument) {
+  const element = document.getElementById('freshness');
+  const found = describeFreshness(statusDocument, new Date());
+  const text = translator.t(found.key, found.values);
+  element.dataset.state = found.state;
+  element.replaceChildren(
+    ...(found.state === 'fresh' ? [] : [warningMark()]),
+    document.createTextNode(text),
+  );
+  element.hidden = false;
+}
+
+function warningMark() {
+  const mark = document.createElement('span');
+  mark.setAttribute('aria-hidden', 'true');
+  mark.textContent = '⚠ ';
+  return mark;
 }
 
 // "Reset my data" (FR-22): forget the saved choices, in storage and in memory. The views follow.
