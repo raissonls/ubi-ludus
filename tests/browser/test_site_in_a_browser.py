@@ -8,7 +8,6 @@ import pytest
 from playwright.sync_api import Browser
 from site_browser import (
     CHOICES,
-    DATA,
     SECRET_SERVICE,
     SECRET_TEAM,
     STORAGE_KEY,
@@ -96,14 +95,9 @@ def test_every_focusable_thing_shows_a_focus_ring(browser: Browser, origin: str)
 # --- the data and the visitor's choices (FR-22) -----------------------------------------------
 
 
-def loaded_text() -> str:
-    count = len(json.loads((DATA / "matches.json").read_text(encoding="utf-8"))["matches"])
-    return f"{count} jogo carregado." if count == 1 else f"{count} jogos carregados."
-
-
 def test_the_published_files_are_loaded_and_counted(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin):
-        assert current.page.locator("#data-status").inner_text() == loaded_text()
+        assert current.page.locator("#matches-content").is_visible()
         fetched = sorted(urlparse(u).path for u in current.requests if "/data/" in u)
         assert fetched == [
             f"/data/{n}.json"
@@ -153,7 +147,7 @@ def test_with_storage_blocked_the_page_still_works_and_reset_still_answers(
 ) -> None:
     for current in visit(browser, origin, storage_blocked=True):
         assert current.console == []
-        assert current.page.locator("#data-status").inner_text() == loaded_text()
+        assert current.page.locator("#matches-content").is_visible()
         current.page.click("#reset-data")
         assert "apagadas" in current.page.locator("#reset-result").inner_text()
 
@@ -162,7 +156,7 @@ def test_when_the_data_cannot_be_loaded_the_page_says_so_and_stays_accessible(
     browser: Browser, origin: str
 ) -> None:
     for current in visit(browser, origin, broken={"matches": 500}):
-        message = current.page.locator("#data-status").inner_text()
+        message = current.page.locator("#state-panel").inner_text()
         assert message.startswith("Não foi possível carregar os jogos")
         assert any("matches.json" in line for line in current.console)
         assert axe_violations(current.page) == []
@@ -172,7 +166,7 @@ def test_a_data_file_in_a_newer_format_is_refused_the_same_way(
     browser: Browser, origin: str
 ) -> None:
     for current in visit(browser, origin, newer_format="teams"):
-        assert current.page.locator("#data-status").inner_text().startswith("Não foi possível")
+        assert current.page.locator("#state-panel").inner_text().startswith("Esta página ficou")
         assert any("this site reads 1.x" in line for line in current.console)
 
 

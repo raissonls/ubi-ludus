@@ -22,6 +22,10 @@ js/filters.js       which matches pass the competition, broadcaster and team-sea
 js/filters-view.js  the "Filtros" box
 js/url-state.js     reads and writes the view in the address, checked against allow-lists; pure
 js/share.js         "Copiar link desta visão"
+js/data-cache.js    the copy of the published data kept in this browser for when a load fails (Cache Storage); the only storage besides preferences.js
+js/data-source.js   the data from the network, else from that copy; never hides data newer than the site
+js/states.js        the loading, problem, no-data and saved-copy screens
+js/home.js          mounts the home page (pickers, lists, filters, shared view) once the data is here
 js/home-views.js   which matches each home list shows (my teams, today, this week), followed teams first; pure
 js/matches-view.js  draws the chosen list as cards and switches between the lists
 js/dom.js          safe element building and team colours as CSS variables
@@ -109,3 +113,10 @@ The footer shows "Football data provided by the Football-Data.org API" exactly a
 - Reading an address is the careful part. Every value is checked against an allow-list built from the data: lists must be one of the three, competitions and broadcasters must be ones offered, team and service ids must exist (at most 50 each, ids must also look like ids). The search text loses control characters and is cut at 60 characters, and is only ever put in a field as text. What does not fit is ignored.
 - Opening a shared link shows its teams, services and filter **for that visit only** and saves nothing: a notice says so. The first time the visitor changes their teams or services the shown choices become their own and are saved, and the choices leave the address.
 - Tests: `tests/browser/test_filters_share.py` (read the address with `location.href`; Playwright's `page.url` learns of `history.replaceState` a moment later).
+
+## Loading, offline, empty and error screens (FR-32)
+Every screen is words first, has a way forward and a test (`tests/browser/test_states.py`, axe in both themes at three sizes).
+- **Loading**: grey cards that hint at the shape of the lists, plus "Carregando os jogos…" in a status region; the section is `aria-busy`. The shimmer stops under reduced motion. Anything that needs the data (the pickers, the lists, the filters) stays hidden until it is here.
+- **Problems** (one panel, `role="alert"`, with the kind in `data-kind`): `offline` (the files could not be reached, or `navigator.onLine` is false), `error` (the server answered something else, or a file is not what the page reads), `outdated` (the data is in a newer format than this site reads: only "reload" is offered, since trying again cannot help) and `unexpected` (the page failed after the data arrived). Each has a button (try again, which keeps the keyboard user's place, or reload) and a link to tell the project. When the connection comes back (`online` event) an offline or error screen tries again by itself.
+- **No data yet**: valid data with no matches is a calm screen of its own ("Ainda não há jogos publicados"), with the freshness line still shown. It is different from "no match today", which stays a message inside the lists.
+- **The copy of the last good load**: each successful load keeps the five published files in Cache Storage (`ubi-ludus-data-v1`). If the next load fails, that copy is shown, with a notice and the freshness line computed from the copy's own `status.json`, so an old copy gets the stale warning. The copy is checked like any file and is dropped if it does not fit the site; it is never used to hide "data newer than the site". It holds the published data only, nothing about the visitor, and it is not touched by "Apagar meus dados". Without Cache Storage (private modes, an insecure page) the site works and a failed load is a problem screen.

@@ -101,7 +101,7 @@ def test_without_the_data_there_is_no_indicator_only_the_error(
 ) -> None:
     for current in visit(browser, origin, broken={"matches": 500}):
         assert not current.page.locator("#freshness").is_visible()
-        assert "Não foi possível carregar" in current.page.locator("#data-status").inner_text()
+        assert "Não foi possível carregar" in current.page.locator("#state-panel").inner_text()
 
 
 @pytest.mark.parametrize("size", list(VIEWPORTS))

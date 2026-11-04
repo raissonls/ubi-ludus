@@ -39,51 +39,71 @@
 
     <!-- The lists of matches come first, so the next match of the followed teams is on screen
          without scrolling. js/matches-view.js draws the cards and switches between the lists. -->
-    <section aria-labelledby="matches-title">
-      <h2 id="matches-title" data-i18n="matches.title"></h2>
-      <div id="view-switch" class="view-switch" role="group" aria-labelledby="matches-title">
-        <button type="button" data-view="mine" aria-pressed="false" data-i18n="views.mine"></button>
-        <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
-        <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
+    <section id="matches-section" aria-labelledby="matches-title" aria-busy="true">
+      <h2 id="matches-title" tabindex="-1" data-i18n="matches.title"></h2>
+
+      <!-- Shown until the data is here (js/states.js). The grey cards only hint at the shape of
+           what is coming; the words are what screen readers get. -->
+      <div id="matches-loading" class="loading" role="status">
+        <p data-i18n="states.loading"></p>
+        <ul class="skeleton" aria-hidden="true">
+          <li class="skeleton__card"></li>
+          <li class="skeleton__card"></li>
+          <li class="skeleton__card"></li>
+        </ul>
       </div>
-      <details id="filters" class="filters">
-        <summary id="filters-summary" data-i18n="filters.title"></summary>
-        <div class="filters__fields">
-        <p class="filter">
-          <input type="checkbox" id="only-watchable" aria-describedby="only-watchable-hint">
-          <label for="only-watchable" data-i18n="matches.onlyWatchable"></label>
-        </p>
-        <p id="only-watchable-hint" class="filter__hint" data-i18n="matches.onlyWatchableHint"></p>
-          <p>
-            <label for="filter-competition" data-i18n="filters.competition"></label>
-            <select id="filter-competition"></select>
-          </p>
-          <p>
-            <label for="filter-broadcaster" data-i18n="filters.broadcaster"></label>
-            <select id="filter-broadcaster"></select>
-          </p>
-          <p>
-            <label for="filter-team" data-i18n="filters.team"></label>
-            <input id="filter-team" type="search" autocomplete="off" maxlength="60">
-          </p>
-          <p><button type="button" id="filters-clear" data-i18n="filters.clear"></button></p>
+
+      <!-- A screen for a problem (offline, an error, no data yet); js/states.js fills it in. -->
+      <div id="state-panel" class="state-panel" hidden></div>
+
+      <!-- What is shown is the copy kept from the last time the data loaded. -->
+      <p id="saved-notice" class="notice" role="status" hidden data-i18n="states.saved"></p>
+
+      <div id="matches-content" hidden>
+        <div id="view-switch" class="view-switch" role="group" aria-labelledby="matches-title">
+          <button type="button" data-view="mine" aria-pressed="false" data-i18n="views.mine"></button>
+          <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
+          <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
         </div>
-        <div class="filters__share">
-          <p><button type="button" id="share-copy" data-i18n="share.copy"></button></p>
-          <p id="share-hint" class="filter__hint" data-i18n="share.hint"></p>
-          <input id="share-link" type="text" readonly hidden data-i18n-attr="aria-label:share.linkLabel">
-          <p id="share-status" role="status"></p>
-        </div>
-      </details>
-      <p id="shared-notice" class="notice" hidden data-i18n="share.notice"></p>
-      <div id="matches-list" hidden></div>
-      <p id="matches-empty"></p>
-      <p id="matches-status" class="visually-hidden" role="status"></p>
+        <details id="filters" class="filters">
+          <summary id="filters-summary" data-i18n="filters.title"></summary>
+          <div class="filters__fields">
+            <p class="filter">
+              <input type="checkbox" id="only-watchable" aria-describedby="only-watchable-hint">
+              <label for="only-watchable" data-i18n="matches.onlyWatchable"></label>
+            </p>
+            <p id="only-watchable-hint" class="filter__hint" data-i18n="matches.onlyWatchableHint"></p>
+            <p>
+              <label for="filter-competition" data-i18n="filters.competition"></label>
+              <select id="filter-competition"></select>
+            </p>
+            <p>
+              <label for="filter-broadcaster" data-i18n="filters.broadcaster"></label>
+              <select id="filter-broadcaster"></select>
+            </p>
+            <p>
+              <label for="filter-team" data-i18n="filters.team"></label>
+              <input id="filter-team" type="search" autocomplete="off" maxlength="60">
+            </p>
+            <p><button type="button" id="filters-clear" data-i18n="filters.clear"></button></p>
+          </div>
+          <div class="filters__share">
+            <p><button type="button" id="share-copy" data-i18n="share.copy"></button></p>
+            <p id="share-hint" class="filter__hint" data-i18n="share.hint"></p>
+            <input id="share-link" type="text" readonly hidden data-i18n-attr="aria-label:share.linkLabel">
+            <p id="share-status" role="status"></p>
+          </div>
+        </details>
+        <p id="shared-notice" class="notice" hidden data-i18n="share.notice"></p>
+        <div id="matches-list" hidden></div>
+        <p id="matches-empty"></p>
+        <p id="matches-status" class="visually-hidden" role="status"></p>
+      </div>
     </section>
 
     <!-- Which teams do you follow? The script (js/teams-picker.js) adds the behaviour and draws
          the options and the chosen teams. -->
-    <section class="picker" aria-labelledby="teams-title">
+    <section class="picker" aria-labelledby="teams-title" data-needs-data hidden>
       <h2 id="teams-title" data-i18n="picker.title"></h2>
       <p id="teams-hint" data-i18n="picker.hint"></p>
       <label for="team-search" data-i18n="picker.label"></label>
@@ -99,7 +119,7 @@
     </section>
 
     <!-- Which services do you have? js/services-picker.js draws one checkbox for each. -->
-    <section class="picker" aria-labelledby="services-title">
+    <section class="picker" aria-labelledby="services-title" data-needs-data hidden>
       <h2 id="services-title" data-i18n="services.title"></h2>
       <p id="services-hint" data-i18n="services.hint"></p>
       <div role="group" aria-labelledby="services-title" aria-describedby="services-hint">
@@ -108,8 +128,6 @@
       <p id="services-summary" role="status"></p>
     </section>
 
-    <!-- Filled in by the script: how many matches were loaded, or that they could not be. -->
-    <p id="data-status" role="status"></p>
     <!-- Shown only when scripts are off; the one string that lives outside the strings file. -->
     <noscript><p>Este site precisa de JavaScript para mostrar os jogos.</p></noscript>
   </main>

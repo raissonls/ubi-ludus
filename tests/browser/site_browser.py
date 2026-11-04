@@ -61,9 +61,10 @@ class Visit:
         self.requests.append(request.url)
         self.details.append(request)
 
-    def open(self) -> None:
+    def open(self, wait_ready: bool = True) -> None:
         self.page.goto(self.origin + self.path)
-        self.page.wait_for_selector("html[data-ready='true']")
+        if wait_ready:
+            self.page.wait_for_selector("html[data-ready='true']")
 
 
 def visit(
@@ -78,11 +79,13 @@ def visit(
     newer_format: str | None = None,
     changed_data: dict[str, dict[str, object]] | None = None,
     path: str = "/index.html",
+    wait_ready: bool = True,
+    before_open: Callable[[Page], None] | None = None,
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
     it were in a format the site does not know, `changed_data` maps a data file to the document
-    served in its place."""
+    served in its place, `before_open` is called with the page just before it loads."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
@@ -112,8 +115,10 @@ def visit(
                     status=200, content_type="application/json", body=json.dumps(document)
                 ),
             )
+        if before_open:
+            before_open(page)  # e.g. to hold back or refuse the data files
         current = Visit(page, origin, path)
-        current.open()
+        current.open(wait_ready)
         yield current
     finally:
         context.close()
@@ -124,7 +129,11 @@ def axe_violations(page: Page) -> list[str]:
 
     It waits for the entrance animations first: a card half faded in is not what a visitor reads.
     """
-    page.evaluate("Promise.allSettled(document.getAnimations().map((a) => a.finished))")
+    page.evaluate(
+        "Promise.allSettled(document.getAnimations()"
+        ".filter((a) => a.effect.getComputedTiming().iterations !== Infinity)"  # not the shimmer
+        ".map((a) => a.finished))"
+    )
     results = Axe().run(page, options={"runOnly": {"type": "tag", "values": WCAG_TAGS}})
     return [
         f"{v['id']} ({v['impact']}): {[n['target'] for n in v['nodes']]}"

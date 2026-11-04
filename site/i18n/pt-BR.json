@@ -6,12 +6,7 @@
     "toContent": "Pular para o conteúdo"
   },
   "home": {
-    "title": "Onde assistir futebol no Brasil",
-    "matchesLoaded": {
-      "one": "{count} jogo carregado.",
-      "other": "{count} jogos carregados."
-    },
-    "loadFailed": "Não foi possível carregar os jogos agora. Tente de novo em alguns minutos."
+    "title": "Onde assistir futebol no Brasil"
   },
   "picker": {
     "title": "Quais times você segue?",
@@ -160,5 +155,32 @@
     "copied": "Link copiado.",
     "manual": "Não deu para copiar sozinho: selecione o link abaixo e copie.",
     "notice": "Você está vendo uma visão compartilhada. O que você tem salvo neste navegador não mudou. Se mudar times ou serviços aqui, a seleção passa a ser a sua."
+  },
+  "states": {
+    "loading": "Carregando os jogos…",
+    "saved": "Não conseguimos atualizar os jogos agora. Estes são os dados salvos neste aparelho na última vez que o site carregou.",
+    "retry": "Tentar de novo",
+    "reload": "Recarregar a página",
+    "report": "Avisar o projeto no GitHub",
+    "offline": {
+      "title": "Sem conexão com os jogos",
+      "body": "Não deu para buscar os jogos agora. Verifique sua internet. Quando a conexão voltar, tentamos de novo sozinhos."
+    },
+    "error": {
+      "title": "Não foi possível carregar os jogos",
+      "body": "O servidor não respondeu como esperado. Tente de novo em alguns minutos."
+    },
+    "outdated": {
+      "title": "Esta página ficou desatualizada",
+      "body": "Os dados mudaram de formato e esta versão do site não sabe mais lê-los. Recarregue a página para pegar a versão nova."
+    },
+    "empty": {
+      "title": "Ainda não há jogos publicados",
+      "body": "Os dados são atualizados todos os dias. Volte mais tarde ou tente de novo."
+    },
+    "unexpected": {
+      "title": "Algo deu errado",
+      "body": "Não conseguimos mostrar a página. Recarregue; se continuar assim, avise o projeto."
+    }
   }
 }
