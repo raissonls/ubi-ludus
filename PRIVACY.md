@@ -10,7 +10,7 @@ Ubi Ludus shows where to watch football in Brazil. It is built so that it does n
 
 ## What stays in your browser
 
-The teams you follow, the services you have and whether you hide the matches you cannot watch are saved **only in your browser** (`localStorage`) so the site remembers them the next time. They are never sent anywhere. You can change or clear them at any time with the "reset my data" control, or by clearing the site's data in your browser. The sharing links that carry your choices in the address (a later feature) contain team and service ids only, never anything personal.
+The teams you follow, the services you have and whether you hide the matches you cannot watch are saved **only in your browser** (`localStorage`) so the site remembers them the next time. They are never sent anywhere. You can change or clear them at any time with the "reset my data" control, or by clearing the site's data in your browser. Your choices are in the address only if you press "Copiar link desta visão" to share a view; that link contains team and service ids, never anything personal, and opening it saves nothing on the other person's device. The filters you set (competition, broadcaster, a team's name) are in the address of the page you are on, so a bookmark keeps them; they are not sent anywhere either.
 
 ## What others can see
 

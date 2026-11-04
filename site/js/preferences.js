@@ -138,6 +138,17 @@ export function createPreferences(getStorage = () => globalThis.localStorage) {
       save();
       changed();
     },
+    /**
+     * Take these choices for this visit only, without saving them (a shared link, FR-29). Fields
+     * left out keep their value. The next change the visitor makes saves what is then in memory.
+     */
+    adopt({ teams, services, onlyWatchable }) {
+      state = {
+        teams: teams ? cleanIds(teams) : state.teams,
+        services: services ? cleanIds(services) : state.services,
+        onlyWatchable: typeof onlyWatchable === 'boolean' ? onlyWatchable : state.onlyWatchable,
+      };
+    },
     /** Forget everything: the saved copy and the one in memory ("Reset my data"). */
     reset() {
       state = { teams: [], services: [], onlyWatchable: false };

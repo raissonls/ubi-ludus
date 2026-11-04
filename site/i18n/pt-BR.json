@@ -61,7 +61,8 @@
     "tbd": "A definir",
     "emptyFiltered": "Nenhum jogo desta lista dá para assistir com os seus serviços.",
     "onlyWatchable": "Só o que dá para assistir",
-    "onlyWatchableHint": "Jogos sem emissora confirmada continuam na lista."
+    "onlyWatchableHint": "Jogos sem emissora confirmada continuam na lista.",
+    "emptyFilters": "Nenhum jogo desta lista com esses filtros."
   },
   "card": {
     "versus": "x",
@@ -142,5 +143,23 @@
     "link": "Reportar transmissão errada",
     "linkFor": "de {teams}",
     "footer": "Viu uma transmissão errada? Avise no GitHub"
+  },
+  "filters": {
+    "title": "Filtros",
+    "titleActive": "Filtros ({count})",
+    "competition": "Competição",
+    "allCompetitions": "Todas as competições",
+    "broadcaster": "Emissora",
+    "allBroadcasters": "Todas as emissoras",
+    "team": "Buscar time nos jogos",
+    "clear": "Limpar filtros"
+  },
+  "share": {
+    "copy": "Copiar link desta visão",
+    "hint": "O link leva os times, os serviços e os filtros desta lista. Quem abrir vê a mesma lista, sem mudar o que já está salvo no navegador dela.",
+    "linkLabel": "Link desta visão",
+    "copied": "Link copiado.",
+    "manual": "Não deu para copiar sozinho: selecione o link abaixo e copie.",
+    "notice": "Você está vendo uma visão compartilhada. O que você tem salvo neste navegador não mudou. Se mudar times ou serviços aqui, a seleção passa a ser a sua."
   }
 }

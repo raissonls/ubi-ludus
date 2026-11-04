@@ -604,3 +604,49 @@ input[type="text"] {
   justify-self: start;
   font-size: var(--font-size-sm);
 }
+
+/* --- Filters and sharing (FR-27, FR-29) ---------------------------------------------------- */
+
+.filters {
+  margin-bottom: var(--space-3);
+}
+
+.filters summary {
+  display: inline-block;
+  min-height: 2.5rem;
+  padding: var(--space-2) 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filters__fields,
+.filters__share {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+}
+
+.filters__fields p,
+.filters__share p {
+  margin: 0;
+}
+
+.filters label {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.filters select,
+.filters input[type="search"],
+.filters input[type="text"] {
+  inline-size: 100%;
+  max-inline-size: 28rem;
+  min-height: 2.5rem;
+}
+
+.notice {
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}

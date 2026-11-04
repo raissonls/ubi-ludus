@@ -47,6 +47,31 @@
         <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
         <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
       </div>
+      <details id="filters" class="filters">
+        <summary id="filters-summary" data-i18n="filters.title"></summary>
+        <div class="filters__fields">
+          <p>
+            <label for="filter-competition" data-i18n="filters.competition"></label>
+            <select id="filter-competition"></select>
+          </p>
+          <p>
+            <label for="filter-broadcaster" data-i18n="filters.broadcaster"></label>
+            <select id="filter-broadcaster"></select>
+          </p>
+          <p>
+            <label for="filter-team" data-i18n="filters.team"></label>
+            <input id="filter-team" type="search" autocomplete="off" maxlength="60">
+          </p>
+          <p><button type="button" id="filters-clear" data-i18n="filters.clear"></button></p>
+        </div>
+        <div class="filters__share">
+          <p><button type="button" id="share-copy" data-i18n="share.copy"></button></p>
+          <p id="share-hint" class="filter__hint" data-i18n="share.hint"></p>
+          <input id="share-link" type="text" readonly hidden data-i18n-attr="aria-label:share.linkLabel">
+          <p id="share-status" role="status"></p>
+        </div>
+      </details>
+      <p id="shared-notice" class="notice" hidden data-i18n="share.notice"></p>
       <p class="filter">
         <input type="checkbox" id="only-watchable" aria-describedby="only-watchable-hint">
         <label for="only-watchable" data-i18n="matches.onlyWatchable"></label>
