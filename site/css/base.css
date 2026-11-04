@@ -724,3 +724,52 @@ input[type="text"] {
   background: var(--color-warning-bg);
   color: var(--color-warning-fg);
 }
+
+/* --- Live now and the countdown (FR-26) ---------------------------------------------------- */
+
+.clock {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.clock[hidden] {
+  display: none;
+}
+
+/* On now, by the clock: the same red pill as "Ao vivo", with a dot that pulses. */
+.clock--live {
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--color-live-bg);
+  color: var(--color-live-fg);
+  font-weight: var(--font-weight-bold);
+}
+
+.clock--over {
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--color-unknown-bg);
+  color: var(--color-unknown-fg);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Data that still says "live" long after the match: the clock says it is probably over. */
+.match-card[data-phase="over"] .state--live {
+  display: none;
+}
+
+.live-dot {
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+}

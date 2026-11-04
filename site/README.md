@@ -26,6 +26,7 @@ js/data-cache.js    the copy of the published data kept in this browser for when
 js/data-source.js   the data from the network, else from that copy; never hides data newer than the site
 js/states.js        the loading, problem, no-data and saved-copy screens
 js/home.js          mounts the home page (pickers, lists, filters, shared view) once the data is here
+js/live-clock.js     where each match stands by the clock (countdown, in progress, probably over) and the loop that keeps cards in step; the rules are pure
 js/home-views.js   which matches each home list shows (my teams, today, this week), followed teams first; pure
 js/matches-view.js  draws the chosen list as cards and switches between the lists
 js/dom.js          safe element building and team colours as CSS variables
@@ -120,3 +121,11 @@ Every screen is words first, has a way forward and a test (`tests/browser/test_s
 - **Problems** (one panel, `role="alert"`, with the kind in `data-kind`): `offline` (the files could not be reached, or `navigator.onLine` is false), `error` (the server answered something else, or a file is not what the page reads), `outdated` (the data is in a newer format than this site reads: only "reload" is offered, since trying again cannot help) and `unexpected` (the page failed after the data arrived). Each has a button (try again, which keeps the keyboard user's place, or reload) and a link to tell the project. When the connection comes back (`online` event) an offline or error screen tries again by itself.
 - **No data yet**: valid data with no matches is a calm screen of its own ("Ainda não há jogos publicados"), with the freshness line still shown. It is different from "no match today", which stays a message inside the lists.
 - **The copy of the last good load**: each successful load keeps the five published files in Cache Storage (`ubi-ludus-data-v1`). If the next load fails, that copy is shown, with a notice and the freshness line computed from the copy's own `status.json`, so an old copy gets the stale warning. The copy is checked like any file and is dropped if it does not fit the site; it is never used to hide "data newer than the site". It holds the published data only, nothing about the visitor, and it is not touched by "Apagar meus dados". Without Cache Storage (private modes, an insecure page) the site works and a failed load is a problem screen.
+
+## Live now and the countdown (FR-26)
+The data is published once a day, so it can say "scheduled" for a match that is on, or "live" long after it ended. The clock settles it, and keeps settling it while the page is open (every 10 seconds, no reload; nothing runs while the tab is in the background, and it catches up the moment the tab returns).
+- Within 24 hours before kickoff the card counts down: "Começa em 2 h 30 min", "… 42 min", "Começa em instantes" (under 30 seconds). Minutes round up, so it never says 0.
+- From kickoff for three hours (90 minutes, a break, extra time) a card that is open shows "● Em andamento" with a pulsing dot. If the data already calls the match live, its own "Ao vivo" label is the only one.
+- Past three hours a match the data still calls open shows "Provavelmente encerrado", and a stale "Ao vivo" label is hidden. The clock never claims more than the time can tell: no score, no minute of play.
+- Finished, postponed and cancelled matches get nothing. The pulse stops under reduced motion.
+- Tests: `tests/browser/test_live_clock.py` winds a mocked clock (`visit(..., ticking=True)`; Playwright's clock moves the page's dates and timers only with `run_for`) to the second around kickoff and three hours later.

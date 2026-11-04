@@ -118,7 +118,7 @@ export function renderMatchCard(model, { translator, accentTeam = null, reportHr
     const live = model.state === 'live';
     when.append(
       el('span', { class: `state state--${model.state}` }, [
-        live ? el('span', { 'aria-hidden': 'true', text: '● ' }) : '',
+        live ? el('span', { class: 'live-dot', 'aria-hidden': 'true', text: '● ' }) : '',
         el('span', { text: translator.t(STATE_KEY[model.state]) }),
       ]),
     );
@@ -140,6 +140,7 @@ export function renderMatchCard(model, { translator, accentTeam = null, reportHr
     id: cardId,
     'data-state': model.state,
     'data-confidence': model.confidence,
+    'data-kickoff': model.kickoff, // for live-clock.js, which keeps the card in step with the time
   };
   if (model.access) attributes['data-access'] = model.access;
   const card = el('li', attributes, [when, title, competition]);
