@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>$title</title>
+<style>
+  /* Only dark mode lives here: every colour for light is also inline, because some clients drop
+     this block. Where it is kept (Apple Mail, Gmail on the web) the e-mail goes dark with the system. */
+  @media (prefers-color-scheme: dark) {
+    .page { background: #12151a !important; }
+    .card { background: #1c2027 !important; border-color: #3a4150 !important; }
+    .text { color: #eef0f4 !important; }
+    .muted { color: #b4bbc8 !important; }
+    .good { background: #14351f !important; color: #bdecca !important; }
+    .warn { background: #3d2a10 !important; color: #ffd9a6 !important; }
+    .link { color: #9ec5ff !important; }
+  }
+</style>
+</head>
+<body class="page" style="margin:0;padding:0;background:#f2f4f7;">
+<div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">$preheader</div>
+<div role="main" aria-label="$title">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="page" style="background:#f2f4f7;">
+<tr><td align="center" style="padding:16px 8px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+<tr><td style="padding:0 4px 12px 4px;font-family:Arial,Helvetica,sans-serif;">
+<h1 class="text" style="margin:0;font-size:22px;line-height:28px;color:#1a1d23;">$heading</h1>
+<p class="muted" style="margin:4px 0 0 0;font-size:14px;line-height:20px;color:#4a5160;">$date</p>
+</td></tr>
+$stale
+$sections
+<tr><td style="padding:8px 4px 0 4px;font-family:Arial,Helvetica,sans-serif;">
+<p class="muted" style="margin:0;font-size:13px;line-height:19px;color:#4a5160;">$footer</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</div>
+</body>
+</html>

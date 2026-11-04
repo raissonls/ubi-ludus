@@ -1,0 +1,4 @@
+$heading
+$date
+
+$stale$sections$footer

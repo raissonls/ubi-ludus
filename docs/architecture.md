@@ -52,7 +52,7 @@ DuckDB is embedded and the runners keep nothing between days, so each run starts
 | dbt project | `dbt/` | Models, tests and docs that run on DuckDB; data quality checks between files (references, uniqueness, accepted values) | M1 ([#63](../../../issues/63)) |
 | Export and validate | `src/ubi_ludus/pipeline/` | Python writes the final JSON from the dbt marts and validates it against the schemas | M1 ([#63](../../../issues/63)) |
 | Website | `site/` | Static pages, onboarding, filters, match cards, calendar export | M3 ([#18](../../../issues/18) onwards) |
-| Daily e-mail | `src/ubi_ludus/email/` | Renders and sends the morning briefing to the owner | M4 ([#30](../../../issues/30), [#31](../../../issues/31)) |
+| Daily e-mail | `src/ubi_ludus/email/` | Renders and sends the morning briefing to the owner ([how it renders](email.md)) | M4 ([#30](../../../issues/30), [#31](../../../issues/31)) |
 | Workflows | `.github/workflows/` | CI on pull requests now; the daily pipeline and review report later | M0 ([#4](../../../issues/4)), M4 ([#32](../../../issues/32)) |
 | Config | `config/` | Which provider serves each competition and its horizon; the owner's teams and services | M1, M2 |
 
