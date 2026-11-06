@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal, cast
 
 import yaml
 
@@ -37,6 +38,8 @@ class OwnerConfig:
     notable_competitions: tuple[str, ...]
     preferred_broadcasters: tuple[str, ...]
     preferred_kinds: tuple[str, ...]
+    #: What the morning e-mail does on a day with nothing to list (FR-42).
+    quiet_days: Literal["skip", "note"] = "skip"
 
 
 def load_owner(
@@ -71,6 +74,9 @@ def load_owner(
         notable_competitions=tuple(document.get("notable_competitions", [])),
         preferred_broadcasters=tuple(document.get("preferred_broadcasters", [])),
         preferred_kinds=tuple(document.get("preferred_kinds", [])),
+        quiet_days=cast(
+            Literal["skip", "note"], document.get("email", {}).get("quiet_days", "skip")
+        ),
     )
 
     problems = _missing("service", owner.services, {s.id for s in data.services})
