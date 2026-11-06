@@ -38,6 +38,7 @@ def test_the_real_owner_file_is_valid_and_says_what_the_owner_told_us() -> None:
     assert owner.notable_competitions == ("uefa-champions-league",)
     assert owner.preferred_broadcasters == ("cazetv",)
     assert owner.preferred_kinds == ("youtube",)
+    assert owner.quiet_days == "skip"  # decided with the owner: no e-mail on a quiet day
 
 
 def test_the_real_owner_file_holds_no_contact_details() -> None:
@@ -52,6 +53,7 @@ def test_the_real_owner_file_holds_no_contact_details() -> None:
         "notable_competitions",
         "preferred_broadcasters",
         "preferred_kinds",
+        "email",
     }
 
 
@@ -151,3 +153,24 @@ def test_a_person_can_follow_teams_and_have_no_service_at_all() -> None:
 def test_unclear_or_secret_fields_are_refused(fields: dict[str, Any]) -> None:
     with pytest.raises(SchemaValidationError):
         check(**fields)
+
+
+def test_a_quiet_day_choice_is_read_and_defaults_to_skip(tmp_path: Path) -> None:
+    def load(path: Path) -> OwnerConfig:
+        return load_owner(path, rights=load_rights(), competitions=COMPETITIONS)
+
+    assert load(write(tmp_path)).quiet_days == "skip"
+    assert load(write(tmp_path, email={})).quiet_days == "skip"
+    assert load(write(tmp_path, email={"quiet_days": "note"})).quiet_days == "note"
+
+
+@pytest.mark.parametrize(
+    "email",
+    [{"quiet_days": "maybe"}, {"quiet_days": True}, {"address": "me@example.org"}, "yes"],
+)
+def test_a_quiet_day_choice_or_an_address_that_is_not_allowed_is_refused(
+    tmp_path: Path, email: Any
+) -> None:
+    """The address is a secret: the file has no field for it, so it cannot be put there."""
+    with pytest.raises(OwnerConfigError):
+        load_owner(write(tmp_path, email=email), rights=load_rights(), competitions=COMPETITIONS)
