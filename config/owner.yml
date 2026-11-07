@@ -34,3 +34,9 @@ preferred_broadcasters:
   - cazetv
 preferred_kinds:
   - youtube
+
+# The morning e-mail (FR-42). quiet_days is what it does on a day with no match of your teams and no
+# notable match: skip (send nothing, so an e-mail always means there is something to see) or note
+# (send a short "no matches today").
+email:
+  quiet_days: skip

@@ -1,6 +1,6 @@
 # The morning e-mail
 
-What it says and how it is made. Sending, secrets and the skip rule are the next task (M4-02, #31); this is the rendering (M4-01, #30, PRD FR-40 and FR-43).
+What it says and how it is made. Rendering is M4-01 (#30, PRD FR-40 and FR-43); sending, secrets and the quiet-day rule are M4-02 (#31, FR-40 to FR-42). The daily workflow that runs it is M4-03 (#32).
 
 ## What it lists
 
@@ -19,7 +19,7 @@ Finished matches are left out. Each match shows the kickoff in Brasília time, t
 
 Broadcasters the owner can watch come first (marked ✔), then the favourites in `owner.yml`, then confirmed ones, then by name. "(confirmado)" is only on those a person checked; if any is from the rights table the e-mail says to check closer to the match. When the data is older than 36 hours the e-mail says so at the top, the same rule as the site.
 
-An empty day still renders ("Hoje não há jogos"); whether to send it is M4-02's flag (FR-42).
+An empty day still renders ("Hoje não há jogos"); whether it is sent is the `email.quiet_days` choice below.
 
 ## How it is made
 
@@ -37,4 +37,58 @@ writes `briefing.html` and `briefing.txt` for today from `site/data` (`--now 202
 
 ## Tests
 
-`tests/unit/test_email_briefing.py` (which matches, order, access, staleness), `tests/unit/test_email_render.py` (words, escaping of hostile names, nothing to load, structure, text and HTML agree) and `tests/browser/test_email.py` (axe in light and dark, no sideways scroll down to 320 px, long names wrap).
+`tests/unit/test_email_briefing.py` (which matches, order, access, staleness), `tests/unit/test_email_render.py` (words, escaping of hostile names, nothing to load, structure, text and HTML agree) and `tests/unit/test_email_send.py` (secrets, the skip rule both ways, the message, TLS and login order, errors that hide credentials, the command) and `tests/browser/test_email.py` (axe in light and dark, no sideways scroll down to 320 px, long names wrap).
+
+## Sending (M4-02)
+
+**Method (PRD Q3, decided 2026-11-06):** plain SMTP through Brevo's free relay (300 e-mails a day; we send one). The code (`send.py`, standard library only) does not know Brevo: it connects to `SMTP_HOST`, upgrades to TLS with the default certificate checks (or uses TLS from the start on port 465), logs in and sends. A different provider is a different set of secrets. The sender is a dedicated address, not your personal mailbox, and nothing in the code limits it to one recipient except that `EMAIL_TO` holds one: sending to other people later is a decision for Phase 2 (consent and LGPD, PRD Q6), not a rewrite.
+
+**The secrets.** The address and the credentials exist only as GitHub Secrets (and in your own git-ignored `.env`), never in a file in the repository, a log or an error message (the settings object hides them even when printed; tests check that).
+
+| Name | What it is | Secret? |
+| --- | --- | --- |
+| `SMTP_USER` | the SMTP login Brevo gives you | yes |
+| `SMTP_PASSWORD` | the SMTP key (not your Brevo account password) | yes |
+| `EMAIL_FROM` | the verified sender address | yes (an address) |
+| `EMAIL_TO` | where the e-mail goes: yours | yes |
+| `SMTP_HOST`, `SMTP_PORT` | default `smtp-relay.brevo.com` and `587` | no |
+
+If any of the first four is missing or empty the job fails and says which ones, before anything is sent and **even on a day with nothing to send**, so a lost secret is found the day it is lost. An address that is a list, has a name, or has a line break in it is refused (a line break could add a header such as `Bcc`).
+
+**Setting it up** (once; you do these, I never see the values):
+
+1. Create a free account at brevo.com. Under *SMTP & API* make an SMTP key and note the SMTP login. Under *Senders, domains & dedicated IPs* add the address you want the e-mail to come from and confirm it from the message Brevo sends there. (Check Brevo's own pages for the exact screens and current limits.)
+2. Add the four secrets to the repository, typing each value when asked so it is not left in your shell history:
+
+   ```bash
+   gh secret set SMTP_USER
+   gh secret set SMTP_PASSWORD
+   gh secret set EMAIL_FROM
+   gh secret set EMAIL_TO
+   ```
+
+3. To try it on your machine, put the same four in `.env` (see `.env.example`) and run:
+
+   ```bash
+   python -m ubi_ludus.email.send --data site/data --dry-run   # renders, sends nothing, needs no secret
+   python -m ubi_ludus.email.send --data site/data             # sends today's e-mail
+   ```
+
+   Add `--now 2026-11-03T11:00:00Z` to pretend it is another moment, `--site-url https://…` for the footer link.
+
+**A day with nothing to list (FR-42).** `config/owner.yml` has
+
+```yaml
+email:
+  quiet_days: skip   # or: note
+```
+
+`skip` (the default, as you chose) sends nothing, so an e-mail always means there is something to see. `note` sends the short "Hoje não há jogos" e-mail, so you know the job ran. A day with any match to list is always sent. The command says which it did ("No e-mail today…" or "E-mail sent.") and exits 0; a missing secret or a refused login exits 1 with the reason, which fails the workflow.
+
+If the mail server refuses the login, the message says to check `SMTP_USER`, `SMTP_PASSWORD` and that `EMAIL_FROM` is verified with the provider. It never repeats the server's reply, which could echo a credential.
+
+**If the login is refused with code 525** ("525 5.7.1 Unauthorized IP address", found when first trying Brevo): that is not a wrong password (a wrong one is 535). Brevo blocks SMTP logins from IP addresses you have not authorised, and a new account has that blocking on. In Brevo: *Settings > Segurança > Endereços IP autorizados*, then **Desativar para chaves SMTP** on the "Chaves SMTP" row (the "dedicated IPs" tab is a different, paid feature). Turning it off is needed anyway: GitHub's runners have a different address on every run, so no list of addresses would keep working. The SMTP key is the protection, which is why it lives only in GitHub Secrets and `.env`. The other possible cause of a 525 is that sending is not yet activated on a new account; that is a request to Brevo's support.
+
+**First real send (2026-11-07):** it arrived in the main inbox of the owner's Gmail, not in spam, with the Gmail sender address. Brevo shows two orange warnings next to a Gmail sender (DKIM "Padrão", "Freemail domain not recommended"); they are about deliverability, not about sending, and only a domain of the owner's own would clear them. Watch the spam folder in the first days of the daily e-mail.
+
+**Not yet:** running it every morning is the workflow of M4-03 (#32), which will pass the four secrets as environment variables and `SITE_URL`.

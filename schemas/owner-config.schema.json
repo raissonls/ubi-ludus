@@ -45,11 +45,35 @@
       "type": "array",
       "uniqueItems": true,
       "items": {
-        "enum": ["free_tv", "pay_tv", "ppv", "streaming", "youtube"]
+        "enum": [
+          "free_tv",
+          "pay_tv",
+          "ppv",
+          "streaming",
+          "youtube"
+        ]
       },
       "description": "Kinds of broadcaster the owner likes best."
+    },
+    "email": {
+      "type": "object",
+      "properties": {
+        "quiet_days": {
+          "enum": [
+            "skip",
+            "note"
+          ],
+          "description": "What the morning e-mail does on a day with no match of the owner's teams and no notable match (PRD FR-42): skip = send nothing; note = send a short 'no matches today' note. Default skip."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Options of the daily e-mail. The address and the credentials are never here; they are GitHub Secrets."
     }
   },
-  "required": ["version", "teams", "services"],
+  "required": [
+    "version",
+    "teams",
+    "services"
+  ],
   "additionalProperties": false
 }
