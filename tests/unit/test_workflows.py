@@ -106,7 +106,7 @@ def test_the_pipeline_runs_every_day_at_0900_utc_and_can_be_started_by_hand() ->
 
 def test_the_steps_run_in_order_and_each_waits_for_the_one_before() -> None:
     jobs = pipeline_jobs()
-    assert list(jobs) == ["build", "deploy", "email"]
+    assert list(jobs) == ["build", "deploy", "email", "status"]
     assert jobs["deploy"]["needs"] == "build"
     assert set(jobs["email"]["needs"]) == {"build", "deploy"}
 
@@ -175,3 +175,100 @@ def test_only_what_the_site_needs_is_deployed() -> None:
     committed = {p.name for p in SITE.iterdir() if p.name != "data"}  # data/ is made by the run
     assert copied - {"data"} | left_out == committed
     assert "data" in copied
+
+
+# --- telling the owner, and keeping the schedules alive (M4-04, FR-51, FR-52) --------------------
+
+WATCHDOG = WORKFLOWS / "watchdog.yml"
+
+
+def test_a_failure_can_be_forced_by_hand_to_test_the_alert() -> None:
+    inputs = load(PIPELINE)[True]["workflow_dispatch"]["inputs"]
+    assert inputs["force_failure"]["default"] is False
+    first = pipeline_jobs()["build"]["steps"][0]
+    assert first["if"] == "inputs.force_failure" and "exit 1" in first["run"]
+    assert "uses" not in first  # it fails before anything is downloaded or run
+
+
+def test_the_status_job_runs_after_anything_except_a_cancel_and_can_only_write_issues() -> None:
+    status = pipeline_jobs()["status"]
+    assert set(status["needs"]) == {"build", "deploy", "email"}
+    assert status["if"] == "always() && !cancelled()"
+    assert status["permissions"] == {"issues": "write"}
+    assert "secrets." not in str(status)  # it uses the run's own token, nothing of ours
+    assert not any("uses" in step for step in status["steps"])  # no third-party code at all
+
+
+def test_a_failure_opens_one_issue_for_the_owner_and_later_ones_add_to_it() -> None:
+    open_step, close_step = pipeline_jobs()["status"]["steps"]
+    assert open_step["if"] == "contains(needs.*.result, 'failure')"
+    text = open_step["run"]
+    assert '--assignee "$OWNER"' in text  # assigned: GitHub e-mails the assignee at once
+    assert "gh issue comment" in text and "--label pipeline-failure --state open" in text
+    assert "$RUN_URL" in text and "docs/pipeline.md" in text
+    # A run that works closes it, and only when the build and the deploy really worked.
+    assert "needs.build.result == 'success'" in close_step["if"]
+    assert "needs.deploy.result == 'success'" in close_step["if"]
+    assert "!contains(needs.*.result, 'failure')" in close_step["if"]
+    assert "gh issue close" in close_step["run"]
+
+
+def test_the_watchdog_runs_every_day_two_hours_after_the_pipeline_is_due() -> None:
+    triggers = load(WATCHDOG)[True]
+    [schedule] = triggers["schedule"]
+    assert schedule["cron"] == "0 11 * * *"
+    assert "workflow_dispatch" in triggers
+
+
+def test_the_keep_alive_can_only_enable_workflows() -> None:
+    job = load(WATCHDOG)["jobs"]["keep-alive"]
+    assert job["permissions"] == {"actions": "write"}
+    assert not any("uses" in step for step in job["steps"])
+
+
+def scheduled_workflows() -> set[str]:
+    return {path.name for path in FILES if "schedule" in load(path)[True]}
+
+
+def test_every_scheduled_workflow_is_kept_alive() -> None:
+    """GitHub switches off any schedule after 60 days of inactivity: none may be left out."""
+    run = load(WATCHDOG)["jobs"]["keep-alive"]["steps"][0]["run"]
+    listed = set(re.search(r"for workflow in (.*?); do", run).group(1).split())  # type: ignore[union-attr]
+    assert listed == scheduled_workflows()
+    assert "gh workflow enable" in run
+
+
+def test_the_freshness_check_asks_the_published_site_and_alerts_the_owner() -> None:
+    job = load(WATCHDOG)["jobs"]["freshness"]
+    assert job["permissions"] == {"contents": "read", "issues": "write"}
+    expected = "https://${{ github.repository_owner }}.github.io/"
+    expected += "${{ github.event.repository.name }}/data/status.json"
+    assert job["env"]["STATUS_URL"] == expected
+    check = next(s for s in job["steps"] if s.get("id") == "check")
+    assert "ubi_ludus.pipeline.watchdog" in check["run"] and '--url "$STATUS_URL"' in check["run"]
+    alert = next(s for s in job["steps"] if s.get("name", "").startswith("Open the alert"))
+    assert alert["if"] == "steps.check.outputs.stale == 'true'"
+    assert '--assignee "$OWNER"' in alert["run"] and "--label stale-data" in alert["run"]
+    close = next(s for s in job["steps"] if s.get("name", "").startswith("Close the alert"))
+    assert close["if"] == "steps.check.outputs.stale == 'false'"
+    assert "secrets." not in str(job)
+
+
+def test_only_the_issue_jobs_can_write_issues_and_only_one_job_can_write_pages() -> None:
+    """The least-privilege review of M4-04: who may do what, across every workflow."""
+    writers: dict[str, set[str]] = {}
+    for path in FILES:
+        for name, job in load(path)["jobs"].items():
+            for scope, level in job["permissions"].items():
+                if level == "write":
+                    writers.setdefault(scope, set()).add(f"{path.name}:{name}")
+    assert writers == {
+        "issues": {
+            "pipeline.yml:status",
+            "review-report.yml:report",
+            "watchdog.yml:freshness",
+        },
+        "pages": {"pipeline.yml:deploy"},
+        "id-token": {"pipeline.yml:deploy"},
+        "actions": {"watchdog.yml:keep-alive"},
+    }

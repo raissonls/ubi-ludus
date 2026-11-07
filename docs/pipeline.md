@@ -17,7 +17,40 @@ The data published last stays up. Nothing is overwritten half way:
 - **The deploy fails:** Pages keeps serving what it had.
 - **Only the e-mail fails** (a login refused, a secret missing): the site is already updated; the run is red so you hear about it.
 
-A failed run is red on the Actions page and GitHub e-mails the owner about failed scheduled runs. Proper failure alerts and the keep-alive that stops GitHub disabling the schedule after 60 days of inactivity are M4-04.
+## How you are told (FR-51)
+
+- **A run fails.** The last job of the pipeline, `status`, opens an issue **assigned to you** ("Daily pipeline failed", label `pipeline-failure`) with the run's address, which jobs failed and what to do. GitHub e-mails the assignee as soon as it is created, so the notice comes within minutes of the failure. If another run fails while the issue is open, it adds a comment instead of opening a second one. The first run that works closes the issue by itself. This also catches a failed e-mail (a refused login, a missing secret) even though the site was updated.
+- **A run never happens.** A failure job cannot report a run that did not start (a delayed, skipped or switched-off schedule), so `watchdog.yml` asks the published site from outside, at 11:00 UTC, when its data last came from a good run (`python -m ubi_ludus.pipeline.watchdog`). Older than 5 hours means today's run did not happen: it opens an issue assigned to you ("Published data is stale", label `stale-data`) and closes it when the data is fresh again. (The 5 hours is for you; the site's own "data may be old" notice waits 36 hours, because it is for visitors.)
+- GitHub also e-mails you about failed scheduled runs by default. That is a third channel and not one to rely on alone.
+
+**Testing the alert:** start a run that fails on purpose and time how long the notice takes (the target is 15 minutes):
+
+```bash
+gh workflow run pipeline.yml -f force_failure=true
+```
+
+An issue "Daily pipeline failed" should appear, assigned to you, with an e-mail from GitHub. The next run that works (a normal manual run) closes it.
+
+## Keep-alive (FR-52)
+
+GitHub switches off scheduled workflows in a public repository after 60 days with no repository activity, and this pipeline deliberately commits nothing. So `watchdog.yml` also has a **keep-alive** job: every day it runs `gh workflow enable` on every workflow that has a schedule (`pipeline.yml`, `review-report.yml` and `watchdog.yml` itself), with a token that can do nothing else (`actions: write`). A test fails if a new scheduled workflow is added and not put on that list.
+
+What is verified and what is not, honestly: the **call** is verified (it works on a workflow that is already on, from your machine and from the run, see the dry run below). That re-enabling **restarts GitHub's 60-day clock** is what community keep-alive tools rely on; GitHub's documentation does not spell it out, and the only full proof is 60 days of quiet. The safety net if it does not hold is the watchdog above (a switched-off pipeline shows up as stale data the next day, as long as the watchdog itself is still on). A manual commit to the repository always counts as activity.
+
+**Dry run:** *Actions > Keep-alive and freshness check > Run workflow* (or `gh workflow run watchdog.yml`). Both jobs should be green, the first listing each workflow as "Enabled (or already on)", the second printing "Fresh: last successful run ...".
+
+## Permissions, reviewed (M4-04)
+
+Every workflow starts with no permissions and each job asks for its own. Who can write what:
+
+| Permission | Where | Why |
+| --- | --- | --- |
+| `issues: write` | `pipeline.yml` `status`, `watchdog.yml` `freshness`, `review-report.yml` `report` | to open, update and close the issues above and the weekly review |
+| `pages: write`, `id-token: write` | `pipeline.yml` `deploy` | to deploy to Pages |
+| `actions: write` | `watchdog.yml` `keep-alive` | to enable workflows |
+| `contents: read` | the jobs that check out the code | nothing in the repository is ever written by a workflow |
+
+No job has `contents: write`, nothing runs on `pull_request_target`, every action is pinned to a commit, and the secrets go to single steps (the provider keys to the build step, the four mail secrets to the send step). `tests/unit/test_workflows.py` fails if any of this changes: the table above is checked against the files.
 
 ## Setting it up (once)
 
@@ -41,4 +74,4 @@ The first run finds no earlier `matches.json` to compare with (the site does not
 
 ## Time
 
-A scheduled run can start late when GitHub is busy, usually by minutes. The chain takes a few minutes, which leaves the e-mail well before 08:00 in Brazil (FR-40).
+A scheduled run can start late when GitHub is busy, usually by minutes (the watchdog allows for it). The chain takes a few minutes, which leaves the e-mail well before 08:00 in Brazil (FR-40).

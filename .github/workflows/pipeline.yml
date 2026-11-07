@@ -10,8 +10,9 @@ name: Daily pipeline
 #   email   The morning e-mail, from the data that was just published.
 #
 # If a provider fails, the build fails before anything is written or deployed, so the data
-# published last stays up (it only gets older, and the site says so after 36 hours). A failed run
-# is how the owner is told (failure alerts are M4-04); how it works is in docs/pipeline.md.
+# published last stays up (it only gets older, and the site says so after 36 hours). The `status`
+# job tells the owner when any step failed (an issue assigned to them, which GitHub e-mails) and
+# closes it when a run works. Missed runs are caught by watchdog.yml. See docs/pipeline.md.
 on:
   schedule:
     - cron: "0 9 * * *" # 09:00 UTC, 06:00 in Brazil
@@ -21,6 +22,10 @@ on:
         description: "Send the morning e-mail after deploying"
         type: boolean
         default: true
+      force_failure:
+        description: "Fail on purpose, to test that the failure alert reaches the owner"
+        type: boolean
+        default: false
 
 # Nothing by default. Each job asks only for what it needs.
 permissions: {}
@@ -38,6 +43,12 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Fail on purpose (to test the alert)
+        if: inputs.force_failure
+        run: |
+          echo "::error title=Forced failure::Started with force_failure, to test the alert."
+          exit 1
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
@@ -145,3 +156,48 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           SITE_URL: ${{ needs.deploy.outputs.page_url }}
         run: python -m ubi_ludus.email.send --data site/data
+
+  # Tells the owner (FR-51). It runs whatever happened before it, except when someone cancelled the
+  # run. A failure opens one issue assigned to the owner (GitHub e-mails assignees at once) and
+  # later failures add a comment to it instead of opening more; a run that works closes it.
+  status:
+    name: Tell the owner
+    needs: [build, deploy, email]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      OWNER: ${{ github.repository_owner }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      BUILD: ${{ needs.build.result }}
+      DEPLOY: ${{ needs.deploy.result }}
+      EMAIL: ${{ needs.email.result }}
+    steps:
+      - name: Open the failure issue, or add to the one that is open
+        if: contains(needs.*.result, 'failure')
+        run: |
+          gh label create pipeline-failure --description "A daily pipeline run failed" --color d73a4a || true
+          body="The daily pipeline failed: $RUN_URL
+
+          Build: $BUILD. Deploy: $DEPLOY. E-mail: $EMAIL.
+
+          The data published last is still on the site (it says so when it is over 36 hours old).
+          Open the run, read the first red step, and see docs/pipeline.md.
+          This issue closes itself when a run works."
+          number="$(gh issue list --label pipeline-failure --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body "Failed again: $RUN_URL ($BUILD / $DEPLOY / $EMAIL)"
+          else
+            gh issue create --title "Daily pipeline failed" --label pipeline-failure --assignee "$OWNER" --body "$body" || gh issue create --title "Daily pipeline failed" --label pipeline-failure --body "$body"
+          fi
+
+      - name: Close the failure issue now that a run has worked
+        if: ${{ !contains(needs.*.result, 'failure') && needs.build.result == 'success' && needs.deploy.result == 'success' }}
+        run: |
+          for number in $(gh issue list --label pipeline-failure --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --comment "A run worked: $RUN_URL"
+          done
