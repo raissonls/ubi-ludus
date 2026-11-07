@@ -23,6 +23,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
 
+from ubi_ludus.logs import event
 from ubi_ludus.pipeline.providers.base import ProviderError
 from ubi_ludus.pipeline.providers.cache import ResponseCache
 from ubi_ludus.pipeline.providers.http import HttpGet, HttpResponse, urllib_get
@@ -125,10 +126,16 @@ class CallLog:
             f"({stats.network} over the network, {stats.cached} from cache)"
             for provider, stats in sorted(self.by_provider.items())
         ]
-        logger.info(
-            "Provider calls this run: %s. Total over the network: %d",
-            "; ".join(parts) or "none",
-            self.network_calls,
+        event(
+            logger,
+            f"Provider calls this run: {'; '.join(parts) or 'none'}. "
+            f"Total over the network: {self.network_calls}",
+            "provider_calls",
+            providers={
+                provider: {"total": stats.total, "network": stats.network, "cached": stats.cached}
+                for provider, stats in sorted(self.by_provider.items())
+            },
+            network_total=self.network_calls,
         )
 
 
