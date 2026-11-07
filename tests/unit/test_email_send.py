@@ -251,7 +251,7 @@ def test_a_server_that_cannot_be_reached_is_reported_without_secrets() -> None:
     FakeSmtp.fail_with = ConnectionRefusedError(HIDDEN)
     with pytest.raises(EmailSendError) as caught:
         deliver(EmailSettings.from_env(ENV))
-    assert "smtp-relay.brevo.com:587" in str(caught.value)
+    assert str(caught.value).startswith("Could not send through smtp-relay.brevo.com:587 (")
     assert HIDDEN not in str(caught.value) and ADDRESS not in str(caught.value)
 
 
