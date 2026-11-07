@@ -11,6 +11,9 @@ from dbt_helpers import FIXTURES, NOW, fixture_registry, rights_with, rule
 
 from ubi_ludus.pipeline import export, publish
 from ubi_ludus.pipeline.env import load_env_file
+from ubi_ludus.pipeline.fetch import FetchOutcome
+from ubi_ludus.pipeline.providers.guard import CallLog
+from ubi_ludus.pipeline.publish import Published
 from ubi_ludus.pipeline.rights import RightsData
 from ubi_ludus.pipeline.run import RunResult, build_warehouse
 from ubi_ludus.pipeline.validate import SchemaValidationError, validate_file
@@ -151,8 +154,14 @@ def test_with_run_the_command_loads_the_env_file_and_builds_the_warehouse_first(
 ) -> None:
     calls: list[str] = []
 
-    def fake_build(database: Path, *, now: datetime, cache_dir: Path | None = None) -> RunResult:
-        calls.append(f"build {database.name} cache={cache_dir}")
+    def fake_build(
+        database: Path,
+        *,
+        now: datetime,
+        cache_dir: Path | None = None,
+        previous_url: str | None = None,
+    ) -> RunResult:
+        calls.append(f"build {database.name} cache={cache_dir} previous={previous_url}")
         return built
 
     def fake_env() -> list[str]:
@@ -164,10 +173,21 @@ def test_with_run_the_command_loads_the_env_file_and_builds_the_warehouse_first(
     monkeypatch.setattr(publish, "load_rights", lambda: RIGHTS)
 
     publish.main(
-        ["--run", "--database", str(built.database), "--out", str(tmp_path), "--cache-dir", "c"]
+        [
+            "--run",
+            "--database",
+            str(built.database),
+            "--out",
+            str(tmp_path),
+            "--cache-dir",
+            "c",
+            "--previous-url",
+            "https://example.org/data/matches.json",
+        ]
     )
 
-    assert calls == ["env", f"build {built.database.name} cache=c"]
+    expected = f"build {built.database.name} cache=c previous=https://example.org/data/matches.json"
+    assert calls == ["env", expected]
 
 
 def test_the_defaults_point_at_the_site_data_folder_and_the_dbt_warehouse() -> None:
@@ -220,3 +240,54 @@ def test_a_value_may_contain_an_equals_sign(tmp_path: Path, clean_environment: N
     path.write_text("VALUE_FOR_TEST=abc==\n", encoding="utf-8")
     load_env_file(path)
     assert os.environ["VALUE_FOR_TEST"] == "abc=="
+
+
+# --- a provider that fails must not replace what is published (M4-03) -------------------------
+
+
+def failed_run(database: Path, *providers: str) -> RunResult:
+    outcomes = tuple(FetchOutcome(name, (), "answered HTTP 500") for name in providers)
+    ok = (FetchOutcome("fine", ()),)
+    return RunResult(database, outcomes + ok, CallLog())
+
+
+def command(monkeypatch: pytest.MonkeyPatch, result: RunResult) -> list[str]:
+    written: list[str] = []
+
+    def fake_publish(*args: Any, **kwargs: Any) -> Published:
+        written.append("published")
+        return Published(Path("."), {"matches": 1}, 0.0)
+
+    monkeypatch.setattr(publish, "load_env_file", lambda: [])
+    monkeypatch.setattr(publish, "build_warehouse", lambda *a, **k: result)
+    monkeypatch.setattr(publish, "load_rights", lambda: RIGHTS)
+    monkeypatch.setattr(publish, "publish", fake_publish)
+    return written
+
+
+def test_a_failed_provider_stops_the_run_before_anything_is_written(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    written = command(monkeypatch, failed_run(tmp_path / "w.duckdb", "api-football", "other"))
+    code = publish.main(["--run", "--require-all-providers", "--out", str(tmp_path)])
+    captured = capsys.readouterr()
+    assert code == 1 and written == []
+    assert "provider api-football failed: answered HTTP 500" in captured.err
+    assert "provider other failed" in captured.err
+    assert "stays as it is" in captured.err and captured.out == ""
+
+
+def test_with_every_provider_working_the_strict_run_writes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    written = command(monkeypatch, failed_run(tmp_path / "w.duckdb"))
+    assert publish.main(["--run", "--require-all-providers", "--out", str(tmp_path)]) == 0
+    assert written == ["published"]
+
+
+def test_without_the_strict_flag_a_failed_provider_still_writes_what_there_is(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    written = command(monkeypatch, failed_run(tmp_path / "w.duckdb", "api-football"))
+    assert publish.main(["--run", "--out", str(tmp_path)]) == 0  # as on your own machine
+    assert written == ["published"]

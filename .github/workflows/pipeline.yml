@@ -1,0 +1,147 @@
+name: Daily pipeline
+
+# Every morning (PRD FR-50): fetch the matches, build and test the data, publish the site, then
+# e-mail the owner. In that order, and each step only if the one before worked:
+#
+#   build   Python fetches and loads, dbt builds and tests (a failing test stops the run), Python
+#           exports and checks every file against its schema.
+#   deploy  The site and the data go to GitHub Pages with the Pages actions. Nothing generated is
+#           ever committed to the repository.
+#   email   The morning e-mail, from the data that was just published.
+#
+# If a provider fails, the build fails before anything is written or deployed, so the data
+# published last stays up (it only gets older, and the site says so after 36 hours). A failed run
+# is how the owner is told (failure alerts are M4-04); how it works is in docs/pipeline.md.
+on:
+  schedule:
+    - cron: "0 9 * * *" # 09:00 UTC, 06:00 in Brazil
+  workflow_dispatch:
+    inputs:
+      send_email:
+        description: "Send the morning e-mail after deploying"
+        type: boolean
+        default: true
+
+# Nothing by default. Each job asks only for what it needs.
+permissions: {}
+
+# One run at a time, and a run that has started is never cut off half way through a deploy.
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Fetch, build and validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: python -m pip install -e .
+
+      # The provider keys are only given to this step. --require-all-providers writes nothing and
+      # fails the job if any provider failed (a missing key counts), so a partial day never
+      # replaces a complete one. The last published matches.json is downloaded to spot matches
+      # whose kickoff moved; if there is none yet (the first run) that is fine.
+      - name: Fetch, build with dbt, export and validate
+        env:
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          PREVIOUS_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/data/matches.json
+        run: >
+          python -m ubi_ludus.pipeline.publish --run --require-all-providers
+          --out site/data --previous-url "$PREVIOUS_URL"
+
+      - name: Show what was built on the run summary
+        run: |
+          {
+            echo '### Published data'
+            echo '```json'
+            cat site/data/status.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Only what the site needs: not its tests, its package.json or its README.
+      - name: Gather the site
+        run: |
+          mkdir _site
+          cp -r site/index.html site/css site/js site/i18n site/assets site/data _site/
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+      # The e-mail job reads the same data the site is about to serve.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: site-data
+          path: site/data
+          retention-days: 7
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write # to deploy
+      id-token: write # to prove to Pages that this run made the artifact
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  email:
+    name: Send the morning e-mail
+    needs: [build, deploy]
+    if: github.event_name != 'workflow_dispatch' || inputs.send_email
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: site-data
+          path: site/data
+
+      # The mail secrets are only given to this step. A missing one fails the job and names it,
+      # even on a day with nothing to send. On a quiet day the owner's quiet_days choice decides.
+      - name: Send the e-mail
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          SITE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: python -m ubi_ludus.email.send --data site/data

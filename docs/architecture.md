@@ -4,7 +4,7 @@ How Ubi Ludus fits together. This is a living overview: it starts as a skeleton 
 
 ## In one paragraph
 
-A scheduled GitHub Actions job runs once a day. Python fetches fixtures from two free data providers and loads them into an embedded DuckDB database. dbt models then clean and merge them, add broadcast information from our own rights table, and run data quality tests. Python exports the result as static JSON, validates it against the schemas, and publishes it with a static website to GitHub Pages. It also sends the owner a morning e-mail. Visitors' browsers download the JSON and do all the personalisation locally, so there is no server and nothing personal is stored anywhere but the visitor's own browser. The split between Python and dbt is explained in [ADR-002](adr/ADR-002-dbt-duckdb.md).
+A scheduled GitHub Actions job runs once a day. Python fetches fixtures from two free data providers and loads them into an embedded DuckDB database. dbt models then clean and merge them, add broadcast information from our own rights table, and run data quality tests. Python exports the result as static JSON, validates it against the schemas, and publishes it with a static website to GitHub Pages. It also sends the owner a morning e-mail. Visitors' browsers download the JSON and do all the personalisation locally, so there is no server and nothing personal is stored anywhere but the visitor's own browser. The split between Python and dbt is explained in [ADR-002](adr/ADR-002-dbt-duckdb.md). The daily workflow, what it does when something fails and how to set it up are in [pipeline.md](pipeline.md).
 
 ## Data flow
 
