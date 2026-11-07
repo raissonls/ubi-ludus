@@ -1,6 +1,6 @@
 # ADR-001: Static pipeline architecture and data providers
 
-- **Status:** Accepted
+- **Status:** Accepted. Decision 5 is partly superseded by [ADR-003](ADR-003-drop-api-football.md): API-Football is no longer used.
 - **Date:** 2026-11-02
 - **Related:** [PRD](../PRD.md) sections 7 and 9, [provider comparison](../research/provider-comparison.md), [security checklist](../security-checklist.md), issue [#5](../../../../issues/5)
 

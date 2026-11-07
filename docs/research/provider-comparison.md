@@ -1,5 +1,7 @@
 # Provider comparison (M0-01)
 
+> **Update 2026-11-07:** API-Football is no longer used. Its free plan suspended our account because GitHub Actions' shared IP addresses look like abuse to it. This study is kept as it was written; the decision and the way back are in [ADR-003](../adr/ADR-003-drop-api-football.md).
+
 **Status:** complete, 2026-11-01. Decision recorded (option A below). Work item: issue [#1](../../../../issues/1).
 
 **Question:** which free data provider can supply fixtures for the competitions in PRD section 5.1, within R$ 0/month, and may we show the data on a public site?

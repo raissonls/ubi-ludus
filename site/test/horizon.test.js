@@ -102,3 +102,28 @@ test('a card for a match still to come carries the notice, one that is over does
   assert.equal(describeMatch(match('4', 'copa-do-brasil', 'cancelled'), data).shortHorizon, false);
   assert.equal(describeMatch(match('5', 'serie-a'), data).shortHorizon, false);
 });
+
+test('the competitions with no data are named, in alphabetical order, whatever their names', async () => {
+  const { uncoveredCompetitions } = await import('../js/horizon.js');
+  const all = {
+    competitionsById: new Map([
+      competition('serie-a', 'Campeonato Brasileiro Série A', 'full'),
+      competition('b', 'Copa Sul-Americana', 'none'),
+      competition('a', 'Amistosos de seleções', 'none'),
+      competition('c', 'Copa do Brasil', 'none'),
+      competition('s', 'Campeonato Paulista', 'short'), // only until tomorrow is covered, not "none"
+    ]),
+  };
+  assert.deepEqual(uncoveredCompetitions(all), [
+    'Amistosos de seleções',
+    'Copa do Brasil',
+    'Copa Sul-Americana',
+  ]);
+  assert.deepEqual(uncoveredCompetitions({ competitionsById: new Map() }), []);
+});
+
+test('the summary of the list reads in the singular and the plural', () => {
+  assert.equal(translator.plural('uncovered.summary', 1), '1 competição ainda sem dados');
+  assert.equal(translator.plural('uncovered.summary', 8), '8 competições ainda sem dados');
+  assert.match(translator.t('uncovered.intro'), /não quer dizer que não haja jogos/);
+});

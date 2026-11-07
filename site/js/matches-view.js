@@ -5,7 +5,7 @@
 import { el } from './dom.js';
 import { EMPTY_FILTERS, activeCount, createMatchFilter } from './filters.js';
 import { defaultView, selectMatches } from './home-views.js';
-import { describeHorizonNotice } from './horizon.js';
+import { describeHorizonNotice, uncoveredCompetitions } from './horizon.js';
 import { createCalendar } from './calendar.js';
 import { createLiveClock } from './live-clock.js';
 import { renderMatchCard } from './match-card.js';
@@ -39,6 +39,9 @@ export function createMatchesView({
   const empty = document.getElementById('matches-empty');
   const status = document.getElementById('matches-status');
   const horizon = document.getElementById('horizon-notice');
+  const uncovered = document.getElementById('uncovered');
+  const uncoveredSummary = document.getElementById('uncovered-summary');
+  const uncoveredList = document.getElementById('uncovered-list');
   const buttons = [...document.querySelectorAll('#view-switch [data-view]')];
   // Cards say where their match stands (a countdown, live, probably over) and keep saying it as
   // time passes.
@@ -134,6 +137,17 @@ export function createMatchesView({
     horizon.hidden = text === '';
     if (horizon.textContent !== text) horizon.textContent = text;
   }
+
+  // The competitions we have no data for, listed once: the data does not change while the page
+  // is open, and an empty list is not hidden because of a filter (PRD risk R1).
+  function showUncovered() {
+    const names = uncoveredCompetitions(data);
+    uncovered.hidden = names.length === 0;
+    if (names.length === 0) return;
+    uncoveredSummary.textContent = translator.plural('uncovered.summary', names.length);
+    uncoveredList.replaceChildren(...names.map((name) => el('li', { text: name })));
+  }
+  showUncovered();
 
   // "All my teams" in one file: offered when the visitor follows teams that have matches to come.
   function showCalendarAll() {

@@ -5,8 +5,17 @@ from collections.abc import Callable
 from pathlib import Path
 
 import pytest
-from dbt_helpers import FIXTURES, NOW, FixtureAdapter, fixture_registry, query, rights_with
+from dbt_helpers import (
+    FIXTURES,
+    LEGACY_COMPETITIONS,
+    NOW,
+    FixtureAdapter,
+    fixture_registry,
+    query,
+    rights_with,
+)
 
+from ubi_ludus.pipeline.config import load_competitions
 from ubi_ludus.pipeline.providers.base import (
     FetchRequest,
     ProviderAdapter,
@@ -43,6 +52,7 @@ def test_the_pipeline_goes_from_provider_answers_to_a_tested_warehouse_with_the_
         tmp_path / "w.duckdb",
         now=NOW,
         registry=fixture_registry(),
+        competitions=load_competitions(LEGACY_COMPETITIONS),  # with API-Football, as before ADR-003
         teams_path=DEFAULT_TEAMS_PATH,  # the curated file: its unique-alias tests run on it too
         rights=rights_with(),
         work_dir=tmp_path / "dbt-work",
@@ -65,6 +75,7 @@ def test_a_provider_that_fails_is_reported_but_the_other_still_feeds_the_run(
         tmp_path / "w.duckdb",
         now=NOW,
         registry=registry,
+        competitions=load_competitions(LEGACY_COMPETITIONS),
         teams_path=TEAMS,
         rights=rights_with(),
         work_dir=tmp_path / "dbt-work",

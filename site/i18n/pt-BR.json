@@ -58,6 +58,13 @@
     "onlyWatchableHint": "Jogos sem emissora confirmada continuam na lista.",
     "emptyFilters": "Nenhum jogo desta lista com esses filtros."
   },
+  "uncovered": {
+    "summary": {
+      "one": "{count} competição ainda sem dados",
+      "other": "{count} competições ainda sem dados"
+    },
+    "intro": "Ainda não temos uma fonte de dados para estas competições, então os jogos delas não aparecem aqui. Isso não quer dizer que não haja jogos."
+  },
   "horizon": {
     "some": {
       "one": "Para {competitions}, só temos dados até amanhã. Jogos depois disso ainda não aparecem aqui.",
@@ -123,8 +130,7 @@
     "sourceCode": "Código-fonte",
     "dataSources": "Fontes dos dados",
     "attribution": {
-      "footballData": "Football data provided by the Football-Data.org API",
-      "apiFootball": "Dados também de API-Football"
+      "footballData": "Football data provided by the Football-Data.org API"
     }
   },
   "views": {

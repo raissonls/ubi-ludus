@@ -148,3 +148,90 @@ def test_axe_finds_nothing_with_the_notice(
     for current in visit(browser, origin, scheme, size, path="/index.html?view=today"):
         assert notice(current.page) == EMPTY
         assert axe_violations(current.page) == []
+
+
+# --- the competitions with no data are listed (PRD risk R1) ---------------------------------------
+
+UNCOVERED = "#uncovered"
+
+
+def with_uncovered(*ids: str) -> dict[str, object]:
+    document = json.loads(Path(DATA / "competitions.json").read_text(encoding="utf-8"))
+    for competition in document["competitions"]:
+        if competition["id"] in ids:
+            competition["coverage"] = "none"
+    return document  # type: ignore[no-any-return]
+
+
+def test_the_competitions_with_no_data_are_listed_instead_of_missing(
+    browser: Browser, origin: str
+) -> None:
+    ids = ("amistosos-selecoes", "uefa-champions-league")
+    for current in visit(
+        browser, origin, path=WEEK, changed_data={"competitions": with_uncovered(*ids)}
+    ):
+        page = current.page
+        summary = page.locator("#uncovered-summary")
+        assert summary.inner_text() == "2 competições ainda sem dados"
+        assert page.locator(UNCOVERED).get_attribute("open") is None  # closed until asked
+        summary.click()
+        assert page.locator("#uncovered-list li").all_inner_texts() == [
+            "Amistosos de seleções",
+            "UEFA Champions League",
+        ]
+        assert "não quer dizer que não haja jogos" in page.locator(UNCOVERED).inner_text()
+        assert current.console == []
+
+
+def test_one_competition_reads_in_the_singular(browser: Browser, origin: str) -> None:
+    changed = {"competitions": with_uncovered("amistosos-selecoes")}
+    for current in visit(browser, origin, path=WEEK, changed_data=changed):
+        assert current.page.locator("#uncovered-summary").inner_text() == (
+            "1 competição ainda sem dados"
+        )
+
+
+def test_nothing_is_shown_when_every_competition_has_data(browser: Browser, origin: str) -> None:
+    for current in visit(browser, origin, path=WEEK):
+        assert not current.page.locator(UNCOVERED).is_visible()
+
+
+def test_the_list_is_there_even_when_a_filter_or_a_quiet_day_leaves_no_matches(
+    browser: Browser, origin: str
+) -> None:
+    changed = {"competitions": with_uncovered("amistosos-selecoes")}
+    for current in visit(browser, origin, path="/index.html?view=today", changed_data=changed):
+        page = current.page
+        assert page.locator("#matches-list").is_hidden()
+        assert page.locator("#uncovered-summary").is_visible()
+
+
+def test_the_list_opens_and_closes_from_the_keyboard(browser: Browser, origin: str) -> None:
+    changed = {"competitions": with_uncovered("amistosos-selecoes")}
+    for current in visit(browser, origin, path=WEEK, changed_data=changed):
+        page = current.page
+        page.locator("#uncovered-summary").focus()
+        page.keyboard.press("Enter")
+        assert page.locator(UNCOVERED).get_attribute("open") is not None
+        assert page.locator("#uncovered-list li").is_visible()
+        page.keyboard.press("Enter")
+        assert page.locator(UNCOVERED).get_attribute("open") is None
+
+
+@pytest.mark.parametrize("size", list(VIEWPORTS))
+@pytest.mark.parametrize("scheme", ["light", "dark"])
+def test_axe_finds_nothing_with_the_list_open(
+    browser: Browser, origin: str, scheme: str, size: str
+) -> None:
+    ids = ("amistosos-selecoes", "uefa-champions-league")
+    for current in visit(
+        browser,
+        origin,
+        scheme,
+        size,
+        path=WEEK,
+        changed_data={"competitions": with_uncovered(*ids)},
+    ):
+        page = current.page
+        page.locator("#uncovered-summary").click()
+        assert axe_violations(page) == []

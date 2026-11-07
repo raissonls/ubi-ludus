@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from dbt_helpers import LEGACY_COMPETITIONS
 
 from ubi_ludus.pipeline.config import load_competitions
 from ubi_ludus.pipeline.fetch import fetch_all, plan_fetches
@@ -421,15 +422,15 @@ def test_a_missing_key_shows_up_as_a_failed_provider_not_a_crash(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv(KEY_ENV, raising=False)
-    plan = plan_fetches(load_competitions(), TODAY)
+    plan = plan_fetches(load_competitions(LEGACY_COMPETITIONS), TODAY)
     only_this = [r for r in plan if r.provider == "api-football"]
     [outcome] = fetch_all(only_this, default_registry())
     assert outcome.responses == ()
     assert outcome.error == f"{KEY_ENV} is not set"
 
 
-def test_the_real_config_asks_api_football_for_ten_leagues_until_tomorrow() -> None:
-    plan = plan_fetches(load_competitions(), TODAY)
+def test_the_frozen_config_asks_api_football_for_ten_leagues_until_tomorrow() -> None:
+    plan = plan_fetches(load_competitions(LEGACY_COMPETITIONS), TODAY)
     [api_football] = [r for r in plan if r.provider == "api-football"]
     assert {t.provider_id for t in api_football.targets} == {
         "73", "475", "624", "629", "477", "11", "13", "71", "34", "10",
@@ -438,7 +439,7 @@ def test_the_real_config_asks_api_football_for_ten_leagues_until_tomorrow() -> N
 
 
 def test_the_national_team_competitions_are_covered_by_their_league_ids() -> None:
-    by_id = {c.id: c for c in load_competitions()}
+    by_id = {c.id: c for c in load_competitions(LEGACY_COMPETITIONS)}
     for competition_id, league_id in (
         ("eliminatorias-copa-do-mundo", "34"),
         ("amistosos-selecoes", "10"),

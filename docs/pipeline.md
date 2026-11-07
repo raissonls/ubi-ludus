@@ -59,7 +59,7 @@ No job has `contents: write`, nothing runs on `pull_request_target`, every actio
 
    | Name | For |
    | --- | --- |
-   | `FOOTBALL_DATA_TOKEN`, `API_FOOTBALL_KEY` | the providers |
+   | `FOOTBALL_DATA_TOKEN` | the provider (football-data.org; API-Football is not used, see [ADR-003](adr/ADR-003-drop-api-football.md)) |
    | `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_FROM`, `EMAIL_TO` | the e-mail (see [email.md](email.md); Brevo's IP blocking for SMTP keys must be off, because the runners change address on every run) |
 
 3. **Try it without e-mailing:** *Actions > Daily pipeline > Run workflow* with "Send the morning e-mail" unticked, or

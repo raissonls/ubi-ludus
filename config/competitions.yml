@@ -3,11 +3,17 @@
 #
 # sources: which provider serves the competition and how many days ahead it can tell us.
 #   horizon_days 14 = a full window (yesterday through 14 days ahead)
-#   horizon_days 1  = only until tomorrow (the API-Football free plan). The site shows a notice.
-#   no sources      = not covered yet. The site lists it as such instead of hiding it.
+#   horizon_days 1  = only until tomorrow (a free plan that allows no more). The site shows a notice.
+#   sources: []     = not covered yet. The site lists it as such instead of hiding it.
 # A competition may list two providers. A match both of them know is published once, from
-# football-data.org when it has it (the pipeline prefers the provider with the longer horizon).
+# the provider with the longer horizon.
 # To add a competition, add an entry here. To add a provider, write an adapter and register it.
+#
+# API-Football is NOT used (decision of 2026-11-07, docs/adr/ADR-003-drop-api-football.md): its
+# free plan suspended our account because GitHub Actions' shared IP addresses look like abuse to
+# it. The adapter is still in the repository, switched off. The competitions that depended on it
+# are listed below with `sources: []`, and the line to bring each one back is in a comment, for a
+# project that has a dedicated outbound IP.
 version: 1
 competitions:
   # --- Brazil -------------------------------------------------------------
@@ -17,42 +23,42 @@ competitions:
     type: league
     sources:
       - {provider: football-data, provider_id: BSA, horizon_days: 14}
-      - {provider: api-football, provider_id: 71, horizon_days: 1}
+      # was also: {provider: api-football, provider_id: 71, horizon_days: 1}
 
   - id: copa-do-brasil
     name: Copa do Brasil
     country_or_region: Brasil
     type: cup
-    sources:
-      - {provider: api-football, provider_id: 73, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 73, horizon_days: 1}
 
   - id: campeonato-paulista
     name: Campeonato Paulista
     country_or_region: Brasil
     type: league
-    sources:
-      - {provider: api-football, provider_id: 475, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 475, horizon_days: 1}
 
   - id: campeonato-carioca
     name: Campeonato Carioca
     country_or_region: Brasil
     type: league
-    sources:
-      - {provider: api-football, provider_id: 624, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 624, horizon_days: 1}
 
   - id: campeonato-mineiro
     name: Campeonato Mineiro
     country_or_region: Brasil
     type: league
-    sources:
-      - {provider: api-football, provider_id: 629, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 629, horizon_days: 1}
 
   - id: campeonato-gaucho
     name: Campeonato Gaúcho
     country_or_region: Brasil
     type: league
-    sources:
-      - {provider: api-football, provider_id: 477, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 477, horizon_days: 1}
 
   # --- South America ------------------------------------------------------
   - id: copa-libertadores
@@ -60,16 +66,17 @@ competitions:
     country_or_region: América do Sul
     type: cup
     sources:
+      # football-data.org marks CLI as a paid tier and may cut it (provider comparison). If it
+      # does, change this to `sources: []` and the site says "not covered yet".
       - {provider: football-data, provider_id: CLI, horizon_days: 14}
-      # Fallback: football-data.org marks CLI as a paid tier and may cut it (provider comparison).
-      - {provider: api-football, provider_id: 13, horizon_days: 1}
+      # was also: {provider: api-football, provider_id: 13, horizon_days: 1}
 
   - id: copa-sul-americana
     name: Copa Sul-Americana
     country_or_region: América do Sul
     type: cup
-    sources:
-      - {provider: api-football, provider_id: 11, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 11, horizon_days: 1}
 
   # --- Europe and the world -----------------------------------------------
   - id: uefa-champions-league
@@ -121,19 +128,19 @@ competitions:
     sources:
       - {provider: football-data, provider_id: WC, horizon_days: 14}
 
-  # National teams: only API-Football has them. League ids confirmed with the API on 2026-11-02:
-  # 34 = "World Cup - Qualification South America", 10 = "Friendlies". The other confederations'
-  # qualifiers are separate leagues at API-Football; a competition takes one id per provider.
+  # National teams: only API-Football had them (league ids confirmed with the API on 2026-11-02:
+  # 34 = "World Cup - Qualification South America", 10 = "Friendlies"). Not covered since the
+  # decision above; hand-maintained calendars (issue #55) are the way back.
   - id: eliminatorias-copa-do-mundo
     name: Eliminatórias da Copa do Mundo
     country_or_region: Mundo
     type: league
-    sources:
-      - {provider: api-football, provider_id: 34, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 34, horizon_days: 1}
 
   - id: amistosos-selecoes
     name: Amistosos de seleções
     country_or_region: Mundo
     type: cup
-    sources:
-      - {provider: api-football, provider_id: 10, horizon_days: 1}
+    sources: []
+    # was: {provider: api-football, provider_id: 10, horizon_days: 1}

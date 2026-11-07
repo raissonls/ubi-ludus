@@ -98,6 +98,11 @@
         <div id="matches-list" hidden></div>
         <p id="matches-empty"></p>
         <p id="horizon-notice" class="notice notice--horizon" role="status" hidden></p>
+        <details id="uncovered" class="uncovered" hidden>
+          <summary id="uncovered-summary"></summary>
+          <p data-i18n="uncovered.intro"></p>
+          <ul id="uncovered-list"></ul>
+        </details>
         <p id="calendar-all-row" hidden><button type="button" id="calendar-all"></button></p>
         <p id="calendar-status" class="visually-hidden" role="status"></p>
         <p id="matches-status" class="visually-hidden" role="status"></p>
@@ -148,7 +153,6 @@
       <p data-i18n="footer.dataSources"></p>
       <ul>
         <li><a href="https://www.football-data.org/" rel="noopener noreferrer" data-i18n="footer.attribution.footballData"></a></li>
-        <li><a href="https://www.api-football.com/" rel="noopener noreferrer" data-i18n="footer.attribution.apiFootball"></a></li>
       </ul>
     </div>
   </footer>
