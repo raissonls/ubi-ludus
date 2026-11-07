@@ -317,7 +317,8 @@ def test_the_footer_carries_the_data_attributions(page: Page, strings: dict[str,
     )
     assert "footer.attribution.apiFootball" not in strings  # not a provider we use
     hosts = {urlparse(attrs.get("href") or "").hostname for attrs in page.find("a")}
-    assert "www.football-data.org" in hosts and "www.api-football.com" not in hosts
+    # The links go to our own repository and to the one provider we use, and to nowhere else.
+    assert {host for host in hosts if host} == {"github.com", "www.football-data.org"}
 
 
 def test_the_footer_has_a_privacy_notice_and_the_repository_has_a_privacy_file(
