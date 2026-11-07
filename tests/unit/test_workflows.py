@@ -122,7 +122,10 @@ def test_a_provider_that_fails_stops_the_run_before_anything_is_deployed() -> No
     command = " ".join(str(step["run"]).split())
     assert "--run" in command and "--require-all-providers" in command
     assert '--previous-url "$PREVIOUS_URL"' in command
-    assert "github.io" in step["env"]["PREVIOUS_URL"]  # from the repository, not typed in
+    # The address of the last published file comes from the repository, not typed in.
+    expected = "https://${{ github.repository_owner }}.github.io/"
+    expected += "${{ github.event.repository.name }}/data/matches.json"
+    assert step["env"]["PREVIOUS_URL"] == expected
     # The default (a failing step stops the job) is not turned off, and the deploy needs the build.
     assert "continue-on-error" not in str(build)
     assert "continue-on-error" not in str(pipeline_jobs()["deploy"])
