@@ -87,4 +87,9 @@ email:
 
 If the mail server refuses the login, the message says to check `SMTP_USER`, `SMTP_PASSWORD` and that `EMAIL_FROM` is verified with the provider. It never repeats the server's reply, which could echo a credential.
 
+**If the login is refused with code 525** (found when first trying Brevo): that is not a wrong password (a wrong one is 535). It means the provider refused the connection itself. Two causes to check in Brevo, in this order:
+
+1. **Authorised IPs.** Brevo can block logins from IP addresses you have not approved (*Security > Authorised IPs*; it also e-mails you a link to authorise the address it just blocked). That works for testing from your own machine, but GitHub's runners have a different address every run, so for the daily workflow IP blocking has to be **off**.
+2. **Sending not activated.** A new account may need Brevo's team to switch SMTP sending on; that is a support request from the account, and they reply in a day or two (their help article on troubleshooting SMTP says how).
+
 **Not yet:** running it every morning is the workflow of M4-03 (#32), which will pass the four secrets as environment variables and `SITE_URL`.

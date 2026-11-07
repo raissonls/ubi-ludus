@@ -160,6 +160,14 @@ def send_message(
             server.login(settings.user, settings.password)
             server.send_message(message)
     except smtplib.SMTPAuthenticationError as exc:
+        if exc.smtp_code == 525:
+            # Not a wrong password (that is 535): the provider refused this connection itself.
+            raise EmailSendError(
+                "The mail server refused this connection (code 525), which is not a wrong "
+                "password. The usual causes: the provider blocks IP addresses you have not "
+                "authorised (Brevo: Security > Authorised IPs; GitHub's runners need blocking "
+                "off), or sending is not activated on the account yet. See docs/email.md."
+            ) from None
         raise EmailSendError(
             f"The mail server rejected the login (code {exc.smtp_code}). Check SMTP_USER and "
             "SMTP_PASSWORD, and that the sender in EMAIL_FROM is verified with the provider."

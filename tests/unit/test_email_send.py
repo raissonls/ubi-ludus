@@ -237,6 +237,16 @@ def test_a_rejected_login_says_what_to_check_and_never_the_password() -> None:
     assert "send" not in calls()
 
 
+def test_a_525_is_not_called_a_wrong_password() -> None:
+    FakeSmtp.fail_with = smtplib.SMTPAuthenticationError(525, b"refused " + HIDDEN.encode())
+    with pytest.raises(EmailSendError) as caught:
+        deliver(EmailSettings.from_env(ENV))
+    text = str(caught.value)
+    assert "525" in text and "not a wrong password" in text
+    assert "Authorised IPs" in text and "activated" in text
+    assert HIDDEN not in text
+
+
 def test_a_server_that_cannot_be_reached_is_reported_without_secrets() -> None:
     FakeSmtp.fail_with = ConnectionRefusedError(HIDDEN)
     with pytest.raises(EmailSendError) as caught:
