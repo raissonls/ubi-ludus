@@ -75,7 +75,6 @@ def test_the_review_stops_quietly_while_the_teams_file_or_a_key_is_missing() -> 
     gate = next(s for s in steps if s.get("id") == "ready")
     assert "data/teams.yml" in gate["run"]
     assert "FOOTBALL_DATA_TOKEN" in gate["run"]
-    assert "API_FOOTBALL_KEY" in gate["run"]
     later = [s for s in steps if "if" in s]
     assert later
     assert all(s["if"] == "steps.ready.outputs.ready == 'true'" for s in later)
@@ -151,7 +150,7 @@ def test_each_secret_goes_to_one_step_and_nothing_else_gets_a_secret() -> None:
     assert holders(jobs["email"]) == ["Send the e-mail"]
     assert holders(jobs["deploy"]) == []
     build_env = next(s for s in jobs["build"]["steps"] if "pipeline.publish" in str(s.get("run")))
-    assert set(build_env["env"]) == {"FOOTBALL_DATA_TOKEN", "API_FOOTBALL_KEY", "PREVIOUS_URL"}
+    assert set(build_env["env"]) == {"FOOTBALL_DATA_TOKEN", "PREVIOUS_URL"}
     mail = next(s for s in jobs["email"]["steps"] if "email.send" in str(s.get("run")))
     assert {"SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "EMAIL_TO"} <= set(mail["env"])
     for job in jobs.values():
@@ -272,3 +271,9 @@ def test_only_the_issue_jobs_can_write_issues_and_only_one_job_can_write_pages()
         "id-token": {"pipeline.yml:deploy"},
         "actions": {"watchdog.yml:keep-alive"},
     }
+
+
+def test_no_workflow_gives_an_api_football_key_to_anything() -> None:
+    """API-Football is not used (docs/adr/ADR-003-drop-api-football.md): its key goes nowhere."""
+    for path in FILES:
+        assert "API_FOOTBALL" not in path.read_text(encoding="utf-8"), path.name

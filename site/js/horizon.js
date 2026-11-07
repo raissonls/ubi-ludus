@@ -1,4 +1,4 @@
-// Competitions with a short data horizon (FR-34). For some competitions the free data plan only
+// Competitions with a short data horizon (FR-34), and those with no data at all. For some competitions the free data plan only
 // tells us about matches until tomorrow. The page must say so, so a list without those matches never
 // looks like "there are none". Which competitions are short is decided by the pipeline from
 // config/competitions.yml (a competition whose longest source reaches less than 14 days) and
@@ -18,6 +18,18 @@ export function shortCompetitionsIn(matches, data, extraIds = []) {
     if (isShortHorizon(competition)) names.push(competition.name);
   }
   return names.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+}
+
+/**
+ * The names of the competitions we have no data for at all (`coverage: "none"`), in alphabetical
+ * order. The page lists them as "not covered yet" so that their absence is never read as "no
+ * matches" (PRD section 5, risk R1).
+ */
+export function uncoveredCompetitions(data) {
+  return [...data.competitionsById.values()]
+    .filter((competition) => competition.coverage === 'none')
+    .map((competition) => competition.name)
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }
 
 /** Whether the data has any competition with a short horizon at all. */

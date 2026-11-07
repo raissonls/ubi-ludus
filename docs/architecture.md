@@ -4,7 +4,7 @@ How Ubi Ludus fits together. This is a living overview: it starts as a skeleton 
 
 ## In one paragraph
 
-A scheduled GitHub Actions job runs once a day. Python fetches fixtures from two free data providers and loads them into an embedded DuckDB database. dbt models then clean and merge them, add broadcast information from our own rights table, and run data quality tests. Python exports the result as static JSON, validates it against the schemas, and publishes it with a static website to GitHub Pages. It also sends the owner a morning e-mail. Visitors' browsers download the JSON and do all the personalisation locally, so there is no server and nothing personal is stored anywhere but the visitor's own browser. The split between Python and dbt is explained in [ADR-002](adr/ADR-002-dbt-duckdb.md). The daily workflow, what it does when something fails and how to set it up are in [pipeline.md](pipeline.md).
+A scheduled GitHub Actions job runs once a day. Python fetches fixtures from the free data provider (football-data.org) and loads them into an embedded DuckDB database. dbt models then clean and merge them, add broadcast information from our own rights table, and run data quality tests. Python exports the result as static JSON, validates it against the schemas, and publishes it with a static website to GitHub Pages. It also sends the owner a morning e-mail. Visitors' browsers download the JSON and do all the personalisation locally, so there is no server and nothing personal is stored anywhere but the visitor's own browser. The split between Python and dbt is explained in [ADR-002](adr/ADR-002-dbt-duckdb.md). The daily workflow, what it does when something fails and how to set it up are in [pipeline.md](pipeline.md).
 
 ## Data flow
 
@@ -12,7 +12,6 @@ A scheduled GitHub Actions job runs once a day. Python fetches fixtures from two
 flowchart LR
     subgraph Sources
       FD["football-data.org<br/>up to 14 days ahead"]
-      AF["API-Football<br/>yesterday to tomorrow"]
       R["rights.yml + overrides.yml<br/>(maintained by hand)"]
       C["competitions.yml + owner.yml<br/>(config)"]
     end
@@ -24,7 +23,6 @@ flowchart LR
       X --> B[Build static site]
     end
     FD --> F
-    AF --> F
     C --> F
     R --> L
     P --> L
@@ -73,6 +71,7 @@ Static JSON with a schema version, served next to the site: `matches.json`, `tea
 |---|---|
 | Why we chose this architecture | [ADR-001](adr/ADR-001-architecture.md) |
 | Why dbt and Python together, on DuckDB | [ADR-002](adr/ADR-002-dbt-duckdb.md) |
+| Why API-Football is not used | [ADR-003](adr/ADR-003-drop-api-football.md) |
 | Providers: coverage, limits, terms | [provider comparison](research/provider-comparison.md) |
 | Security and the go-public plan | [security checklist](security-checklist.md) |
 | How we plan and track work | [README](../README.md#how-we-plan-work) |

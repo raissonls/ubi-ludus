@@ -653,6 +653,27 @@ input[type="text"] {
   border-style: dotted;
 }
 
+.uncovered {
+  margin-block: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) dotted var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.uncovered summary {
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.uncovered ul {
+  margin: 0;
+  padding-inline-start: var(--space-4);
+}
+
 .match-card__horizon {
   margin: 0;
   font-size: var(--font-size-sm);

@@ -170,7 +170,6 @@ def test_external_links_open_safely_and_go_only_to_known_places(page: Page) -> N
     allowed = (
         "https://github.com/raissonls/ubi-ludus",
         "https://www.football-data.org/",
-        "https://www.api-football.com/",
     )
     for attrs in page.find("a"):
         href = attrs.get("href") or ""
@@ -311,14 +310,14 @@ def test_the_page_holds_no_visible_text_of_its_own_except_the_no_script_notice(p
 
 
 def test_the_footer_carries_the_data_attributions(page: Page, strings: dict[str, object]) -> None:
-    """football-data.org's terms require this exact line; API-Football is a courtesy."""
+    """football-data.org's terms require this exact line. It is the only provider we use."""
     assert (
         strings["footer.attribution.footballData"]
         == "Football data provided by the Football-Data.org API"
     )
-    assert "API-Football" in str(strings["footer.attribution.apiFootball"])
+    assert "footer.attribution.apiFootball" not in strings  # not a provider we use
     hosts = {urlparse(attrs.get("href") or "").hostname for attrs in page.find("a")}
-    assert {"www.football-data.org", "www.api-football.com"} <= hosts
+    assert "www.football-data.org" in hosts and "www.api-football.com" not in hosts
 
 
 def test_the_footer_has_a_privacy_notice_and_the_repository_has_a_privacy_file(

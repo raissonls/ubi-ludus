@@ -31,8 +31,28 @@ def write(tmp_path: Path, *competitions: dict[str, Any]) -> Path:
 def test_the_real_config_file_loads() -> None:
     by_id = {c.id: c for c in load_competitions()}
     assert by_id["brasileirao-serie-a"].coverage == "full"
-    assert by_id["copa-do-brasil"].coverage == "short"
-    assert by_id["eliminatorias-copa-do-mundo"].coverage == "short"  # API-Football since M1-07
+    assert by_id["uefa-champions-league"].coverage == "full"
+    assert by_id["copa-do-brasil"].coverage == "none"  # API-Football was dropped (ADR-003)
+    assert by_id["eliminatorias-copa-do-mundo"].coverage == "none"
+
+
+def test_no_real_source_is_api_football_and_exactly_the_old_ones_are_not_covered() -> None:
+    """ADR-003: its account was suspended from GitHub's shared IPs; the adapter is switched off."""
+    real = load_competitions()
+    assert {s.provider for c in real for s in c.sources} == {"football-data"}
+    assert {c.id for c in real if c.coverage == "none"} == {
+        "copa-do-brasil",
+        "campeonato-paulista",
+        "campeonato-carioca",
+        "campeonato-mineiro",
+        "campeonato-gaucho",
+        "copa-sul-americana",
+        "eliminatorias-copa-do-mundo",
+        "amistosos-selecoes",
+    }
+    # Every one of them says how to bring it back.
+    text = (Path(__file__).resolve().parents[2] / "config" / "competitions.yml").read_text("utf-8")
+    assert text.count("# was: {provider: api-football") == 8
 
 
 def test_provider_ids_are_read_as_text_even_when_written_as_numbers(tmp_path: Path) -> None:

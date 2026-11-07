@@ -22,6 +22,11 @@ from ubi_ludus.pipeline.warehouse import (
 )
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "dbt"
+# The competitions as they were before API-Football was dropped (ADR-003): its adapter and dbt
+# model are kept, switched off, and their tests need competitions that use it.
+LEGACY_COMPETITIONS = (
+    Path(__file__).resolve().parents[1] / "fixtures" / "competitions-with-api-football.yml"
+)
 NOW = datetime(2026, 11, 2, 9, 0, tzinfo=UTC)
 TODAY = date(2026, 11, 2)
 # The code is only the label in the resource name. Copa do Brasil is served by another provider
@@ -137,7 +142,7 @@ def build(
     database = tmp_path / "warehouse.duckdb"
     con = connect(database)
     load_yaml_file(con, "raw_teams", FIXTURES / "teams.yml", key="teams")
-    load_competitions(con, config.load_competitions())
+    load_competitions(con, config.load_competitions(LEGACY_COMPETITIONS))
     load_provider_responses(
         con, [response(cid, payload) for cid, payload in payloads.items()] + extra
     )

@@ -23,7 +23,7 @@ The teams you follow, the services you have and whether you hide the matches you
 
 ## Data from other sources
 
-Match data comes from [football-data.org](https://www.football-data.org/) and [API-Football](https://www.api-football.com/). The site shows only what it needs (team names, competition, kickoff time, status and where it is shown). Team crests and logos are not used.
+Match data comes from [football-data.org](https://www.football-data.org/). The site shows only what it needs (team names, competition, kickoff time, status and where it is shown). Team crests and logos are not used.
 
 ## Brazil's LGPD
 

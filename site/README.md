@@ -66,7 +66,7 @@ test/             unit tests for js/ (Node's built-in runner)
 
 ## Data attribution
 
-The footer shows "Football data provided by the Football-Data.org API" exactly as football-data.org's terms require, and credits API-Football. See [the provider comparison](../docs/research/provider-comparison.md).
+The footer shows "Football data provided by the Football-Data.org API" exactly as football-data.org's terms require, and credits no other provider, because there is none (API-Football is not used, see [ADR-003](../docs/adr/ADR-003-drop-api-football.md)). See [the provider comparison](../docs/research/provider-comparison.md).
 
 ## The teams picker
 
@@ -140,8 +140,14 @@ The data is published once a day, so it can say "scheduled" for a match that is 
 - Tests: `site/test/ics.test.js` and `calendar.test.js` for the rules, and `tests/browser/test_calendar.py` downloads the real files and reads them back with the `icalendar` library (a strict RFC 5545 parser, added as a dev dependency) after checking the bytes: CRLF, no byte order mark, no line over 75 octets. I could not import into Google Calendar or Apple Calendar from here; the file follows what they require (VERSION, PRODID, UID, DTSTAMP, DTSTART, SUMMARY, CRLF, UTC times).
 
 ## Competitions known only until tomorrow (FR-34)
-- Some competitions come from a source that tells us only about matches until tomorrow (the API-Football free plan). Which ones is decided in `config/competitions.yml` by each source's `horizon_days`; the pipeline publishes the result as `coverage: "short"` in `competitions.json` (14 days or more is `full`). The page never names a competition: it reads `coverage`, so a change in the configuration is a change on the site with no code.
+- Some competitions come from a source that tells us only about matches until tomorrow (a free plan that allows no more). Which ones is decided in `config/competitions.yml` by each source's `horizon_days`; the pipeline publishes the result as `coverage: "short"` in `competitions.json` (14 days or more is `full`). The page never names a competition: it reads `coverage`, so a change in the configuration is a change on the site with no code.
 - **Below the list** (so the next match stays in view on a phone): a notice names the short competitions that have a match in the list ("Para Copa do Brasil e Campeonato Paulista, só temos dados até amanhã. Jogos depois disso ainda não aparecem aqui."). It also shows when the visitor filters on a short competition and nothing is left, and, when a list is empty with no competition chosen, in a general form, so an empty list is never read as "no matches exist".
 - **On the card**: a match still to come in such a competition says "Dados desta competição só até amanhã" (in words, with a dotted notice box, not colour alone). Finished and cancelled matches do not.
 - Accessibility: it is plain text in reading order, in a `role="status"` paragraph that is replaced only when its text changes (so it is not read again at each redraw); there is nothing to press, and the card's line is part of the card.
 - Code: `js/horizon.js` (pure), `matches-view.js` (the notice), `match-model.js` and `match-card.js` (the card line). Tests: `site/test/horizon.test.js`, `tests/browser/test_horizon.py`, and a `short-horizon` card in the card gallery and its recorded look (`snapshots/match_card_styles.json`).
+
+## Competitions not covered yet (PRD risk R1)
+- A competition with no data source at all (`sources: []` in `config/competitions.yml`, published as `coverage: "none"`) is listed under the matches as a closed `<details>`: "8 competições ainda sem dados", and when opened, the names and a line saying that this does not mean there are no matches. So a missing competition is never read as "no matches".
+- Today that is Copa do Brasil, Copa Sul-Americana, the state championships, the World Cup qualifiers and the national-team friendlies, since API-Football is not used ([ADR-003](../docs/adr/ADR-003-drop-api-football.md)). The page learns it from the data, not from a list in the code, so adding a source for one of them removes it from the list.
+- Keyboard and screen readers: it is a native `<details>`, so Enter and Space open it and the list is announced as a list. Shown once, even when a filter or a quiet day leaves no matches.
+- Code: `uncoveredCompetitions()` in `js/horizon.js` (pure) and `showUncovered()` in `matches-view.js`. Tests: `site/test/horizon.test.js` and `tests/browser/test_horizon.py`.
