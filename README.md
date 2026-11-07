@@ -16,6 +16,7 @@
 | Why we chose it (architecture decisions) | [docs/adr/](docs/adr/README.md) |
 | Providers: coverage, limits, terms | [docs/research/provider-comparison.md](docs/research/provider-comparison.md) |
 | Security and the go-public plan | [docs/security-checklist.md](docs/security-checklist.md) |
+| Running it: weekly routine, alerts, rotating a secret, rolling back | [docs/runbook.md](docs/runbook.md) |
 
 ## Phase 1 at a glance
 

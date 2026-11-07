@@ -75,14 +75,18 @@ def configure_logging(
 ) -> logging.Handler:
     """Send every log record to ``stream`` (standard error) as JSON lines.
 
-    Safe to call more than once: the handler is replaced, never doubled.
+    Safe to call more than once: the handler is replaced, never doubled. A plain stream handler that
+    a library put on the root logger (dbt does, when it is imported) is taken off, or every line
+    would come out twice, once in each format.
     """
     handler = logging.StreamHandler(stream if stream is not None else sys.stderr)
     handler.set_name(_HANDLER_NAME)
     handler.setFormatter(JsonFormatter())
     root = logging.getLogger()
-    for existing in [h for h in root.handlers if h.get_name() == _HANDLER_NAME]:
-        root.removeHandler(existing)
+    for existing in list(root.handlers):
+        # Exactly a StreamHandler, not a subclass: a test's or a file's handler is left alone.
+        if existing.get_name() == _HANDLER_NAME or type(existing) is logging.StreamHandler:
+            root.removeHandler(existing)
     root.addHandler(handler)
     chosen = (level or os.environ.get(LEVEL_ENV) or "INFO").upper()
     root.setLevel(chosen if chosen in logging.getLevelNamesMapping() else "INFO")

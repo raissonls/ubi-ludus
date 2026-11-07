@@ -81,4 +81,4 @@ Static JSON with a schema version, served next to the site: `matches.json`, `tea
 - Sequence of one daily run, with timings, once M4 exists.
 - Rights resolution rules and override precedence (M2).
 - Front-end structure, state handling and the pt-BR string file (M3).
-- Runbook: rotate a leaked secret, switch provider, disable the e-mail, roll back the site ([#35](../../../issues/35)).
+- [Runbook](runbook.md): rotate a leaked secret, switch provider, disable the e-mail, roll back the site, the weekly routine ([#35](../../../issues/35)).
