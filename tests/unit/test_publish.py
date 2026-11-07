@@ -1,6 +1,7 @@
 """Writing the five published files, and reading the local .env."""
 
 import json
+import logging
 import os
 from datetime import UTC, datetime
 from pathlib import Path
@@ -8,6 +9,7 @@ from typing import Any
 
 import pytest
 from dbt_helpers import FIXTURES, NOW, fixture_registry, rights_with, rule
+from log_helpers import leave_logging_as_found  # noqa: F401 - an autouse fixture
 
 from ubi_ludus.pipeline import export, publish
 from ubi_ludus.pipeline.env import load_env_file
@@ -291,3 +293,65 @@ def test_without_the_strict_flag_a_failed_provider_still_writes_what_there_is(
     written = command(monkeypatch, failed_run(tmp_path / "w.duckdb", "api-football"))
     assert publish.main(["--run", "--out", str(tmp_path)]) == 0  # as on your own machine
     assert written == ["published"]
+
+
+# --- the run leaves structured logs (FR-54) -----------------------------------------------------
+
+
+def events(stderr: str) -> list[dict[str, Any]]:
+    """The JSON lines of the log, as the Actions page would show them."""
+    return [json.loads(line) for line in stderr.splitlines() if line.startswith("{")]
+
+
+def test_a_finished_run_logs_one_summary_with_the_counts_the_calls_and_the_time(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    result = failed_run(tmp_path / "w.duckdb")
+    result.call_log.stats("football-data").network += 9
+    command(monkeypatch, result)
+    assert publish.main(["--run", "--require-all-providers", "--out", str(tmp_path)]) == 0
+    [summary] = [e for e in events(capsys.readouterr().err) if e.get("event") == "run_summary"]
+    assert summary["outcome"] == "published" and summary["level"] == "INFO"
+    assert summary["record_counts"] == {"matches": 1}
+    assert summary["unknown_ratio"] == 0.0
+    assert summary["network_calls"] == 9 and summary["failed_providers"] == {}
+    assert isinstance(summary["duration_seconds"], float)
+    assert summary["time"].endswith("Z")
+
+
+def test_a_stopped_run_logs_which_providers_failed_and_why(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    command(monkeypatch, failed_run(tmp_path / "w.duckdb", "api-football"))
+    assert publish.main(["--run", "--require-all-providers", "--out", str(tmp_path)]) == 1
+    [summary] = [e for e in events(capsys.readouterr().err) if e.get("event") == "run_summary"]
+    assert summary["outcome"] == "stopped"
+    assert summary["failed_providers"] == {"api-football": "answered HTTP 500"}
+
+
+def test_a_run_without_the_run_flag_logs_a_summary_with_no_call_count(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    command(monkeypatch, failed_run(tmp_path / "w.duckdb"))
+    assert publish.main(["--out", str(tmp_path)]) == 0  # an existing warehouse: nothing was called
+    [summary] = [e for e in events(capsys.readouterr().err) if e.get("event") == "run_summary"]
+    assert summary["network_calls"] is None
+
+
+def test_no_secret_in_the_environment_reaches_the_log(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    hidden_value = "tok-9d2c7e41ab55"
+    monkeypatch.setenv("FOOTBALL_DATA_TOKEN", hidden_value)
+    result = failed_run(tmp_path / "w.duckdb", "football-data")
+
+    def leaky_build(*args: Any, **kwargs: Any) -> RunResult:
+        logging.getLogger("ubi_ludus.test").warning("provider said no to %s", hidden_value)
+        return result
+
+    command(monkeypatch, result)
+    monkeypatch.setattr(publish, "build_warehouse", leaky_build)
+    publish.main(["--run", "--require-all-providers", "--out", str(tmp_path)])
+    captured = capsys.readouterr()
+    assert hidden_value not in captured.err + captured.out
+    assert "provider said no to ***" in captured.err

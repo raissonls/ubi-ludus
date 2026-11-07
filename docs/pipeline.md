@@ -52,6 +52,27 @@ Every workflow starts with no permissions and each job asks for its own. Who can
 
 No job has `contents: write`, nothing runs on `pull_request_target`, every action is pinned to a commit, and the secrets go to single steps (the provider keys to the build step, the four mail secrets to the send step). `tests/unit/test_workflows.py` fails if any of this changes: the table above is checked against the files.
 
+## The logs (FR-54, FR-03)
+
+The pipeline writes its log as **one JSON object per line** on standard error, so the Actions page can be read by a person and searched by a tool. Every line has `time` (UTC), `level`, `logger` and `message`; some also carry data under their own names. `UBI_LUDUS_LOG_LEVEL` (DEBUG, INFO, WARNING, ERROR) changes the level; the default is INFO.
+
+Two lines are the ones to look for. Open the build job's step "Fetch, build with dbt, export and validate" and search for the event name:
+
+| `event` | When | What it carries |
+| --- | --- | --- |
+| `provider_calls` | after the providers were asked | `providers`: for each one `total`, `network` (real calls) and `cached`; and `network_total`. This is the count of calls per run that FR-03 asks for. |
+| `run_summary` | at the end, whatever the result | `outcome` (`published` or `stopped`), `record_counts` and `unknown_ratio` (when published), `failed_providers` with the reason of each, `network_calls`, `duration_seconds` |
+
+```json
+{"time": "2026-11-07T23:12:09Z", "level": "INFO", "logger": "ubi_ludus.pipeline.publish", "message": "Run finished, 5 files written: 92 matches, ...", "event": "run_summary", "outcome": "published", "record_counts": {"matches": 92, ...}, "unknown_ratio": 0.0, "failed_providers": {}, "network_calls": 9, "duration_seconds": 22.4}
+```
+
+On a downloaded log: `grep '"event": "run_summary"' run.log | jq .`. Not every line is JSON: dbt prints its own progress as plain text between ours.
+
+**No secrets in the log.** The value of any environment variable whose name contains TOKEN, KEY, PASSWORD or SECRET is replaced by `***` wherever it would appear in a line (message, data or error text), as a safety net behind code that does not log them to begin with. GitHub also masks secrets in Actions logs. `tests/unit/test_logs.py` and `tests/unit/test_publish.py` check it.
+
+The status file the site reads (`status.json`: last success, record counts, unknown ratio) is written by the same run and is what the freshness note on the site uses.
+
 ## Setting it up (once)
 
 1. **Turn on Pages from Actions.** Repository *Settings > Pages > Build and deployment > Source: GitHub Actions*. (Or `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`.) The site then lives at `https://<owner>.github.io/<repo>/`. The repository must be public, or on a plan that has Pages for private ones.

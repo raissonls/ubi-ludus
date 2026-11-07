@@ -21,6 +21,7 @@ from pathlib import Path
 
 import duckdb
 
+from ubi_ludus.logs import configure_logging
 from ubi_ludus.pipeline.owner import OwnerConfig, load_owner
 from ubi_ludus.pipeline.rights import RightsData, RightsRule, load_rights
 from ubi_ludus.pipeline.run import build_warehouse
@@ -253,6 +254,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--cache-dir", type=Path, default=None)
     args = parser.parse_args(argv)
 
+    configure_logging()
     now = datetime.now(UTC)
     if args.run:
         build_warehouse(args.database, now=now, cache_dir=args.cache_dir)
