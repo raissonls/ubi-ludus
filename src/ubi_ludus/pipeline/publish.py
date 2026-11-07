@@ -12,6 +12,7 @@ The site loads these files from a ``data/`` folder next to it. On your machine:
 from __future__ import annotations
 
 import argparse
+import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -63,12 +64,32 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="run the pipeline first (calls the providers; keys from .env or the environment)",
     )
     parser.add_argument("--cache-dir", type=Path, default=None, help="reuse responses for an hour")
+    parser.add_argument(
+        "--previous-url",
+        default=None,
+        help="where the last published matches.json is, to flag matches whose kickoff moved",
+    )
+    parser.add_argument(
+        "--require-all-providers",
+        action="store_true",
+        help="with --run, write nothing and exit 1 if any provider failed, so that whatever was "
+        "published last stays up (the daily workflow uses this)",
+    )
     args = parser.parse_args(argv)
 
     now = datetime.now(UTC)
     if args.run:
         load_env_file()
-        build_warehouse(args.database, now=now, cache_dir=args.cache_dir)
+        result = build_warehouse(
+            args.database, now=now, cache_dir=args.cache_dir, previous_url=args.previous_url
+        )
+        if args.require_all_providers and result.failed_providers:
+            for provider, reason in sorted(result.failed_providers.items()):
+                print(f"error: provider {provider} failed: {reason}", file=sys.stderr)  # noqa: T201
+            print(  # noqa: T201
+                "Nothing was written: the data published last stays as it is.", file=sys.stderr
+            )
+            return 1
     published = publish(args.database, args.out, rights=load_rights(), now=now)
     summary = ", ".join(f"{n} {name}" for name, n in published.counts.items())
     print(f"Wrote {len(FILES)} files to {args.out}: {summary}")
