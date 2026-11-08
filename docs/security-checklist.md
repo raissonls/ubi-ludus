@@ -1,6 +1,6 @@
 # Security checklist and go-public plan
 
-Owner: Raisson Leal Silva. Signed off on 2026-11-08 ([#39](../../../issues/39), M5-04), except the owner steps at the end of the sign-off. Created for issue [#6](../../../issues/6) (M0-06); reused as the sign-off list in [#39](../../../issues/39) (M5-04). Source of the requirements: [PRD section 13](PRD.md#13-security-and-privacy).
+Owner: Raisson Leal Silva. Signed off on 2026-11-08 ([#39](../../../issues/39), M5-04), with one item that only the owner can confirm (the recovery codes). Created for issue [#6](../../../issues/6) (M0-06); reused as the sign-off list in [#39](../../../issues/39) (M5-04). Source of the requirements: [PRD section 13](PRD.md#13-security-and-privacy).
 
 Tick items as they are done. Nothing here is legal advice.
 
@@ -25,7 +25,7 @@ Run on 2026-11-02:
 - [x] No raw provider data in the repo. `research-samples/` is git-ignored and nothing like it is tracked.
 - [x] No API keys in files. `.env` is git-ignored and `.env.example` has empty values. The real key values were also searched for in every tracked file, commit message, issue, pull request and comment: no match.
 - [x] Docs read as a stranger would. The README status line was out of date ("no code yet") and was fixed. No local paths or employer names appear in files, issues or pull requests.
-- [ ] Commit e-mail checked (see [Account](#account-and-personal-data)). The scan found one personal address in the author field of pre-squash commits (13 by 2026-11-08, 3 of them on `main`). It cannot be removed from those commits, so the account settings in the Account section must be on. Still the owner's to do.
+- [x] Commit e-mail checked (see [Account](#account-and-personal-data)). The scan found one personal address in the author field of pre-squash commits (13 by 2026-11-08, 3 of them on `main`). It cannot be removed from those commits, so the account settings in the Account section must be on. Both settings were turned on by the owner on 2026-11-08.
 - [x] Issues read: 55 issues, 11 pull requests and 8 comments were scanned for e-mail addresses, tokens and local paths. Nothing found. They become public with the repo. The project board stays private unless you change it.
 
 ## What GitHub Free allows
@@ -47,7 +47,7 @@ Read from the GitHub docs and the API on 2026-11-01. Where the docs were unclear
 
 - [x] **Two-factor authentication is on** for the GitHub account. Confirmed by the owner on 2026-11-02 (the API does not expose this setting, so it cannot be verified automatically).
 - [ ] Recovery codes are saved somewhere safe, not in this repo.
-- [ ] **Commit e-mail.** Squash-merged commits on `main` already use GitHub's noreply address, but the first empty commit and the pre-squash branch commits (visible on pull request pages once the repo is public) show a personal e-mail. In GitHub, Settings, Emails: turn on "Keep my email addresses private" and "Block command line pushes that expose my email". Locally, `git config user.email` is set to the noreply address for this repository.
+- [x] **Commit e-mail.** Done 2026-11-08. Squash-merged commits on `main` already use GitHub's noreply address, but the first empty commit and the pre-squash branch commits (visible on pull request pages once the repo is public) show a personal e-mail. In GitHub, Settings, Emails: turn on "Keep my email addresses private" and "Block command line pushes that expose my email". Locally, `git config user.email` is set to the noreply address for this repository.
 - [ ] Optional: sign commits (GitHub shows a "Verified" badge). Not required for Phase 1.
 
 ## On the day the repository goes public
@@ -82,8 +82,8 @@ Each row was checked against the repository and against GitHub's own settings on
 
 | Requirement | Status | How it was checked |
 |---|---|---|
-| E-mail credentials and API keys only in GitHub Secrets | done | `gh secret list` shows six secrets (names only). The real value of every key in the git-ignored `.env` was searched for in the whole history of every ref (about 4 MB of patches) and in every tracked file: **no match**. `.env` is git-ignored and `.env.example` has empty values. The unused `API_FOOTBALL_KEY` secret is still stored: see "Left for the owner" below. |
-| Owner's e-mail address never committed | done, one caveat | The value of `EMAIL_TO` and `EMAIL_FROM` is in no commit and no tracked file. Caveat: 3 commits on `main` (and 10 on old branches) were authored with a personal address before the noreply setting was used; all 45 later commits on `main` use the noreply address. History on a protected branch is not rewritten. See "Left for the owner". |
+| E-mail credentials and API keys only in GitHub Secrets | done | `gh secret list` shows five secrets (names only: the four mail secrets and the football-data.org token). The real value of every key in the git-ignored `.env` was searched for in the whole history of every ref (about 4 MB of patches) and in every tracked file: **no match**. `.env` is git-ignored and `.env.example` has empty values. The unused `API_FOOTBALL_KEY` secret was deleted by the owner on 2026-11-08. |
+| Owner's e-mail address never committed | done | The value of `EMAIL_TO` and `EMAIL_FROM` is in no commit and no tracked file. Caveat: 3 commits on `main` (and 10 on old branches) were authored with a personal address before the noreply setting was used; all 45 later commits on `main` use the noreply address. History on a protected branch is not rewritten. The owner turned on "Keep my email addresses private" and "Block command line pushes that expose my email" on 2026-11-08 (seen on GitHub's e-mail settings page), so no new commit can carry it. |
 | Workflow `permissions:` minimal per job | done | Reviewed one by one, see the table below. Every workflow starts from `permissions: {}` and `tests/unit/test_workflows.py` fails if one does not, or if a job other than the named ones can write issues or Pages. The repository default is "read" and Actions cannot approve pull requests (API). |
 | Third-party actions pinned to commit SHAs | done | The repository policy "require full-length commit SHA" is on (API: `sha_pinning_required: true`) and a test checks every `uses:` line. |
 | Dependabot for Actions and Python | done | `.github/dependabot.yml` has `github-actions` and `pip`. 0 open Dependabot alerts (API). |
@@ -139,11 +139,9 @@ API-Football is no longer used ([ADR-003](adr/ADR-003-drop-api-football.md)), so
 
 ### Left for the owner
 
-These cannot be done or verified from here (the automatic safety check refuses changes to the secret store):
+Done by the owner on 2026-11-08, because the assistant cannot change the secret store or account settings: the unused `API_FOOTBALL_KEY` secret is deleted, and both e-mail privacy switches are on. The 13 older commits cannot be changed. One item remains that nobody can check from outside:
 
-1. **Delete the unused secret:** `gh secret delete API_FOOTBALL_KEY` (the account is suspended and nothing reads it).
-2. **Commit e-mail.** In GitHub, Settings, Emails: "Keep my email addresses private" and "Block command line pushes that expose my email" (also listed under [Account](#account-and-personal-data)). The 13 older commits cannot be changed.
-3. **Recovery codes** for the GitHub account are saved somewhere safe, and 2FA is still on.
+1. **Recovery codes** for the GitHub account are saved somewhere safe, and 2FA is still on.
 
 ## Ongoing habits
 

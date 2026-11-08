@@ -12,7 +12,7 @@
 - [ ] Screen-reader pass done ([accessibility audit](audits/accessibility-2026-11-07.md), #36).
 - [x] Site rollback tried once, 2026-11-08 ([runbook](runbook.md#rolling-back-the-site)).
 - [ ] The name checked before telling people about the site (#45).
-- [ ] Owner steps of the [security sign-off](security-checklist.md#left-for-the-owner) done.
+- [x] Owner steps of the [security sign-off](security-checklist.md#left-for-the-owner) done, 2026-11-08 (recovery codes: the owner's to confirm).
 
 ## During the window
 
