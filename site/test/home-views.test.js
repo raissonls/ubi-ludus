@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { daysFrom, defaultView, selectMatches, VIEWS } from '../js/home-views.js';
+import { daysFrom, defaultView, nextMatch, selectMatches, VIEWS } from '../js/home-views.js';
 
 // Monday 2 November 2026, 09:00 in Brazil.
 const NOW = new Date('2026-11-02T12:00:00Z');
@@ -68,4 +68,44 @@ test('"mine" lists only the followed teams, still to come', () => {
 test('the same instant keeps its order by id', () => {
   const twin = [match('b', '2026-11-03T20:00:00Z', 'x', 'y'), match('a', '2026-11-03T20:00:00Z', 'z', 'w')];
   assert.deepEqual(ids(selectMatches('week', twin, [], NOW).others), ['a', 'b']);
+});
+
+// --- the match shown big at the top follows the view ---------------------------------------
+
+test('today: the match of the followed team that is today, not one from another day', () => {
+  assert.equal(nextMatch('today', MATCHES, ['palmeiras'], NOW).id, 'followed-today');
+});
+
+test('the week: the soonest match of the followed team in that week', () => {
+  assert.equal(nextMatch('week', MATCHES, ['palmeiras'], NOW).id, 'followed-today');
+  assert.equal(nextMatch('week', MATCHES, ['f'], NOW).id, 'tomorrow');
+});
+
+test('my teams: the soonest one to come, wherever it is', () => {
+  assert.equal(nextMatch('mine', MATCHES, ['f'], NOW).id, 'tomorrow');
+});
+
+test('nothing for a view in which the followed teams do not play', () => {
+  assert.equal(nextMatch('today', MATCHES, ['f'], NOW), null); // f plays tomorrow
+  assert.equal(nextMatch('week', MATCHES, ['zzz'], NOW), null);
+  assert.equal(nextMatch('today', MATCHES, [], NOW), null);
+});
+
+test('a match that is on now comes before one that is only soon', () => {
+  const matches = [
+    match('later', '2026-11-02T23:00:00Z', 'palmeiras', 'x'),
+    match('on-now', '2026-11-02T11:00:00Z', 'palmeiras', 'y', 'live'),
+  ];
+  assert.equal(nextMatch('today', matches, ['palmeiras'], NOW).id, 'on-now');
+});
+
+test('a match that is over, postponed or cancelled is not the next one', () => {
+  const matches = [
+    match('over', '2026-11-02T10:00:00Z', 'palmeiras', 'x', 'finished'),
+    match('off', '2026-11-02T14:00:00Z', 'palmeiras', 'y', 'postponed'),
+    match('called-off', '2026-11-02T15:00:00Z', 'palmeiras', 'z', 'cancelled'),
+    match('real', '2026-11-02T22:00:00Z', 'palmeiras', 'w'),
+  ];
+  assert.equal(nextMatch('today', matches, ['palmeiras'], NOW).id, 'real');
+  assert.equal(nextMatch('today', matches.slice(0, 3), ['palmeiras'], NOW), null);
 });

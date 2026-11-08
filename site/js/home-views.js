@@ -28,6 +28,21 @@ function byKickoff(a, b) {
   return Date.parse(a.kickoff_utc) - Date.parse(b.kickoff_utc) || a.id.localeCompare(b.id);
 }
 
+// A match worth putting first: one that is on now, or still to come.
+const OPEN = new Set(['scheduled', 'rescheduled', 'live']);
+
+/**
+ * The match to show big at the top for a view: among the matches of the followed teams in that
+ * view's days, the one on now, else the soonest still to come. Null when their teams have none
+ * in the view (the big card is then left out, rather than showing a match from another day).
+ * Filters do not apply: it is the visitor's own next match.
+ */
+export function nextMatch(view, allMatches, teamIds, now) {
+  const { followed } = selectMatches(view, allMatches, teamIds, now);
+  const open = followed.filter((match) => OPEN.has(match.status));
+  return open.find((match) => match.status === 'live') ?? open[0] ?? null;
+}
+
 /**
  * The matches of one view: `followed` are the ones with a team the visitor follows, `others` the
  * rest (empty for "mine"); each group soonest first, so followed teams always come before the rest.
