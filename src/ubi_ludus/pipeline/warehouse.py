@@ -70,6 +70,20 @@ def load_yaml_file(
     return load_records(con, table, _records(document, key, path))
 
 
+def load_teams(con: duckdb.DuckDBPyConnection, path: Path) -> int:
+    """Load ``data/teams.yml`` into ``raw_teams``.
+
+    A team is a club unless it says ``kind: national``, and its shirt is its colours unless it
+    says otherwise: a club's shirt is not always its brand colours (Corinthians play in white).
+    The defaults are filled in here so every later step can rely on both fields being there.
+    """
+    records = [
+        {**team, "kind": team.get("kind", "club"), "shirt": team.get("shirt", team["colors"])}
+        for team in _records(read_yaml(path), "teams", path)
+    ]
+    return load_records(con, "raw_teams", records)
+
+
 def _records(document: Any, key: str | None, path: Path) -> list[Mapping[str, Any]]:
     records = document[key] if key is not None else document
     if not isinstance(records, list):

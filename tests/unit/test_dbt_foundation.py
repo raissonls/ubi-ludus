@@ -19,7 +19,7 @@ from ubi_ludus.pipeline.warehouse import (
     load_previous_matches,
     load_provider_responses,
     load_rights_tables,
-    load_yaml_file,
+    load_teams,
 )
 
 pytestmark = pytest.mark.dbt
@@ -32,7 +32,7 @@ def build(tmp_path: Path, teams_file: str) -> Path:
     """Load a teams fixture into a fresh DuckDB file and run dbt on it."""
     database = tmp_path / "warehouse.duckdb"
     con = connect(database)
-    load_yaml_file(con, "raw_teams", FIXTURES / teams_file, key="teams")
+    load_teams(con, FIXTURES / teams_file)
     load_competitions(con, config.load_competitions())
     load_provider_responses(con, [])  # no matches: these tests are about teams
     load_previous_matches(con, None)
@@ -69,7 +69,20 @@ def test_teams_go_from_yaml_through_dbt_to_a_valid_teams_json(
     flamengo = next(t for t in document["teams"] if t["id"] == "flamengo")
     assert flamengo["colors"] == {"primary": "#C52613", "secondary": "#000000"}
     assert flamengo["aliases"] == ["CR Flamengo", "Flamengo RJ"]
-    assert set(flamengo) == {"id", "name", "short_name", "aliases", "country", "colors"}
+    assert set(flamengo) == {
+        "id",
+        "name",
+        "short_name",
+        "aliases",
+        "country",
+        "colors",
+        "kind",
+        "shirt",
+    }
+    # A team is a club unless it says otherwise, and its shirt is its colours unless it says
+    # otherwise: the fixture says neither, so both defaults show.
+    assert flamengo["kind"] == "club"
+    assert flamengo["shirt"] == flamengo["colors"]
 
 
 def test_a_failing_dbt_test_stops_the_build(tmp_path: Path) -> None:

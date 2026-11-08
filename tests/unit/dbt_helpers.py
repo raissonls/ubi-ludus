@@ -18,7 +18,7 @@ from ubi_ludus.pipeline.warehouse import (
     load_previous_matches,
     load_provider_responses,
     load_rights_tables,
-    load_yaml_file,
+    load_teams,
 )
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "dbt"
@@ -141,7 +141,7 @@ def build(
     extra = (change(payloads) if change else None) or []
     database = tmp_path / "warehouse.duckdb"
     con = connect(database)
-    load_yaml_file(con, "raw_teams", FIXTURES / "teams.yml", key="teams")
+    load_teams(con, FIXTURES / "teams.yml")
     load_competitions(con, config.load_competitions(LEGACY_COMPETITIONS))
     load_provider_responses(
         con, [response(cid, payload) for cid, payload in payloads.items()] + extra

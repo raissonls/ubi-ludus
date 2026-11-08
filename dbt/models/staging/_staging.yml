@@ -7,6 +7,12 @@ models:
         data_tests:
           - unique
           - not_null
+      - name: kind
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [club, national]
 
   - name: stg_competitions
     columns:
