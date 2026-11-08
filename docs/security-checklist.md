@@ -100,7 +100,7 @@ Each row was checked against the repository and against GitHub's own settings on
 | No cookies or identifying analytics; privacy notice and `PRIVACY.md` | done | No `document.cookie` and no analytics in `site/`; `PRIVACY.md` and the footer notice exist. |
 | Preferences never leave the browser | done | Saved only in `localStorage` (`preferences.js`); the policy allows connections to the site's own address only, so nothing could be sent elsewhere. |
 | Provider calls within rate limits; user-agent identifies the project | done | One provider, 9 calls a run, once a day, through the limiter and the per-run call budget in `providers/guard.py` (the free plan allows 10 a minute). The user-agent is `ubi-ludus/<version> (+repository address)`. |
-| Runbook: rotate a leaked secret, switch provider, disable e-mail, roll back | done, one step untried | [Runbook](runbook.md). The outage drill ran live on 2026-11-08. The site rollback (re-running an old deploy) has **not** been tried on the live site: see the runbook. |
+| Runbook: rotate a leaked secret, switch provider, disable e-mail, roll back | done | [Runbook](runbook.md). The outage drill and the site rollback (re-running an old deploy) both ran live on 2026-11-08. |
 | Provider terms re-checked before launch | done | Re-read on 2026-11-08, see below. |
 
 ### Workflow permissions, one by one (2026-11-08)

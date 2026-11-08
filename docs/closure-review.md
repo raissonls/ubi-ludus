@@ -10,7 +10,7 @@
 - [x] Owner effort log: [audits/effort-log.md](audits/effort-log.md).
 - [ ] Usability sessions done and findings fixed ([usability kit](usability/README.md), #38).
 - [ ] Screen-reader pass done ([accessibility audit](audits/accessibility-2026-11-07.md), #36).
-- [ ] Site rollback tried once ([runbook](runbook.md#rolling-back-the-site)).
+- [x] Site rollback tried once, 2026-11-08 ([runbook](runbook.md#rolling-back-the-site)).
 - [ ] The name checked before telling people about the site (#45).
 - [ ] Owner steps of the [security sign-off](security-checklist.md#left-for-the-owner) done.
 
