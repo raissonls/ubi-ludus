@@ -11,7 +11,7 @@ from typing import Any
 
 import pytest
 from playwright.sync_api import Browser, Locator, Page
-from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, open_details, visit
 
 pytestmark = pytest.mark.browser
 
@@ -79,9 +79,14 @@ def test_each_card_says_whether_the_visitor_can_watch_with_what_they_have(
         # Palmeiras (Globo is free), Real Madrid (SporTV only), Chelsea (Premiere, ESPN),
         # São Paulo (Globo), Brasil (nothing known).
         assert access(page) == ["yes", "no", "no", "yes", "unknown"]
-        lines = page.locator(".match-card__access").all_inner_texts()
+        # The line is in the details of each match; the poster only ticks "você tem".
+        teams = ("Palmeiras", "Real Madrid", "Chelsea", "São Paulo")
+        lines = [open_details(page, t).locator(".match-card__access").inner_text() for t in teams]
         assert lines == [YES, NO, NO, YES]
-        assert "assistir" not in page.locator(".match-card[data-access='unknown']").inner_text()
+        assert (
+            "assistir"
+            not in page.locator(".match-card--poster[data-access='unknown']").inner_text()
+        )
 
 
 def test_the_broadcasters_the_visitor_has_are_marked_on_each_badge(
@@ -134,7 +139,7 @@ def test_a_match_that_cannot_be_watched_is_set_apart_by_words_and_a_dashed_edge(
         card = page.locator(".match-card[data-access='no']").first
         style = card.evaluate("e => getComputedStyle(e).borderTopStyle")
         assert style == "dashed"
-        assert card.locator(".match-card__access").inner_text() == NO
+        assert open_details(page, "Real Madrid").locator(".match-card__access").inner_text() == NO
         assert (
             page.locator(".match-card[data-access='yes']").first.evaluate(
                 "e => getComputedStyle(e).borderTopStyle"

@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from axe_playwright_python.sync_playwright import Axe  # type: ignore[import-untyped]
-from playwright.sync_api import Browser, Page, Request, Route
+from playwright.sync_api import Browser, Locator, Page, Request, Route
 
 SITE = Path(__file__).resolve().parents[2] / "site"
 # The published files the site loads from /data/. The pipeline writes the real ones; the tests
@@ -32,6 +32,20 @@ WATCH_VIOLATIONS = (
     " e => window.__violations.push(e.violatedDirective));"
 )
 VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
+
+
+def open_details(page: Page, text: str) -> Locator:
+    """Open the sheet of the first match whose poster has this text, and return the sheet.
+
+    The lists show posters; the full card (every broadcaster, the calendar button, the report
+    link) is in the sheet that opens when a poster is pressed.
+    """
+    sheet = page.locator("#match-sheet")
+    if sheet.evaluate("e => e.open"):
+        page.keyboard.press("Escape")
+    poster = page.locator("#matches-list .match-card--poster", has_text=text).first
+    poster.locator(".poster__open").click()
+    return sheet
 
 
 def answer_with(status: int) -> Callable[[Route], None]:

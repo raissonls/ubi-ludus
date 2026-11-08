@@ -1,0 +1,391 @@
+/*
+ * The match lists as rows ("rails"), like the rows of a streaming app: a title, "see all", and a
+ * row of poster cards you scroll sideways (js/matches-view.js, js/poster.js), the quick filters as
+ * chips, and the details in a sheet (js/sheet.js). Colours come from the tokens, so both themes
+ * work. The motion only moves and fades things and is off when the visitor asks for less.
+ */
+
+/* ---- the chips ---- */
+
+.quick {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-2) calc(var(--space-4) * -1) 0;
+  padding: 0 var(--space-4) var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.quick::-webkit-scrollbar {
+  display: none;
+}
+
+.quick button {
+  flex-shrink: 0;
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.quick button[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--font-weight-bold);
+}
+
+/* On a small phone every line counts: the next match has to be on the first screen. */
+@media (max-width: 26rem) {
+  .quick {
+    margin-top: var(--space-1);
+  }
+
+  .quick button {
+    min-height: 2.25rem;
+  }
+}
+
+/* ---- a row ---- */
+
+.rail {
+  margin-top: var(--space-6);
+}
+
+.rail__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.rail .rail__title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  letter-spacing: -0.01em;
+}
+
+.rail__more {
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.rail--live .rail__title::before {
+  content: "";
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-right: var(--space-2);
+  border-radius: 50%;
+  background: var(--color-live-fg);
+}
+
+/* The posters sit in a row that scrolls sideways, bleeding to the edge of the screen. */
+.rail .rail__track {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0 calc(var(--space-4) * -1);
+  padding: var(--space-1) var(--space-4) var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--space-4);
+  scrollbar-width: none;
+}
+
+.rail .rail__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* "See all": the row wraps into a grid. */
+.rail.is-expanded .rail__track {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.75rem, 1fr));
+  overflow-x: visible;
+}
+
+/* ---- a poster ---- */
+
+.match-card--poster {
+  position: relative;
+  display: flex;
+  flex: 0 0 9.875rem;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 15rem;
+  padding: var(--space-3);
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-inline-start-width: var(--border-width);
+  border-radius: 1.25rem;
+  /* Nothing is cut off, however wide the text is set: the words wrap and the card grows. */
+  background:
+    linear-gradient(to bottom, transparent 25%, var(--color-surface) 78%),
+    linear-gradient(135deg, color-mix(in srgb, var(--home, #9aa0ad) 50%, transparent) 0%, transparent 55%),
+    linear-gradient(315deg, color-mix(in srgb, var(--away, #9aa0ad) 50%, transparent) 0%, transparent 55%),
+    var(--color-surface);
+}
+
+.rail.is-expanded .match-card--poster {
+  flex-basis: auto;
+}
+
+.match-card--poster[data-followed="true"] {
+  border-color: var(--color-focus);
+}
+
+.match-card--poster[data-state="finished"] {
+  color: var(--color-text-muted);
+}
+
+.poster__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.poster__chip,
+.poster__day {
+  padding: 0.125rem 0.5rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.poster__day {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+}
+
+.poster__chip--free {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.poster__chip--state {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.poster__chip .state {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+}
+
+.poster__shirts {
+  display: flex;
+  justify-content: center;
+  margin: 0.25rem 0 0;
+}
+
+.poster__shirts .shirt:first-child {
+  margin-right: -0.75rem;
+}
+
+.poster__shirts .shirt:last-child {
+  margin-top: 0.625rem;
+}
+
+.match-card--poster .match-card__when {
+  margin-top: auto;
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.match-card--poster .clock {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0;
+}
+
+.match-card--poster .match-card__teams {
+  font-size: var(--font-size-base);
+  line-height: 1.2;
+}
+
+/* The whole poster is the button: its hit area is stretched over the card. */
+.poster__open {
+  all: unset;
+  display: block;
+  margin-block: -0.5rem;
+  padding-block: 0.5rem;
+  color: inherit;
+  cursor: pointer;
+}
+
+.poster__open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* The ring is on the button itself and, since the button stands for the whole card, on the card. */
+.poster__open:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+.match-card--poster:has(.poster__open:focus-visible) {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.match-card--poster .match-card__competition {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.poster__where {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  min-height: 1.5rem;
+}
+
+.poster__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.poster__where .badge {
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+}
+
+.poster__more {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.poster__can {
+  flex-basis: 100%;
+  color: var(--color-confirmed-fg);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.match-card--poster .match-card__horizon {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+/* ---- the sheet ---- */
+
+.sheet {
+  width: min(100%, 34rem);
+  max-width: 100%;
+  max-height: 92vh;
+  margin: auto auto 0;
+  padding: 0 var(--space-4) var(--space-6);
+  box-sizing: border-box;
+  overflow-y: auto;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-bottom: 0;
+  border-radius: 1.75rem 1.75rem 0 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.sheet::backdrop {
+  background: rgb(10 2 16 / 0.62);
+}
+
+.sheet__bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-3) 0 var(--space-1);
+  background: var(--color-surface);
+}
+
+.sheet__handle {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  width: 2.75rem;
+  height: 0.3125rem;
+  margin-left: -1.375rem;
+  border-radius: 0.1875rem;
+  background: var(--color-border-strong);
+}
+
+.sheet__close {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+}
+
+.sheet__close::before {
+  content: "×";
+}
+
+.sheet .match-card {
+  border-color: var(--color-border);
+}
+
+@media (min-width: 40rem) {
+  .sheet {
+    margin: auto;
+    border-bottom: var(--border-width) solid var(--color-border-strong);
+    border-radius: 1.75rem;
+  }
+}
+
+/* ---- motion ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rails-sheet-up {
+    from { opacity: 0; transform: translateY(2rem); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .sheet[open] {
+    animation: rails-sheet-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .match-card--poster {
+    transition: transform var(--motion-base) var(--motion-ease);
+  }
+
+  .match-card--poster:hover {
+    transform: translateY(-0.1875rem);
+  }
+}
