@@ -20,6 +20,7 @@ from site_browser import (
     STORAGE_KEY,
     VIEWPORTS,
     WATCH_VIOLATIONS,
+    add_teams,
     axe_violations,
     open_details,
     open_settings,
@@ -238,13 +239,12 @@ def test_the_followed_calendar_follows_the_choices_as_they_change(
 ) -> None:
     for current in visit(browser, origin):
         page = current.page
-        open_settings(page)
-        page.fill("#team-search", "palm")
-        page.keyboard.press("Enter")
+        add_teams(page, "palm")
         assert (
             page.locator("#calendar-all").inner_text()
             == "Baixar calendário dos meus times (1 jogo)"
         )
+        open_settings(page)
         page.get_by_role("button", name="Remover Palmeiras").click()
         assert not page.locator("#calendar-all-row").is_visible()
 

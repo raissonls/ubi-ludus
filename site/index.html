@@ -139,22 +139,14 @@
       <button type="button" id="settings-close" class="icon-button icon-button--close" data-i18n-attr="aria-label:settings.close"></button>
     </div>
     <div class="drawer__body">
-        <!-- Which teams do you follow? The script (js/teams-picker.js) adds the behaviour and draws
-             the options and the chosen teams. -->
+        <!-- Which teams do you follow? The script (js/teams-picker.js) draws the chosen teams, each
+             with a button to remove it; "Adicionar times" opens the first-run choice (js/home.js). -->
         <section class="picker" aria-labelledby="teams-title" data-needs-data hidden>
           <h3 id="teams-title" data-i18n="picker.title"></h3>
-          <p id="teams-hint" data-i18n="picker.hint"></p>
-          <label for="team-search" data-i18n="picker.label"></label>
-          <div class="picker__field">
-            <input id="team-search" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="team-options" aria-describedby="teams-hint">
-            <ul id="team-options" role="listbox" aria-labelledby="teams-title" hidden></ul>
-          </div>
-          <p id="team-no-results" hidden></p>
-          <h4 id="chosen-title" data-i18n="picker.chosenTitle"></h4>
-          <ul id="chosen-teams" class="chips" aria-labelledby="chosen-title"></ul>
+          <ul id="chosen-teams" class="team-rows" aria-labelledby="teams-title"></ul>
           <p id="chosen-empty" data-i18n="picker.none"></p>
           <p id="picker-announcer" class="visually-hidden" role="status"></p>
-          <p><button type="button" id="reopen-onboarding" data-i18n="onboarding.reopen"></button></p>
+          <p><button type="button" id="reopen-onboarding" class="drawer__add" data-i18n="onboarding.reopen"></button></p>
         </section>
 
         <!-- Which services do you have? js/services-picker.js draws one checkbox for each. -->

@@ -25,7 +25,6 @@ from site_browser import (
 pytestmark = pytest.mark.browser
 
 GALLERY = "/gallery/cards.html"
-SEARCH = "#team-search"
 FILTER = "Só o que dá para assistir"
 YES = "Dá para assistir com os seus serviços."
 NO = "Nenhuma dessas emissoras está nos seus serviços."

@@ -1,6 +1,7 @@
 """Shared for the browser tests: the site's files, the page load and what it reports."""
 
 import json
+import re
 from collections.abc import Callable, Iterator
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -48,6 +49,23 @@ def close_settings(page: Page) -> None:
     if page.locator("#settings").evaluate("e => e.open"):
         page.keyboard.press("Escape")
         page.wait_for_function("!document.querySelector('#settings').open")
+
+
+def add_teams(page: Page, *searches: str) -> None:
+    """Add teams the way a visitor does: "Adicionar times" in the settings, a search for each one
+    in the first-run choice, "Continuar" and then "Concluir" (the services stay as they were).
+
+    Each text is searched and the first team found is tapped.
+    """
+    open_settings(page)
+    page.click("#reopen-onboarding")
+    flow = page.locator("#onboarding")
+    for text in searches:
+        page.locator("#ob-search").fill(text)
+        flow.locator(".ob-row--result[aria-pressed='false']").first.click()
+    flow.get_by_role("button", name=re.compile("^Continuar com")).click()
+    flow.get_by_role("button", name=re.compile("^Concluir")).click()
+    flow.wait_for(state="hidden")
 
 
 def open_details(page: Page, text: str) -> Locator:

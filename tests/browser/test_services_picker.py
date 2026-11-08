@@ -4,7 +4,14 @@ import json
 
 import pytest
 from playwright.sync_api import Browser, Locator, Page, expect
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, open_settings, visit
+from site_browser import (
+    STORAGE_KEY,
+    VIEWPORTS,
+    add_teams,
+    axe_violations,
+    open_settings,
+    visit,
+)
 
 pytestmark = pytest.mark.browser
 
@@ -84,9 +91,8 @@ def test_services_and_teams_are_saved_together_and_neither_loses_the_other(
 ) -> None:
     for current in visit(browser, origin, settings=True):
         page = current.page
-        page.locator("#team-search").focus()
-        page.fill("#team-search", "palm")
-        page.keyboard.press("Enter")
+        add_teams(page, "palm")
+        open_settings(page)
         box(page, "Globoplay").check()
         assert saved(page) == {
             "version": 1,

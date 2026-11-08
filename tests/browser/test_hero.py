@@ -13,6 +13,7 @@ from playwright.sync_api import Browser, Page
 from site_browser import (
     STORAGE_KEY,
     VIEWPORTS,
+    add_teams,
     axe_violations,
     open_details,
     open_settings,
@@ -91,11 +92,9 @@ def test_it_follows_the_choice_of_teams(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, saved=saved(["palmeiras"])):
         page = current.page
         open_settings(page)  # the teams are chosen in the settings panel
-        page.click("#chosen-teams .chip")  # take Palmeiras out
+        page.click("#chosen-teams .team-row__remove")  # take Palmeiras out
         assert not page.locator("#next-match").is_visible()
-        page.click("#team-search")
-        page.keyboard.type("real")
-        page.keyboard.press("Enter")
+        add_teams(page, "real")
         assert page.locator(f"{HERO} .hero__title").inner_text() == "Real Madrid x Barça"
 
 
