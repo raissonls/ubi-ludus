@@ -5,10 +5,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -39,7 +39,7 @@
         "background-color": "rgba(0, 0, 0, 0)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(169, 177, 191)"
+        "color": "rgb(187, 166, 204)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -52,8 +52,8 @@
       "more": null,
       "state": "finished",
       "stateLabel": {
-        "background-color": "rgb(35, 40, 49)",
-        "color": "rgb(195, 202, 214)",
+        "background-color": "rgb(45, 26, 61)",
+        "color": "rgb(214, 200, 227)",
         "text": "Encerrado"
       },
       "teams": {
@@ -81,10 +81,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(17, 34, 51)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -93,7 +93,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -126,10 +126,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -171,10 +171,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -183,7 +183,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -229,10 +229,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -241,7 +241,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -291,10 +291,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -303,7 +303,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -322,10 +322,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -380,10 +380,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -392,7 +392,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -442,10 +442,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -526,10 +526,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -538,7 +538,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
@@ -597,10 +597,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -609,7 +609,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -668,10 +668,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -680,7 +680,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -699,10 +699,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(255, 255, 255)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -710,8 +710,8 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(35, 40, 49)",
-        "color": "rgb(195, 202, 214)",
+        "background-color": "rgb(45, 26, 61)",
+        "color": "rgb(214, 200, 227)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
@@ -757,10 +757,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -775,7 +775,7 @@
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -793,10 +793,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(255, 223, 0)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -804,14 +804,14 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(35, 40, 49)",
-        "color": "rgb(195, 202, 214)",
+        "background-color": "rgb(45, 26, 61)",
+        "color": "rgb(214, 200, 227)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -831,10 +831,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -865,7 +865,7 @@
         "background-color": "rgba(0, 0, 0, 0)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(169, 177, 191)"
+        "color": "rgb(187, 166, 204)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -878,8 +878,8 @@
       "more": null,
       "state": "finished",
       "stateLabel": {
-        "background-color": "rgb(35, 40, 49)",
-        "color": "rgb(195, 202, 214)",
+        "background-color": "rgb(45, 26, 61)",
+        "color": "rgb(214, 200, 227)",
         "text": "Encerrado"
       },
       "teams": {
@@ -911,10 +911,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(17, 34, 51)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -923,7 +923,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -960,10 +960,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1009,10 +1009,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1021,7 +1021,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1071,10 +1071,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1083,7 +1083,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1137,10 +1137,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1149,7 +1149,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1168,10 +1168,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1230,10 +1230,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1242,7 +1242,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1296,10 +1296,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1384,10 +1384,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1396,7 +1396,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
@@ -1459,10 +1459,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1471,7 +1471,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1534,10 +1534,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1546,7 +1546,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1565,10 +1565,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(255, 255, 255)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1576,8 +1576,8 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(35, 40, 49)",
-        "color": "rgb(195, 202, 214)",
+        "background-color": "rgb(45, 26, 61)",
+        "color": "rgb(214, 200, 227)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
@@ -1627,10 +1627,10 @@
         }
       ],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1645,7 +1645,7 @@
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -1663,10 +1663,10 @@
       "accessLine": null,
       "badges": [],
       "card": {
-        "background-color": "rgb(23, 26, 31)",
+        "background-color": "rgb(31, 10, 43)",
         "border-inline-start-color": "rgb(255, 223, 0)",
         "border-inline-start-width": "6px",
-        "color": "rgb(236, 239, 244)"
+        "color": "rgb(246, 240, 250)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1674,14 +1674,14 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(35, 40, 49)",
-        "color": "rgb(195, 202, 214)",
+        "background-color": "rgb(45, 26, 61)",
+        "color": "rgb(214, 200, 227)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(169, 177, 191)",
+        "color": "rgb(187, 166, 204)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -1704,7 +1704,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1735,7 +1735,7 @@
         "background-color": "rgba(0, 0, 0, 0)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(74, 81, 96)"
+        "color": "rgb(90, 70, 112)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1748,8 +1748,8 @@
       "more": null,
       "state": "finished",
       "stateLabel": {
-        "background-color": "rgb(235, 237, 241)",
-        "color": "rgb(61, 68, 82)",
+        "background-color": "rgb(236, 230, 241)",
+        "color": "rgb(63, 51, 82)",
         "text": "Encerrado"
       },
       "teams": {
@@ -1780,7 +1780,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(17, 34, 51)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1789,7 +1789,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1825,7 +1825,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1870,7 +1870,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1879,7 +1879,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1928,7 +1928,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1937,7 +1937,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -1990,7 +1990,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -1999,7 +1999,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2021,7 +2021,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2079,7 +2079,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2088,7 +2088,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2141,7 +2141,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2225,7 +2225,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2234,7 +2234,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
@@ -2296,7 +2296,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2305,7 +2305,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2367,7 +2367,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2376,7 +2376,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2398,7 +2398,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(255, 255, 255)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2406,8 +2406,8 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(235, 237, 241)",
-        "color": "rgb(61, 68, 82)",
+        "background-color": "rgb(236, 230, 241)",
+        "color": "rgb(63, 51, 82)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
@@ -2456,7 +2456,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2471,7 +2471,7 @@
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -2492,7 +2492,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(255, 223, 0)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2500,14 +2500,14 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(235, 237, 241)",
-        "color": "rgb(61, 68, 82)",
+        "background-color": "rgb(236, 230, 241)",
+        "color": "rgb(63, 51, 82)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -2530,7 +2530,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2561,7 +2561,7 @@
         "background-color": "rgba(0, 0, 0, 0)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(74, 81, 96)"
+        "color": "rgb(90, 70, 112)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2574,8 +2574,8 @@
       "more": null,
       "state": "finished",
       "stateLabel": {
-        "background-color": "rgb(235, 237, 241)",
-        "color": "rgb(61, 68, 82)",
+        "background-color": "rgb(236, 230, 241)",
+        "color": "rgb(63, 51, 82)",
         "text": "Encerrado"
       },
       "teams": {
@@ -2610,7 +2610,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(17, 34, 51)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2619,7 +2619,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2659,7 +2659,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2708,7 +2708,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2717,7 +2717,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2770,7 +2770,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2779,7 +2779,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2836,7 +2836,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2845,7 +2845,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2867,7 +2867,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2929,7 +2929,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -2938,7 +2938,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -2995,7 +2995,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3083,7 +3083,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3092,7 +3092,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 3,
@@ -3158,7 +3158,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3167,7 +3167,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -3233,7 +3233,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3242,7 +3242,7 @@
       "confidence": "rule",
       "confidenceLine": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "text": "Pela tabela de direitos: confira antes do jogo."
       },
       "hiddenBadges": 0,
@@ -3264,7 +3264,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(255, 255, 255)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3272,8 +3272,8 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(235, 237, 241)",
-        "color": "rgb(61, 68, 82)",
+        "background-color": "rgb(236, 230, 241)",
+        "color": "rgb(63, 51, 82)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
@@ -3326,7 +3326,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(0, 100, 55)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3341,7 +3341,7 @@
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
@@ -3362,7 +3362,7 @@
         "background-color": "rgb(255, 255, 255)",
         "border-inline-start-color": "rgb(255, 223, 0)",
         "border-inline-start-width": "6px",
-        "color": "rgb(20, 23, 28)"
+        "color": "rgb(27, 10, 38)"
       },
       "cardBorder": {
         "border-inline-start-style": "solid",
@@ -3370,14 +3370,14 @@
       },
       "confidence": "unknown",
       "confidenceLine": {
-        "background-color": "rgb(235, 237, 241)",
-        "color": "rgb(61, 68, 82)",
+        "background-color": "rgb(236, 230, 241)",
+        "color": "rgb(63, 51, 82)",
         "text": "Transmissão ainda não confirmada"
       },
       "hiddenBadges": 0,
       "horizon": {
         "background-color": "rgba(0, 0, 0, 0)",
-        "color": "rgb(74, 81, 96)",
+        "color": "rgb(90, 70, 112)",
         "font-weight": "700",
         "text": "Dados desta competição só até amanhã"
       },
