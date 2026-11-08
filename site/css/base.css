@@ -432,12 +432,13 @@ input[type="text"] {
   margin: 0 0 var(--space-3);
   padding: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* the column may shrink below its longest word */
   gap: var(--space-2);
 }
 
 .service {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   column-gap: var(--space-3);
   align-items: center;
   padding: var(--space-3) var(--space-4);
@@ -457,12 +458,14 @@ input[type="text"] {
 .service label {
   margin: 0;
   cursor: pointer;
+  overflow-wrap: anywhere; /* text at 200% on a 320 px screen must wrap, not push out (1.4.4) */
 }
 
 .service__includes {
   grid-column: 2;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
 }
 
 /* --- The lists on the home page ------------------------------------------------------------ */
@@ -597,6 +600,9 @@ input[type="text"] {
 
 .match-card__report {
   justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem; /* as tall as the calendar button beside it, over 24 px (WCAG 2.2, 2.5.8) */
   font-size: var(--font-size-sm);
 }
 
