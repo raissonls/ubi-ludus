@@ -4,14 +4,13 @@
 
 import { el } from './dom.js';
 import { EMPTY_FILTERS, activeCount, createMatchFilter } from './filters.js';
-import { defaultView, selectMatches } from './home-views.js';
+import { defaultView, nextMatch, selectMatches } from './home-views.js';
 import { describeHorizonNotice, uncoveredCompetitions } from './horizon.js';
 import { createCalendar } from './calendar.js';
 import { createLiveClock } from './live-clock.js';
 import { renderHero } from './hero.js';
 import { renderMatchCard } from './match-card.js';
 import { accessibleBroadcasters, describeMatch } from './match-model.js';
-import { upcomingMatches } from './matches-preview.js';
 import { matchReportUrl } from './report.js';
 
 /** Cards after this one enter together, so a long list does not take long to appear. */
@@ -109,7 +108,7 @@ export function createMatchesView({
       groups.push(group(others, false, titled ? translator.t('matches.groupOthers') : ''));
     }
     list.replaceChildren(...groups);
-    showNext(now);
+    showNext(now, view);
     showHorizonNotice([...followed, ...others]);
     liveClock.update();
     showCalendarAll();
@@ -128,11 +127,12 @@ export function createMatchesView({
     status.textContent = translator.plural('matches.shown', total, { view: label });
   }
 
-  // The next match of the followed teams, big, above whichever list is shown. It is "your next
-  // match", so the filters do not hide it.
-  function showNext(now) {
-    const next = teamIds.length > 0 ? upcomingMatches(data.matches, teamIds, now, 1)[0] : undefined;
-    nextSection.hidden = next === undefined;
+  // The next match of the followed teams in the list being shown (today's, the week's, or the
+  // next of all), big, above the list: the one on now, else the soonest. The filters do not hide
+  // it; a list with none of their matches has no big card.
+  function showNext(now, view) {
+    const next = teamIds.length > 0 ? nextMatch(view, data.matches, teamIds, now) : null;
+    nextSection.hidden = next === null;
     nextCard.replaceChildren(
       ...(next ? [renderHero(describeMatch(next, data, { accessible }), { translator })] : []),
     );

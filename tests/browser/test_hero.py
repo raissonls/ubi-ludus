@@ -22,6 +22,10 @@ def saved(teams: list[str], services: list[str] | None = None) -> dict[str, str]
     return {STORAGE_KEY: json.dumps(record)}
 
 
+def hero_title(page: Page) -> str:
+    return page.locator(f"{HERO} .hero__title").inner_text()
+
+
 def hero_text(page: Page) -> str:
     return page.locator(HERO).inner_text()
 
@@ -55,14 +59,25 @@ def test_a_team_with_no_match_to_come_has_no_next_match(browser: Browser, origin
         assert not current.page.locator("#next-match").is_visible()
 
 
-def test_it_stays_while_the_visitor_looks_at_today_and_the_week(
-    browser: Browser, origin: str
-) -> None:
+def test_it_follows_the_list_the_visitor_is_looking_at(browser: Browser, origin: str) -> None:
+    """Never a match from another day: on "Hoje" it is today's, on the week the week's."""
+    # The test data's clock is 2 November; Palmeiras play Flamengo on the 3rd.
     for current in visit(browser, origin, saved=saved(["palmeiras"])):
         page = current.page
-        for label in ("Hoje", "Esta semana", "Meus times"):
-            page.locator("#view-switch [data-view]").get_by_text(label, exact=True).click()
-            assert page.locator(HERO).is_visible(), label
+        switch = page.locator("#view-switch [data-view]")
+        switch.get_by_text("Hoje", exact=True).click()
+        assert not page.locator("#next-match").is_visible()  # nothing of theirs today
+        switch.get_by_text("Esta semana", exact=True).click()
+        assert hero_title(page) == "Palmeiras x Flamengo"
+        switch.get_by_text("Meus times", exact=True).click()
+        assert hero_title(page) == "Palmeiras x Flamengo"
+
+
+def test_on_the_day_their_team_plays_today_it_is_that_match(browser: Browser, origin: str) -> None:
+    for current in visit(browser, origin, saved=saved(["palmeiras"]), now="2026-11-03T12:00:00Z"):
+        page = current.page
+        page.locator("#view-switch [data-view]").get_by_text("Hoje", exact=True).click()
+        assert hero_title(page) == "Palmeiras x Flamengo"
 
 
 def test_it_follows_the_choice_of_teams(browser: Browser, origin: str) -> None:
