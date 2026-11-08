@@ -150,7 +150,7 @@ def test_the_visitor_goes_from_the_welcome_to_their_matches_in_a_few_taps(
         assert page.evaluate(f"localStorage.getItem('{ONBOARDED_KEY}')") == "1"
         # The matches of the chosen teams are on the page and the choices are in the pickers.
         assert "Palmeiras x Flamengo" in page.locator("#matches-list").inner_text()
-        assert page.locator("#chosen-teams .chip").count() == 2
+        assert page.locator("#chosen-teams .team-row").count() == 2
 
 
 def test_choosing_nothing_and_skipping_the_services_saves_nothing_but_the_fact_it_was_seen(

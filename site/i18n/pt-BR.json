@@ -10,20 +10,8 @@
   },
   "picker": {
     "title": "Meus times",
-    "hint": "Digite o nome do time e escolha na lista. Você pode escolher quantos quiser.",
-    "label": "Buscar time",
-    "noResults": "Nenhum time encontrado para “{query}”.",
-    "found": {
-      "one": "{count} time encontrado.",
-      "other": "{count} times encontrados."
-    },
-    "chosenTitle": "Times escolhidos",
     "none": "Nenhum time escolhido ainda.",
     "remove": "Remover {team}",
-    "added": {
-      "one": "{team} adicionado. {count} time escolhido.",
-      "other": "{team} adicionado. {count} times escolhidos."
-    },
     "removedAll": "{team} removido. Nenhum time escolhido.",
     "removed": {
       "one": "{team} removido. {count} time escolhido.",

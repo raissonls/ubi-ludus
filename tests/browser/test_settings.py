@@ -107,7 +107,7 @@ def test_the_settings_hold_the_teams_the_services_the_filters_and_the_rest(
         panel = open_settings(page)
         headings = [t.lower() for t in panel.locator("h3").all_inner_texts()]  # shown in capitals
         assert headings == ["meus times", "o que tenho em casa", "o que mostrar", "mais"]
-        assert panel.locator("#team-search").is_visible()
+        assert panel.locator("#chosen-teams").is_visible()
         assert panel.locator("#only-watchable").is_visible()
         assert panel.locator("#filters").is_visible()
         assert panel.get_by_role("button", name="Adicionar times").is_visible()
@@ -118,7 +118,7 @@ def test_the_page_no_longer_ends_with_the_pickers(browser: Browser, origin: str)
     for current in visit(browser, origin):
         page = current.page
         assert page.locator("main > section.picker").count() == 0
-        assert page.locator("main #team-search").count() == 0
+        assert page.locator("main #chosen-teams").count() == 0
         assert page.locator("main #service-options").count() == 0
 
 

@@ -92,7 +92,7 @@ def test_while_the_data_is_on_its_way_there_is_a_loading_screen(
         # Nothing that needs the data is offered yet.
         assert not page.locator("#matches-content").is_visible()
         assert not page.locator("#state-panel").is_visible()
-        assert not page.locator("#team-search").is_visible()
+        assert not page.locator("#reopen-onboarding").is_visible()
         assert not page.locator("#service-options").is_visible()
         # The page is usable meanwhile: the footer, the reset control.
         open_settings(page)
@@ -106,7 +106,7 @@ def test_while_the_data_is_on_its_way_there_is_a_loading_screen(
         assert not page.locator("#matches-loading").is_visible()
         assert page.locator("#matches-content").is_visible()
         open_settings(page)
-        assert page.locator("#team-search").is_visible()
+        assert page.locator("#reopen-onboarding").is_visible()
 
 
 def test_the_loading_cards_shimmer_but_not_when_motion_is_reduced(
@@ -154,7 +154,7 @@ def test_without_a_connection_the_page_says_so_and_offers_to_try_again(
         assert link.get_attribute("rel") == "noopener noreferrer"
         # Nothing that needs the data is offered, and no stale indicator is made up.
         assert not page.locator("#matches-content").is_visible()
-        assert not page.locator("#team-search").is_visible()
+        assert not page.locator("#reopen-onboarding").is_visible()
         assert not page.locator("#freshness").is_visible()
 
 
@@ -279,7 +279,7 @@ def test_when_the_load_fails_the_last_good_data_is_shown_with_a_notice(
         assert notice.get_attribute("role") == "status"
         assert not page.locator("#state-panel").is_visible()
         open_settings(page)
-        assert page.locator("#team-search").is_visible()  # the page works on the copy
+        assert page.locator("#reopen-onboarding").is_visible()  # the page works on the copy
         assert page.locator("#freshness").get_attribute("data-state") == "fresh"
 
 

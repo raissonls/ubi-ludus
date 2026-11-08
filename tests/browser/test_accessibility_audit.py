@@ -41,7 +41,7 @@ DESCRIBE_FOCUSED = r"""
   const solid = (el) => { let n = el; while (n) { const c = nums(getComputedStyle(n).backgroundColor); if (c.length < 4 || c[3] > 0.99) return c.slice(0, 3); n = n.parentElement; } return [255, 255, 255]; };
   const s = getComputedStyle(e);
   const r = e.getBoundingClientRect();
-  const label = e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (typeof e.className === 'string' && e.className ? '.' + e.className.split(' ')[0] : '');
+  const label = e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (typeof e.className === 'string' && e.className ? '.' + e.className.split(' ')[0] : '') + (e.getAttribute('aria-label') ? '[' + e.getAttribute('aria-label') + ']' : '');
   const hasOutline = s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2;
   const hasShadow = !!(s.boxShadow && s.boxShadow !== 'none');
   const cx = Math.min(Math.max(r.left + r.width / 2, 0), innerWidth - 1);
@@ -355,23 +355,20 @@ def said(page: Page) -> str:
     return page.locator("#picker-announcer").inner_text().replace(" ", " ").strip()
 
 
-def test_choosing_a_team_and_removing_it_is_announced_and_keeps_the_focus(
+def test_removing_a_team_is_announced_and_keeps_the_focus_in_the_list(
     browser: Browser, origin: str
 ) -> None:
-    """Onboarding with the keyboard alone: what a screen reader is told at each step (FR-20)."""
-    for current in visit(browser, origin, settings=True):
+    """Changing the teams with the keyboard alone: what a screen reader is told (FR-20)."""
+    record = '{"version": 1, "teams": ["palmeiras", "flamengo"], "services": []}'
+    for current in visit(browser, origin, settings=True, saved={STORAGE_KEY: record}):
         page = current.page
-        search = page.locator("#team-search")
-        search.focus()
-        assert search.get_attribute("role") == "combobox"
-        page.keyboard.type("palm")
-        assert search.get_attribute("aria-expanded") == "true"
-        page.keyboard.press("ArrowDown")
-        assert search.get_attribute("aria-activedescendant")
-        page.keyboard.press("Enter")
-        assert said(page) == "Palmeiras adicionado. 1 time escolhido."
-        assert page.evaluate("document.activeElement.id") == "team-search"  # not lost
         page.get_by_role("button", name="Remover Palmeiras").focus()
         page.keyboard.press("Enter")
-        assert said(page) == "Palmeiras removido. Nenhum time escolhido."
-        assert page.evaluate("document.activeElement.id") == "team-search"
+        assert said(page) == "Palmeiras removido. 1 time escolhido."
+        # The row is gone: the focus goes to the team that took its place, not back to the page.
+        assert page.evaluate("document.activeElement.getAttribute('aria-label')") == (
+            "Remover Flamengo"
+        )
+        page.keyboard.press("Enter")
+        assert said(page) == "Flamengo removido. Nenhum time escolhido."
+        assert page.evaluate("document.activeElement.id") == "reopen-onboarding"

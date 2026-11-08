@@ -10,8 +10,8 @@ js/main.js        entry point
 js/i18n.js        loads i18n/pt-BR.json, translates, fills the page
 js/data.js        loads the five published files from data/ and indexes them by id
 js/preferences.js  the visitor's teams and services, in localStorage and nowhere else
-js/search.js       finds a team as you type (no accents, aliases, ranked); pure
-js/teams-picker.js  the "Which teams do you follow?" combobox and the chosen teams
+js/search.js       finds a team as you type in the first-run choice (no accents, aliases, ranked); pure
+js/teams-picker.js  the teams the visitor follows, as rows with a remove button (settings panel)
 js/onboarding.js    the first-run flow: welcome, continent, country and team as grids of shirts, then services (js/onboarding-model.js and js/countries.js decide what it shows; js/shirt.js draws a shirt in a team's two colours)
 js/settings.js      the settings panel (a native dialog from the right): the teams, the services and the filters
 js/team-strip.js    the strip at the top of the lists with the shirts and services the visitor chose
@@ -72,13 +72,12 @@ test/             unit tests for js/ (Node's built-in runner)
 
 The footer shows "Football data provided by the Football-Data.org API" exactly as football-data.org's terms require, and credits no other provider, because there is none (API-Football is not used, see [ADR-003](../docs/adr/ADR-003-drop-api-football.md)). See [the provider comparison](../docs/research/provider-comparison.md).
 
-## The teams picker
+## My teams (in the settings panel)
 
-- It is an ARIA editable combobox with list autocomplete: `role=combobox` on the box, a `listbox` it controls, `aria-activedescendant` for the option under the arrow keys. Down and Up move (and wrap), Enter chooses (the first suggestion if none is under the arrows), Escape closes and then clears. What happened is said in a polite live region ("Palmeiras adicionado. 2 times escolhidos.").
-- Search ignores case, accents and punctuation and also looks at each team's short name and aliases, so `barca` finds Barcelona and `brazil` finds Brasil. With nothing typed it suggests Brazilian teams first.
-- Choosing a team saves it at once and shows its next matches, so a new visitor is two or three interactions from a result (click, type, pick; or just type and press Enter).
-- The suggestions close after a choice and when a chosen team is removed, so they never cover the chosen teams the visitor may want to reach.
-- A team's two colours are only an accent (a small square and a bar), set as CSS variables from script (the policy allows that, not a `style` attribute). There is no crest or logo, and the name is always next to the colour.
+- The panel lists the teams the visitor follows, one row each: the shirt, the name, where it is from and a button "Remover {time}" (44 px). There is no search box in the panel: a list of suggestions under a text box does not work well on a phone, and the choice of teams should have one way in.
+- "Adicionar times" closes the panel and opens the same choice as at the start (continent, country, team, with a search for who already knows the name), with the teams chosen already ticked. A new visitor with nothing chosen gets the same flow from the strip at the top of the lists.
+- Removing a team saves at once and takes its matches off the lists. What happened is said in a polite live region ("Palmeiras removido. 1 time escolhido."), and the focus goes to the row that took its place, or to "Adicionar times" when none is left.
+- A team's two colours are the shirt (colours only: no crest or logo), drawn from script as SVG; the name is always next to it.
 
 ## The services picker
 
