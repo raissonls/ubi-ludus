@@ -219,6 +219,7 @@ gh run list --workflow pipeline.yml --limit 5      # the last runs
 gh run view <id> --log-failed                       # only the failing step's log
 gh workflow run pipeline.yml -f send_email=false    # a run by hand, without the e-mail
 gh workflow run pipeline.yml -f force_failure=true  # fail on purpose, to test the alert
+gh workflow run pipeline.yml -f simulate_outage=true -f send_email=false  # the outage drill, live
 gh workflow run watchdog.yml                        # keep-alive and freshness check by hand
 gh workflow list --all                              # are all schedules on?
 gh secret list                                      # names only, never values
