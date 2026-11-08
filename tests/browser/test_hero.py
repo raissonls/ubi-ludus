@@ -10,7 +10,14 @@ from typing import Any
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, open_details, visit
+from site_browser import (
+    STORAGE_KEY,
+    VIEWPORTS,
+    axe_violations,
+    open_details,
+    open_settings,
+    visit,
+)
 
 pytestmark = pytest.mark.browser
 
@@ -83,6 +90,7 @@ def test_on_the_day_their_team_plays_today_it_is_that_match(browser: Browser, or
 def test_it_follows_the_choice_of_teams(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, saved=saved(["palmeiras"])):
         page = current.page
+        open_settings(page)  # the teams are chosen in the settings panel
         page.click("#chosen-teams .chip")  # take Palmeiras out
         assert not page.locator("#next-match").is_visible()
         page.click("#team-search")

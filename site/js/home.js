@@ -10,9 +10,10 @@ import { restrictTo } from './preferences.js';
 import { createServicesPicker } from './services-picker.js';
 import { createShare } from './share.js';
 import { createTeamPicker } from './teams-picker.js';
+import { createTeamStrip } from './team-strip.js';
 import { buildSearch, parseUrlState } from './url-state.js';
 
-export function mountHome({ data, translator, preferences }) {
+export function mountHome({ data, translator, preferences, settings }) {
   // The choices that are saved may name a team that has since gone: keep only the ones we know.
   const known = { teams: new Set(data.teamsById.keys()), services: new Set(data.servicesById.keys()) };
   const chosen = () => restrictTo(preferences.get(), known);
@@ -62,6 +63,7 @@ export function mountHome({ data, translator, preferences }) {
     translator,
     initial: { view: fromAddress.view, filters: fromAddress.filters },
     setOnlyWatchable: (value) => preferences.setOnlyWatchable(value),
+    onCompetition: () => settings.openFilters(),
     onStateChange: (state) => {
       filtersView.show(state.filters);
       syncAddress();
@@ -81,13 +83,25 @@ export function mountHome({ data, translator, preferences }) {
     },
   });
   const onboarding = createOnboarding({ data, translator, preferences });
-  document.getElementById('reopen-onboarding').addEventListener('click', () => onboarding.open({ from: 'continents' }));
+  // "Adicionar times": the same choice as at the start (continent, country, team), with what is
+  // chosen already ticked. The settings close first, so the flow takes the whole screen.
+  const addTeams = () => {
+    settings.close();
+    onboarding.open({ from: 'continents' });
+  };
+  document.getElementById('reopen-onboarding').addEventListener('click', addTeams);
+  const strip = createTeamStrip({
+    data,
+    translator,
+    onOpen: (choices) => (choices.teams.length === 0 ? addTeams() : settings.open()),
+  });
   const onlyWatchable = document.getElementById('only-watchable');
   onlyWatchable.addEventListener('change', () => preferences.setOnlyWatchable(onlyWatchable.checked));
 
   function show() {
     const choices = chosen();
     picker.update(choices.teams);
+    strip.update(choices);
     servicesPicker.update(choices.services);
     onlyWatchable.checked = choices.onlyWatchable;
     filtersView.setExtra(choices.onlyWatchable ? 1 : 0);

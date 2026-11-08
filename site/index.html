@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/onboarding.css">
   <link rel="stylesheet" href="css/hero.css">
   <link rel="stylesheet" href="css/rails.css">
+  <link rel="stylesheet" href="css/settings.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -29,9 +30,15 @@
 
   <header class="site-header">
     <div class="container">
-      <p class="brand">
-        <span class="brand__name" data-i18n="app.name"></span>
-      </p>
+      <div class="site-header__bar">
+        <p class="brand">
+          <img class="brand__logo" src="assets/logo.svg" alt="" width="32" height="32">
+          <span class="brand__name" data-i18n="app.name"></span>
+        </p>
+        <button type="button" id="settings-open" class="icon-button" aria-haspopup="dialog" data-i18n-attr="aria-label:settings.open">
+          <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.5"/><circle cx="8" cy="17" r="2.5"/></svg>
+        </button>
+      </div>
       <!-- How old the data is; js/main.js fills it in from status.json. -->
       <p id="freshness" class="freshness" hidden></p>
     </div>
@@ -63,53 +70,33 @@
       <p id="saved-notice" class="notice" role="status" hidden data-i18n="states.saved"></p>
 
       <div id="matches-content" hidden>
+        <!-- Your teams and services, always in sight; pressing it opens the settings (js/team-strip.js). -->
+        <button type="button" id="team-strip" class="strip" aria-haspopup="dialog">
+          <span id="team-strip-shirts" class="strip__shirts" aria-hidden="true"></span>
+          <span class="strip__text">
+            <span id="team-strip-teams" class="strip__teams"></span>
+            <span id="team-strip-services" class="strip__services"></span>
+          </span>
+          <span class="strip__edit" data-i18n="strip.edit"></span>
+        </button>
         <div id="view-switch" class="view-switch" role="group" aria-labelledby="matches-title">
           <button type="button" data-view="mine" aria-pressed="false" data-i18n="views.mine"></button>
           <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
           <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
         </div>
-        <!-- Quick filters, as chips (js/matches-view.js). The full filters are in the fold-out below. -->
+        <!-- Quick filters, as chips (js/matches-view.js). The full filters are in the settings. -->
         <div id="quick-filters" class="quick" role="group" data-i18n-attr="aria-label:quick.label">
           <button type="button" data-quick="all" aria-pressed="true" data-i18n="quick.all"></button>
           <button type="button" data-quick="live" aria-pressed="false" data-i18n="quick.live"></button>
           <button type="button" data-quick="watchable" aria-pressed="false" data-i18n="quick.watchable"></button>
           <button type="button" data-quick="free" aria-pressed="false" data-i18n="quick.free"></button>
-          <button type="button" data-quick="competition" aria-controls="filters" data-i18n="quick.competition"></button>
+          <button type="button" data-quick="competition" aria-haspopup="dialog" data-i18n="quick.competition"></button>
         </div>
         <!-- The next match of the followed teams, big (js/hero.js through js/matches-view.js). -->
         <section id="next-match" class="next" aria-labelledby="next-match-title" hidden>
           <h3 id="next-match-title" class="next__title" data-i18n="hero.title"></h3>
           <div id="next-match-card"></div>
         </section>
-        <details id="filters" class="filters">
-          <summary id="filters-summary" data-i18n="filters.title"></summary>
-          <div class="filters__fields">
-            <p class="filter">
-              <input type="checkbox" id="only-watchable" aria-describedby="only-watchable-hint">
-              <label for="only-watchable" data-i18n="matches.onlyWatchable"></label>
-            </p>
-            <p id="only-watchable-hint" class="filter__hint" data-i18n="matches.onlyWatchableHint"></p>
-            <p>
-              <label for="filter-competition" data-i18n="filters.competition"></label>
-              <select id="filter-competition"></select>
-            </p>
-            <p>
-              <label for="filter-broadcaster" data-i18n="filters.broadcaster"></label>
-              <select id="filter-broadcaster"></select>
-            </p>
-            <p>
-              <label for="filter-team" data-i18n="filters.team"></label>
-              <input id="filter-team" type="search" autocomplete="off" maxlength="60">
-            </p>
-            <p><button type="button" id="filters-clear" data-i18n="filters.clear"></button></p>
-          </div>
-          <div class="filters__share">
-            <p><button type="button" id="share-copy" data-i18n="share.copy"></button></p>
-            <p id="share-hint" class="filter__hint" data-i18n="share.hint"></p>
-            <input id="share-link" type="text" readonly hidden data-i18n-attr="aria-label:share.linkLabel">
-            <p id="share-status" role="status"></p>
-          </div>
-        </details>
         <p id="shared-notice" class="notice" hidden data-i18n="share.notice"></p>
         <div id="matches-list" hidden></div>
         <p id="matches-empty"></p>
@@ -119,38 +106,9 @@
           <p data-i18n="uncovered.intro"></p>
           <ul id="uncovered-list"></ul>
         </details>
-        <p id="calendar-all-row" hidden><button type="button" id="calendar-all"></button></p>
         <p id="calendar-status" class="visually-hidden" role="status"></p>
         <p id="matches-status" class="visually-hidden" role="status"></p>
       </div>
-    </section>
-
-    <!-- Which teams do you follow? The script (js/teams-picker.js) adds the behaviour and draws
-         the options and the chosen teams. -->
-    <section class="picker" aria-labelledby="teams-title" data-needs-data hidden>
-      <h2 id="teams-title" data-i18n="picker.title"></h2>
-      <p id="teams-hint" data-i18n="picker.hint"></p>
-      <label for="team-search" data-i18n="picker.label"></label>
-      <div class="picker__field">
-        <input id="team-search" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="team-options" aria-describedby="teams-hint">
-        <ul id="team-options" role="listbox" aria-labelledby="teams-title" hidden></ul>
-      </div>
-      <p id="team-no-results" hidden></p>
-      <h3 id="chosen-title" data-i18n="picker.chosenTitle"></h3>
-      <ul id="chosen-teams" class="chips" aria-labelledby="chosen-title"></ul>
-      <p id="chosen-empty" data-i18n="picker.none"></p>
-      <p id="picker-announcer" class="visually-hidden" role="status"></p>
-      <p><button type="button" id="reopen-onboarding" data-i18n="onboarding.reopen"></button></p>
-    </section>
-
-    <!-- Which services do you have? js/services-picker.js draws one checkbox for each. -->
-    <section class="picker" aria-labelledby="services-title" data-needs-data hidden>
-      <h2 id="services-title" data-i18n="services.title"></h2>
-      <p id="services-hint" data-i18n="services.hint"></p>
-      <div role="group" aria-labelledby="services-title" aria-describedby="services-hint">
-        <ul id="service-options" class="services"></ul>
-      </div>
-      <p id="services-summary" role="status"></p>
     </section>
 
     <!-- Shown only when scripts are off; the one string that lives outside the strings file. -->
@@ -173,12 +131,87 @@
     <ul id="match-sheet-card" class="matches"></ul>
   </dialog>
 
+  <!-- The settings, in a panel that slides in from the right (js/settings.js): the teams, the services
+       and the filters that used to sit at the end of the page. -->
+  <dialog id="settings" class="drawer" aria-labelledby="settings-title">
+    <div class="drawer__head">
+      <h2 id="settings-title" data-i18n="settings.title"></h2>
+      <button type="button" id="settings-close" class="icon-button icon-button--close" data-i18n-attr="aria-label:settings.close"></button>
+    </div>
+    <div class="drawer__body">
+        <!-- Which teams do you follow? The script (js/teams-picker.js) adds the behaviour and draws
+             the options and the chosen teams. -->
+        <section class="picker" aria-labelledby="teams-title" data-needs-data hidden>
+          <h3 id="teams-title" data-i18n="picker.title"></h3>
+          <p id="teams-hint" data-i18n="picker.hint"></p>
+          <label for="team-search" data-i18n="picker.label"></label>
+          <div class="picker__field">
+            <input id="team-search" type="text" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="team-options" aria-describedby="teams-hint">
+            <ul id="team-options" role="listbox" aria-labelledby="teams-title" hidden></ul>
+          </div>
+          <p id="team-no-results" hidden></p>
+          <h4 id="chosen-title" data-i18n="picker.chosenTitle"></h4>
+          <ul id="chosen-teams" class="chips" aria-labelledby="chosen-title"></ul>
+          <p id="chosen-empty" data-i18n="picker.none"></p>
+          <p id="picker-announcer" class="visually-hidden" role="status"></p>
+          <p><button type="button" id="reopen-onboarding" data-i18n="onboarding.reopen"></button></p>
+        </section>
+
+        <!-- Which services do you have? js/services-picker.js draws one checkbox for each. -->
+        <section class="picker" aria-labelledby="services-title" data-needs-data hidden>
+          <h3 id="services-title" data-i18n="services.title"></h3>
+          <p id="services-hint" data-i18n="services.hint"></p>
+          <div role="group" aria-labelledby="services-title" aria-describedby="services-hint">
+            <ul id="service-options" class="services"></ul>
+          </div>
+          <p id="services-summary" role="status"></p>
+        </section>
+      <section class="picker" aria-labelledby="watch-title" data-needs-data hidden>
+        <h3 id="watch-title" data-i18n="settings.watchTitle"></h3>
+        <p class="filter">
+          <input type="checkbox" id="only-watchable" aria-describedby="only-watchable-hint">
+          <label for="only-watchable" data-i18n="matches.onlyWatchable"></label>
+            </p>
+        <p id="only-watchable-hint" class="filter__hint" data-i18n="matches.onlyWatchableHint"></p>
+      </section>
+      <details id="filters" class="filters">
+        <summary id="filters-summary" data-i18n="filters.title"></summary>
+        <div class="filters__fields">
+          <p>
+            <label for="filter-competition" data-i18n="filters.competition"></label>
+            <select id="filter-competition"></select>
+          </p>
+          <p>
+            <label for="filter-broadcaster" data-i18n="filters.broadcaster"></label>
+            <select id="filter-broadcaster"></select>
+          </p>
+          <p>
+            <label for="filter-team" data-i18n="filters.team"></label>
+            <input id="filter-team" type="search" autocomplete="off" maxlength="60">
+          </p>
+          <p><button type="button" id="filters-clear" data-i18n="filters.clear"></button></p>
+          </div>
+        <div class="filters__share">
+          <p><button type="button" id="share-copy" data-i18n="share.copy"></button></p>
+          <p id="share-hint" class="filter__hint" data-i18n="share.hint"></p>
+          <input id="share-link" type="text" readonly hidden data-i18n-attr="aria-label:share.linkLabel">
+          <p id="share-status" role="status"></p>
+          </div>
+      </details>
+
+      <p id="calendar-all-row" hidden><button type="button" id="calendar-all"></button></p>
+      <section class="drawer__more" aria-labelledby="more-title">
+        <h3 id="more-title" data-i18n="settings.moreTitle"></h3>
+        <p><a href="https://github.com/raissonls/ubi-ludus/issues/new?template=wrong-broadcast.yml" rel="noopener noreferrer" data-i18n="report.footer"></a></p>
+        <p><button type="button" id="reset-data" data-i18n="footer.reset"></button></p>
+        <p id="reset-result" role="status"></p>
+      </section>
+    </div>
+  </dialog>
+
   <footer class="site-footer">
     <div class="container">
       <p data-i18n="footer.privacy"></p>
-      <p><button type="button" id="reset-data" data-i18n="footer.reset"></button></p>
-      <p><a href="https://github.com/raissonls/ubi-ludus/issues/new?template=wrong-broadcast.yml" rel="noopener noreferrer" data-i18n="report.footer"></a></p>
-      <p id="reset-result" role="status"></p>
       <ul>
         <li><a href="https://github.com/raissonls/ubi-ludus/blob/main/PRIVACY.md" rel="noopener noreferrer" data-i18n="footer.privacyLink"></a></li>
         <li><a href="https://github.com/raissonls/ubi-ludus" rel="noopener noreferrer" data-i18n="footer.sourceCode"></a></li>

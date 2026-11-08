@@ -11,7 +11,16 @@ from typing import Any
 
 import pytest
 from playwright.sync_api import Browser, Locator, Page
-from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, open_details, visit
+from site_browser import (
+    DATA,
+    STORAGE_KEY,
+    VIEWPORTS,
+    axe_violations,
+    close_settings,
+    open_details,
+    open_settings,
+    visit,
+)
 
 pytestmark = pytest.mark.browser
 
@@ -46,13 +55,13 @@ def saved(*services: str, teams: tuple[str, ...] = (), only: bool = False) -> di
 
 
 def filter_box(page: Page) -> Locator:
-    """The "only what I can watch" checkbox, which lives in the Filtros box (opened if closed)."""
-    if not page.locator("#filters").evaluate("e => e.open"):
-        page.locator("#filters-summary").click()
+    """The "only what I can watch" checkbox, which lives in the settings panel (opened)."""
+    open_settings(page)
     return page.get_by_role("checkbox", name=FILTER)
 
 
 def week(page: Page) -> None:
+    close_settings(page)
     page.get_by_role("button", name="Esta semana", exact=True).click()
 
 
@@ -113,6 +122,7 @@ def test_ticking_a_service_updates_the_cards_at_once(browser: Browser, origin: s
         page = current.page
         week(page)
         assert access(page) == ["yes", "no", "no", "yes", "unknown"]
+        open_settings(page)
         page.get_by_label("Premiere (pay-per-view)").check()  # Chelsea's match has Premiere
         assert access(page) == ["yes", "no", "yes", "yes", "unknown"]
         page.get_by_label("TV por assinatura").check()  # SporTV, for Real Madrid's

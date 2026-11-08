@@ -11,7 +11,7 @@ from typing import Any
 
 import pytest
 from playwright.sync_api import Browser, Page, expect
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, open_settings, visit
 
 pytestmark = pytest.mark.browser
 
@@ -245,9 +245,11 @@ def test_can_watch_is_the_same_choice_as_the_one_in_the_filters(
         page = current.page
         chip(page, "watchable").click()
         assert chip(page, "watchable").get_attribute("aria-pressed") == "true"
-        page.locator("#filters summary").click()
+        open_settings(page)
         assert page.locator("#only-watchable").is_checked()
+        page.keyboard.press("Escape")
         chip(page, "watchable").click()
+        open_settings(page)
         assert not page.locator("#only-watchable").is_checked()
 
 
@@ -257,6 +259,7 @@ def test_the_competition_chip_opens_the_filters_at_the_competition(
     for current in visit(browser, origin):
         page = current.page
         chip(page, "competition").click()
+        assert page.locator("#settings").evaluate("e => e.open")
         assert page.locator("#filters").get_attribute("open") is not None
         assert page.evaluate("document.activeElement.id") == "filter-competition"
 

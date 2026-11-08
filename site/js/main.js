@@ -8,6 +8,7 @@ import { describeFreshness } from './freshness.js';
 import { mountHome } from './home.js';
 import { applyStrings, createTranslator, loadStrings } from './i18n.js';
 import { createPreferences } from './preferences.js';
+import { createSettings } from './settings.js';
 import { createStates, problemKind } from './states.js';
 
 const strings = await loadStrings(new URL('../i18n/pt-BR.json', import.meta.url));
@@ -15,6 +16,7 @@ const translator = createTranslator(strings);
 applyStrings(document, translator);
 
 const preferences = createPreferences();
+const settings = createSettings();
 const states = createStates({ translator });
 const dataUrl = new URL('../data/', import.meta.url);
 const cache = createDataCache(dataUrl);
@@ -38,7 +40,7 @@ async function start() {
     }
     if (!mounted) {
       mounted = true;
-      mountHome({ data: loaded.data, translator, preferences });
+      mountHome({ data: loaded.data, translator, preferences, settings });
     }
     states.ready({ fromSavedCopy: loaded.source === 'saved' });
   } catch (error) {

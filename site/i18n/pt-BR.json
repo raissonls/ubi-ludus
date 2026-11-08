@@ -9,7 +9,7 @@
     "title": "Onde assistir futebol no Brasil"
   },
   "picker": {
-    "title": "Quais times você segue?",
+    "title": "Meus times",
     "hint": "Digite o nome do time e escolha na lista. Você pode escolher quantos quiser.",
     "label": "Buscar time",
     "noResults": "Nenhum time encontrado para “{query}”.",
@@ -31,7 +31,7 @@
     }
   },
   "services": {
-    "title": "Quais serviços você tem?",
+    "title": "O que tenho em casa",
     "hint": "Marque as assinaturas que você tem. TV aberta e YouTube não precisam de assinatura: esses jogos você já pode ver.",
     "includes": "Inclui: {names}.",
     "noneChosen": "Nenhum serviço marcado: vamos considerar só a TV aberta e o YouTube.",
@@ -42,7 +42,7 @@
   },
   "matches": {
     "title": "Jogos",
-    "pickPrompt": "Escolha ao menos um time, logo abaixo, para ver os jogos dele.",
+    "pickPrompt": "Escolha ao menos um time, na faixa acima ou nos ajustes, para ver os jogos dele.",
     "empty": "Nenhum jogo dos seus times nos próximos dias.",
     "emptyToday": "Nenhum jogo hoje.",
     "emptyWeek": "Nenhum jogo nos próximos sete dias.",
@@ -222,7 +222,7 @@
   },
   "onboarding": {
     "dialogLabel": "Primeiros passos",
-    "reopen": "Escolher de novo, passo a passo",
+    "reopen": "Adicionar times",
     "skip": "Pular",
     "back": "Voltar",
     "progress": "Passo {step} de {total}",
@@ -349,5 +349,22 @@
   },
   "sheet": {
     "close": "Fechar os detalhes"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "open": "Abrir os ajustes",
+    "close": "Fechar os ajustes",
+    "watchTitle": "O que mostrar",
+    "moreTitle": "Mais"
+  },
+  "strip": {
+    "none": "Escolha seus times",
+    "noneHint": "Toque para escolher",
+    "edit": "Editar",
+    "freeOnly": "Só TV aberta e YouTube",
+    "andMore": {
+      "one": "e mais {count}",
+      "other": "e mais {count}"
+    }
   }
 }

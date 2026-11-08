@@ -112,9 +112,16 @@ main:focus {
 .brand {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-1) var(--space-3);
   margin: 0;
+}
+
+.brand__logo {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
 }
 
 .brand__name {
@@ -126,7 +133,7 @@ main:focus {
    arrived. The room they will take is kept from the first paint: without it the header grew twice
    and pushed the whole page down each time (layout shift). */
 .brand {
-  min-height: calc(var(--font-size-lg) * var(--line-height-base));
+  min-height: 2rem;
 }
 
 main {

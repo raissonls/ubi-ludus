@@ -22,6 +22,7 @@ from site_browser import (
     WATCH_VIOLATIONS,
     axe_violations,
     open_details,
+    open_settings,
     visit,
 )
 
@@ -182,6 +183,7 @@ def test_all_the_followed_teams_matches_download_as_one_calendar(
     saved = following("palmeiras", "real-madrid", "chelsea")
     for current in visit(browser, origin, saved=saved):
         page = current.page
+        open_settings(page)
         button = page.get_by_role("button", name="Baixar calendário dos meus times (3 jogos)")
         assert button.is_visible()
         name, raw = save_file(page, button.click)
@@ -209,6 +211,7 @@ def test_it_ignores_the_filters_of_the_list(browser: Browser, origin: str) -> No
         page = current.page
         shown = page.locator("#matches-list .match-card__teams").all_inner_texts()
         assert shown == ["Palmeiras x Flamengo", "São Paulo x Atlético-MG"]  # the Brasileirão only
+        open_settings(page)
         _, raw = save_file(page, page.locator("#calendar-all").click)
         # The calendar is of the followed teams, whatever the list shows.
         assert [str(e["UID"]) for e in events(parse(raw))] == ["fx-1@ubi-ludus", "fx-2@ubi-ludus"]
@@ -216,6 +219,7 @@ def test_it_ignores_the_filters_of_the_list(browser: Browser, origin: str) -> No
 
 def test_one_match_reads_in_the_singular(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, saved=following("brasil")):
+        open_settings(current.page)
         button = current.page.get_by_role(
             "button", name="Baixar calendário dos meus times (1 jogo)"
         )
@@ -224,6 +228,7 @@ def test_one_match_reads_in_the_singular(browser: Browser, origin: str) -> None:
 
 def test_without_followed_teams_there_is_no_calendar_of_them(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin):
+        open_settings(current.page)
         assert not current.page.locator("#calendar-all").is_visible()
         assert not current.page.locator("#calendar-all-row").is_visible()
 
@@ -233,6 +238,7 @@ def test_the_followed_calendar_follows_the_choices_as_they_change(
 ) -> None:
     for current in visit(browser, origin):
         page = current.page
+        open_settings(page)
         page.fill("#team-search", "palm")
         page.keyboard.press("Enter")
         assert (
@@ -254,6 +260,7 @@ def test_saving_a_calendar_sends_nothing_and_breaks_no_security_rule(
     ):
         page = current.page
         before = len(current.requests)
+        open_settings(page)
         save_file(page, page.locator("#calendar-all").click)
         save_file(page, add_button(page, "Palmeiras x Flamengo").click)
         later = [r for r in current.requests[before:] if not r.endswith("/assets/favicon.svg")]
@@ -271,6 +278,7 @@ def test_the_files_say_nothing_about_the_visitors_choices(browser: Browser, orig
     }
     for current in visit(browser, origin, saved={STORAGE_KEY: json.dumps(record)}):
         page = current.page
+        open_settings(page)
         _, raw = save_file(page, page.locator("#calendar-all").click)
         text = raw.decode("utf-8").lower()
         assert "globoplay" not in text and "onlywatchable" not in text and "preferences" not in text
@@ -287,6 +295,7 @@ def test_axe_finds_nothing_with_the_calendar_buttons(
     saved = following("palmeiras", "real-madrid")
     for current in visit(browser, origin, scheme, size, path=WEEK, saved=saved):
         page = current.page
+        open_settings(page)
         assert page.locator("#calendar-all").is_visible()
         assert axe_violations(page) == []
         save_file(page, page.locator("#calendar-all").click)

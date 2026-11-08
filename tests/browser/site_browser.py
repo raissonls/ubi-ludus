@@ -34,12 +34,29 @@ WATCH_VIOLATIONS = (
 VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
 
 
+def open_settings(page: Page) -> Locator:
+    """Open the settings panel (the gear in the header) and return it."""
+    panel = page.locator("#settings")
+    if not panel.evaluate("e => e.open"):
+        page.click("#settings-open")
+        page.wait_for_function("document.querySelector('#settings').open")
+    return panel
+
+
+def close_settings(page: Page) -> None:
+    """Close the settings panel if it is open (it keeps the rest of the page out of reach)."""
+    if page.locator("#settings").evaluate("e => e.open"):
+        page.keyboard.press("Escape")
+        page.wait_for_function("!document.querySelector('#settings').open")
+
+
 def open_details(page: Page, text: str) -> Locator:
     """Open the sheet of the first match whose poster has this text, and return the sheet.
 
     The lists show posters; the full card (every broadcaster, the calendar button, the report
     link) is in the sheet that opens when a poster is pressed.
     """
+    close_settings(page)
     sheet = page.locator("#match-sheet")
     if sheet.evaluate("e => e.open"):
         page.keyboard.press("Escape")
@@ -101,6 +118,7 @@ def visit(
     ticking: bool = False,
     forced_colors: str = "none",
     onboarding: bool = False,
+    settings: bool = False,
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
@@ -108,7 +126,9 @@ def visit(
     served in its place, `before_open` is called with the page just before it loads, `now` is the
     time the page sees (it stands still unless `ticking`, when the test moves it), `forced_colors`
     is "active" to see the page as in Windows high-contrast mode, `onboarding` is True to let the
-    first-run flow open (by default the visitor has already seen it, so it stays out of the way)."""
+    first-run flow open (by default the visitor has already seen it, so it stays out of the way),
+    `settings` is True to open the settings panel once the page is ready (the teams, services and
+    filters are in it)."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
@@ -151,6 +171,8 @@ def visit(
             before_open(page)  # e.g. to hold back or refuse the data files
         current = Visit(page, origin, path)
         current.open(wait_ready)
+        if settings:
+            open_settings(page)
         yield current
     finally:
         context.close()

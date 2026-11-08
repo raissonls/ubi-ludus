@@ -17,6 +17,7 @@ from site_browser import (
     VIEWPORTS,
     WATCH_VIOLATIONS,
     axe_violations,
+    open_settings,
     visit,
 )
 
@@ -332,6 +333,7 @@ def test_the_visitor_can_come_back_to_change_their_teams_with_their_choices_tick
     for current in open_flow(browser, origin, saved=saved):
         page = current.page
         assert not page.locator(DIALOG).is_visible()
+        open_settings(page)
         page.click("#reopen-onboarding")
         assert "De que parte do mundo" in title(page)
         assert button(page, "Continuar com 1 escolhido").is_visible()
@@ -352,6 +354,7 @@ def test_the_button_to_change_the_teams_gives_the_focus_back_when_the_flow_close
     saved = {STORAGE_KEY: json.dumps({"version": 1, "teams": ["palmeiras"], "services": []})}
     for current in open_flow(browser, origin, saved=saved):
         page = current.page
+        open_settings(page)
         page.click("#reopen-onboarding")
         button(page, "Pular").click()
         expect(page.locator(DIALOG)).to_be_hidden()

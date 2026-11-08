@@ -4,7 +4,7 @@ import json
 
 import pytest
 from playwright.sync_api import Browser, Locator, Page, expect
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, open_settings, visit
 
 pytestmark = pytest.mark.browser
 
@@ -36,7 +36,7 @@ def ticked(page: Page) -> list[str]:
 def test_every_service_of_the_catalogue_is_offered_with_what_it_includes(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         labels = page.locator("#service-options label").all_inner_texts()
         assert labels == SERVICES
@@ -53,7 +53,7 @@ def test_every_service_of_the_catalogue_is_offered_with_what_it_includes(
 def test_nothing_is_ticked_by_default_and_the_page_says_what_that_means(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         assert ticked(page) == []
         assert page.locator("#services-summary").inner_text() == NONE_CHOSEN
@@ -64,7 +64,7 @@ def test_nothing_is_ticked_by_default_and_the_page_says_what_that_means(
 
 
 def test_ticking_a_service_saves_it_and_says_how_many(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         box(page, "Globoplay").check()
         assert saved(page)["services"] == ["globoplay"]
@@ -82,7 +82,7 @@ def test_ticking_a_service_saves_it_and_says_how_many(browser: Browser, origin: 
 def test_services_and_teams_are_saved_together_and_neither_loses_the_other(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator("#team-search").focus()
         page.fill("#team-search", "palm")
@@ -104,7 +104,7 @@ def test_services_and_teams_are_saved_together_and_neither_loses_the_other(
 
 
 def test_the_keyboard_ticks_a_service_with_space(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator("#service-tv-por-assinatura").focus()
         page.keyboard.press("Space")
@@ -118,21 +118,22 @@ def test_the_keyboard_ticks_a_service_with_space(browser: Browser, origin: str) 
 def test_a_checkbox_has_a_name_and_a_description_for_a_screen_reader(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         disney = box(page, "Disney+ (plano com ESPN)")
         assert disney.get_attribute("aria-describedby") == "service-disney-plus-includes"
         tree = page.locator("section[aria-labelledby=services-title]").aria_snapshot()
-        assert 'group "Quais serviços você tem?"' in tree
+        assert 'group "O que tenho em casa"' in tree
         assert 'checkbox "Globoplay"' in tree
 
 
 def test_the_choices_survive_a_reload_and_reset_clears_them(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         box(page, "Disney+ (plano com ESPN)").check()
         page.reload()
         page.wait_for_selector("html[data-ready='true']")
+        open_settings(page)
         assert ticked(page) == ["disney-plus"]
         assert page.locator("#services-summary").inner_text() == "1 serviço marcado."
 
@@ -144,13 +145,13 @@ def test_the_choices_survive_a_reload_and_reset_clears_them(browser: Browser, or
 
 def test_a_saved_service_the_data_no_longer_has_is_ignored(browser: Browser, origin: str) -> None:
     value = {STORAGE_KEY: '{"version": 1, "teams": [], "services": ["gone-tv", "globoplay"]}'}
-    for current in visit(browser, origin, saved=value):
+    for current in visit(browser, origin, settings=True, saved=value):
         assert ticked(current.page) == ["globoplay"]
         assert current.console == []
 
 
 def test_the_summary_is_spoken_when_it_changes(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         assert page.locator("#services-summary").get_attribute("role") == "status"
         box(page, "Premiere (pay-per-view)").check()
@@ -162,7 +163,7 @@ def test_the_summary_is_spoken_when_it_changes(browser: Browser, origin: str) ->
 def test_axe_finds_nothing_with_services_ticked(
     browser: Browser, origin: str, scheme: str, size: str
 ) -> None:
-    for current in visit(browser, origin, scheme, size):
+    for current in visit(browser, origin, scheme, size, settings=True):
         page = current.page
         box(page, "Globoplay").check()
         box(page, "Disney+ (plano com ESPN)").check()
@@ -173,7 +174,7 @@ def test_axe_finds_nothing_with_services_ticked(
 
 def test_ticked_choices_never_leave_the_browser(browser: Browser, origin: str) -> None:
     """Ticking sends nothing at all, and no request ever names a chosen service."""
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         before = len(current.details)
         box(page, "Globoplay").check()

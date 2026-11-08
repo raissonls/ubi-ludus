@@ -585,14 +585,10 @@ html.ob-open {
 }
 
 .ob-brand__mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 2rem;
   height: 2rem;
-  border-radius: 0.625rem;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  border-radius: 0.5rem;
 }
 
 .ob-sample {

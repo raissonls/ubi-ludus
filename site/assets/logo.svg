@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ubi Ludus">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#46116b"/>
+      <stop offset="1" stop-color="#14041c"/>
+    </linearGradient>
+    <linearGradient id="pin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c07bff"/>
+      <stop offset="1" stop-color="#8c0fe0"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#tile)"/>
+  <g transform="translate(8.96 9.8) scale(0.72)">
+    <path d="M32 3C19.8 3 10 12.6 10 24.5c0 15 17 31.2 21.2 34.9a1.2 1.2 0 0 0 1.6 0C37 55.7 54 39.5 54 24.5 54 12.6 44.2 3 32 3z" fill="url(#pin)"/>
+    <circle cx="32" cy="24.5" r="12" fill="none" stroke="#14041c" stroke-width="3.6"/>
+    <line x1="32" y1="12.5" x2="32" y2="36.5" stroke="#14041c" stroke-width="3.6"/>
+    <circle cx="32" cy="24.5" r="3.4" fill="#14041c"/>
+  </g>
+</svg>

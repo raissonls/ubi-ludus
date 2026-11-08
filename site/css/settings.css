@@ -1,0 +1,242 @@
+/*
+ * The header with the settings button, the strip with the visitor's teams, and the settings panel
+ * (js/settings.js, js/team-strip.js). Colours come from the tokens, so both themes work. The panel
+ * slides in only when motion is allowed.
+ */
+
+/* ---- the header ---- */
+
+/* The skip link slides in over the sticky header. */
+.skip-link {
+  z-index: 50;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-block: var(--space-2);
+}
+
+.site-header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.site-header .freshness {
+  margin-top: 0;
+  min-height: calc(var(--font-size-sm) * var(--line-height-base) + 2 * var(--space-1));
+}
+
+.icon-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.icon-button--close::before {
+  content: "×";
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* ---- the strip with your teams ---- */
+
+.strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 3.5rem;
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  box-sizing: border-box;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 1.125rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.strip__shirts {
+  display: flex;
+  padding-left: 0.625rem;
+}
+
+.strip__shirt {
+  margin-left: -0.625rem;
+}
+
+.strip__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.strip__teams {
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}
+
+.strip__services {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.strip__edit {
+  color: var(--color-link);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.strip:not([data-has-teams]) .strip__edit {
+  display: none;
+}
+
+/* On a small phone every line counts: the next match has to be on the first screen. */
+@media (max-width: 26rem) {
+  main {
+    padding-block-start: var(--space-4);
+  }
+
+  .strip {
+    min-height: 3rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .strip__services {
+    display: none;
+  }
+}
+
+/* ---- the settings panel ---- */
+
+.drawer {
+  width: min(26rem, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-inline-start: var(--border-width) solid var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.drawer[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer::backdrop {
+  background: rgb(10 2 16 / 0.62);
+}
+
+.drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-6);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.drawer__head h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  letter-spacing: -0.02em;
+}
+
+.drawer__body {
+  flex: 1;
+  padding: var(--space-4) var(--space-6) var(--space-8);
+  overflow-y: auto;
+}
+
+.drawer h3 {
+  margin: var(--space-6) 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.drawer .picker:first-child h3 {
+  margin-top: 0;
+}
+
+.drawer__more p {
+  margin: 0 0 var(--space-3);
+}
+
+/* ---- switches: the services and "only what I can watch" are native checkboxes, drawn as switches ---- */
+
+.service input[type="checkbox"],
+.filter input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  inline-size: 3rem;
+  block-size: 1.75rem;
+  margin: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 0.875rem;
+  background: var(--color-border);
+  cursor: pointer;
+}
+
+.service input[type="checkbox"]::before,
+.filter input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--color-text);
+}
+
+.service input[type="checkbox"]:checked,
+.filter input[type="checkbox"]:checked {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.service input[type="checkbox"]:checked::before,
+.filter input[type="checkbox"]:checked::before {
+  background: var(--color-on-accent);
+  transform: translateX(1.25rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .service input[type="checkbox"]::before,
+  .filter input[type="checkbox"]::before {
+    transition: transform var(--motion-base) var(--motion-ease);
+  }
+
+  @keyframes drawer-in {
+    from { transform: translateX(100%); }
+    to { transform: none; }
+  }
+
+  .drawer[open] {
+    animation: drawer-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}

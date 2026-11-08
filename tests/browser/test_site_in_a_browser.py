@@ -14,6 +14,7 @@ from site_browser import (
     VIEWPORTS,
     WATCH_VIOLATIONS,
     axe_violations,
+    open_settings,
     visit,
 )
 
@@ -108,6 +109,7 @@ def test_the_published_files_are_loaded_and_counted(browser: Browser, origin: st
 def test_no_request_carries_the_visitors_choices(browser: Browser, origin: str) -> None:
     """The choices sit in localStorage before the page runs; no request may mention them."""
     for current in visit(browser, origin, saved=CHOICES):
+        open_settings(current.page)
         current.page.click("#reset-data")
         current.page.wait_for_function("document.querySelector('#reset-result').textContent !== ''")
         assert current.details
@@ -128,6 +130,7 @@ def test_the_reset_control_erases_the_saved_choices_and_says_so(
     for current in visit(browser, origin, saved=CHOICES):
         page = current.page
         assert page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')") is not None
+        open_settings(page)
         page.get_by_role("button", name="Apagar meus dados").click()
         assert page.evaluate(f"localStorage.getItem('{STORAGE_KEY}')") is None
         assert "apagadas" in page.locator("#reset-result").inner_text()
@@ -136,6 +139,7 @@ def test_the_reset_control_erases_the_saved_choices_and_says_so(
 def test_the_reset_control_works_from_the_keyboard(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, saved=CHOICES):
         page = current.page
+        open_settings(page)
         page.locator("#reset-data").focus()
         page.keyboard.press("Enter")
         assert "apagadas" in page.locator("#reset-result").inner_text()
@@ -148,6 +152,7 @@ def test_with_storage_blocked_the_page_still_works_and_reset_still_answers(
     for current in visit(browser, origin, storage_blocked=True):
         assert current.console == []
         assert current.page.locator("#matches-content").is_visible()
+        open_settings(current.page)
         current.page.click("#reset-data")
         assert "apagadas" in current.page.locator("#reset-result").inner_text()
 

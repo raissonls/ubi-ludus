@@ -13,6 +13,8 @@ js/preferences.js  the visitor's teams and services, in localStorage and nowhere
 js/search.js       finds a team as you type (no accents, aliases, ranked); pure
 js/teams-picker.js  the "Which teams do you follow?" combobox and the chosen teams
 js/onboarding.js    the first-run flow: welcome, continent, country and team as grids of shirts, then services (js/onboarding-model.js and js/countries.js decide what it shows; js/shirt.js draws a shirt in a team's two colours)
+js/settings.js      the settings panel (a native dialog from the right): the teams, the services and the filters
+js/team-strip.js    the strip at the top of the lists with the shirts and services the visitor chose
 js/hero.js          the next match of the followed teams as one big card: both shirts, when, and where to watch
 js/services-picker.js  the "Which services do you have?" checkboxes
 js/matches-preview.js  which matches of the followed teams are still to come; pure

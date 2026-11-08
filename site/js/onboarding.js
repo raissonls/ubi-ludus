@@ -193,7 +193,7 @@ export function createOnboarding({ data, translator, preferences }) {
     const heading = title(words(t('onboarding.welcome.title'), 2));
     return el('div', { class: 'ob__welcome' }, [
       el('div', { class: 'ob-brand' }, [
-        el('span', { class: 'ob-brand__mark', 'aria-hidden': 'true', text: 'U' }),
+        el('img', { class: 'ob-brand__mark', src: 'assets/logo.svg', alt: '', width: '32', height: '32' }),
         el('span', { class: 'ob-brand__name', text: t('app.name') }),
       ]),
       sample,

@@ -13,7 +13,15 @@ from urllib.parse import urlparse
 
 import pytest
 from playwright.sync_api import Browser, Page, Route
-from site_browser import CHOICES, DATA, SECRET_TEAM, VIEWPORTS, axe_violations, visit
+from site_browser import (
+    CHOICES,
+    DATA,
+    SECRET_TEAM,
+    VIEWPORTS,
+    axe_violations,
+    open_settings,
+    visit,
+)
 
 pytestmark = pytest.mark.browser
 
@@ -87,6 +95,7 @@ def test_while_the_data_is_on_its_way_there_is_a_loading_screen(
         assert not page.locator("#team-search").is_visible()
         assert not page.locator("#service-options").is_visible()
         # The page is usable meanwhile: the footer, the reset control.
+        open_settings(page)
         assert page.get_by_role("button", name="Apagar meus dados").is_visible()
         while len(held) < 5:
             page.wait_for_timeout(50)
@@ -96,6 +105,7 @@ def test_while_the_data_is_on_its_way_there_is_a_loading_screen(
         assert page.locator("#matches-section").get_attribute("aria-busy") == "false"
         assert not page.locator("#matches-loading").is_visible()
         assert page.locator("#matches-content").is_visible()
+        open_settings(page)
         assert page.locator("#team-search").is_visible()
 
 
@@ -268,6 +278,7 @@ def test_when_the_load_fails_the_last_good_data_is_shown_with_a_notice(
         assert notice.inner_text().startswith("Não conseguimos atualizar os jogos agora.")
         assert notice.get_attribute("role") == "status"
         assert not page.locator("#state-panel").is_visible()
+        open_settings(page)
         assert page.locator("#team-search").is_visible()  # the page works on the copy
         assert page.locator("#freshness").get_attribute("data-state") == "fresh"
 
