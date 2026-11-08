@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import DATA, VIEWPORTS, axe_violations, visit
+from site_browser import DATA, VIEWPORTS, axe_violations, open_settings, visit
 
 pytestmark = pytest.mark.browser
 
@@ -106,6 +106,7 @@ def test_it_follows_the_filters_as_they_change(browser: Browser, origin: str) ->
     for current in visit(browser, origin, path=WEEK):
         page = current.page
         assert notice(page) == SOME
+        open_settings(page)
         page.locator("#filters summary").click()
         page.select_option("#filter-competition", "brasileirao-serie-a")
         assert notice(page) is None

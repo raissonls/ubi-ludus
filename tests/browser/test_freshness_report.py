@@ -227,8 +227,8 @@ def test_following_the_link_goes_to_the_new_issue_form_and_only_then(
         assert query(page.url)["title"] == "Transmissão errada: Palmeiras x Flamengo"
 
 
-def test_the_footer_links_to_the_form_without_a_match(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+def test_the_settings_link_to_the_form_without_a_match(browser: Browser, origin: str) -> None:
+    for current in visit(browser, origin, settings=True):
         link = current.page.get_by_role("link", name="Viu uma transmissão errada? Avise no GitHub")
         href = link.get_attribute("href") or ""
         assert urlparse(href).path == REPO_PATH

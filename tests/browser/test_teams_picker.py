@@ -34,7 +34,7 @@ def listed_matches(page: Page) -> list[str]:
 def test_a_new_visitor_chooses_a_team_and_sees_its_matches_in_three_interactions(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         assert listed_matches(page) == []
         assert page.locator("#matches-empty").is_visible()
@@ -48,7 +48,7 @@ def test_a_new_visitor_chooses_a_team_and_sees_its_matches_in_three_interactions
 
 
 def test_the_keyboard_alone_does_it_in_two_steps(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.keyboard.type("real")  # 1
@@ -61,7 +61,7 @@ def test_the_keyboard_alone_does_it_in_two_steps(browser: Browser, origin: str) 
 
 
 def test_search_ignores_accents_case_and_finds_aliases(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.keyboard.type("SAO")
@@ -75,7 +75,7 @@ def test_search_ignores_accents_case_and_finds_aliases(browser: Browser, origin:
 def test_an_empty_box_suggests_brazilian_teams_first_and_shows_where_each_is_from(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         names = options(page)
@@ -87,7 +87,7 @@ def test_an_empty_box_suggests_brazilian_teams_first_and_shows_where_each_is_fro
 
 
 def test_no_match_says_so(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.keyboard.type("zzzz")
@@ -102,7 +102,7 @@ def test_no_match_says_so(browser: Browser, origin: str) -> None:
 
 
 def test_chosen_teams_are_not_offered_again(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "real")
@@ -115,7 +115,7 @@ def test_chosen_teams_are_not_offered_again(browser: Browser, origin: str) -> No
 
 
 def test_the_combobox_says_what_it_is_to_a_screen_reader(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         box = page.get_by_role("combobox", name="Buscar time")
         assert box.get_attribute("aria-expanded") == "false"
@@ -132,7 +132,7 @@ def test_the_combobox_says_what_it_is_to_a_screen_reader(browser: Browser, origi
 def test_arrow_keys_move_through_the_options_and_enter_chooses(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         box = page.locator(SEARCH)
         box.focus()
@@ -161,7 +161,7 @@ def test_arrow_keys_move_through_the_options_and_enter_chooses(
 
 
 def test_escape_closes_the_list_then_clears_the_text(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.keyboard.type("sao")
@@ -173,7 +173,7 @@ def test_escape_closes_the_list_then_clears_the_text(browser: Browser, origin: s
 
 
 def test_what_happens_is_said_in_a_live_region(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         assert page.locator("#picker-announcer").get_attribute("role") == "status"
         page.locator(SEARCH).focus()
@@ -192,13 +192,13 @@ def test_what_happens_is_said_in_a_live_region(browser: Browser, origin: str) ->
 def test_the_accessibility_tree_has_a_labelled_combobox_and_a_named_list_of_choices(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
         page.keyboard.press("Enter")
         tree = page.locator("section[aria-labelledby=teams-title]").aria_snapshot()
-        assert 'heading "Quais times você segue?"' in tree
+        assert 'heading "Meus times"' in tree
         assert 'combobox "Buscar time"' in tree
         assert 'list "Times escolhidos"' in tree
         assert 'button "Remover Palmeiras"' in tree
@@ -210,7 +210,7 @@ def test_the_accessibility_tree_has_a_labelled_combobox_and_a_named_list_of_choi
 def test_a_chosen_team_can_be_removed_and_focus_goes_back_to_the_box(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
@@ -226,7 +226,7 @@ def test_a_chosen_team_can_be_removed_and_focus_goes_back_to_the_box(
 
 
 def test_a_chip_can_be_removed_from_the_keyboard(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
@@ -238,7 +238,7 @@ def test_a_chip_can_be_removed_from_the_keyboard(browser: Browser, origin: str) 
 
 
 def test_several_teams_show_all_their_matches_in_time_order(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         for text in ("barca", "chel", "palm"):
@@ -252,7 +252,7 @@ def test_several_teams_show_all_their_matches_in_time_order(browser: Browser, or
 
 
 def test_a_finished_match_and_an_undecided_opponent(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "brasil")
@@ -266,7 +266,7 @@ def test_a_finished_match_and_an_undecided_opponent(browser: Browser, origin: st
 
 
 def test_matches_show_the_local_time_in_brazil(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
@@ -280,7 +280,7 @@ def test_matches_show_the_local_time_in_brazil(browser: Browser, origin: str) ->
 
 
 def test_the_choices_survive_a_reload(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
@@ -295,7 +295,7 @@ def test_the_choices_survive_a_reload(browser: Browser, origin: str) -> None:
 
 
 def test_reset_my_data_empties_the_picker_and_the_matches(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
@@ -310,7 +310,7 @@ def test_a_saved_team_the_data_no_longer_has_is_quietly_ignored(
     browser: Browser, origin: str
 ) -> None:
     saved = {STORAGE_KEY: '{"version": 1, "teams": ["gone-fc", "palmeiras"], "services": []}'}
-    for current in visit(browser, origin, saved=saved):
+    for current in visit(browser, origin, settings=True, saved=saved):
         assert chosen(current.page) == ["Remover Palmeiras"]
         assert current.console == []
 
@@ -321,7 +321,7 @@ def test_a_saved_team_the_data_no_longer_has_is_quietly_ignored(
 def test_team_colours_are_used_as_accents_and_nothing_else_is_drawn(
     browser: Browser, origin: str
 ) -> None:
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "palm")
@@ -337,7 +337,13 @@ def test_team_colours_are_used_as_accents_and_nothing_else_is_drawn(
         )
         assert wash == "#006437"  # the poster's wash starts from Palmeiras green
         # No crest, no logo, no picture: the only drawings are shirts, which are colours only.
-        assert page.locator("img, canvas, picture, svg:not(.shirt)").count() == 0
+        # Only the shirts and the small icons of the interface: no crest, no logo of a club.
+        assert (
+            page.locator(
+                "img:not(.brand__logo), canvas, picture, svg:not(.shirt):not(.icon)"
+            ).count()
+            == 0
+        )
         assert current.console == []  # setting a colour from script is allowed by the policy
 
 
@@ -349,7 +355,7 @@ def test_team_colours_are_used_as_accents_and_nothing_else_is_drawn(
 def test_axe_finds_nothing_with_the_list_open_and_teams_chosen(
     browser: Browser, origin: str, scheme: str, size: str
 ) -> None:
-    for current in visit(browser, origin, scheme, size):
+    for current in visit(browser, origin, scheme, size, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "real")
@@ -364,7 +370,7 @@ def test_axe_finds_nothing_with_the_list_open_and_teams_chosen(
 def test_axe_finds_nothing_when_a_search_has_no_result(
     browser: Browser, origin: str, scheme: str
 ) -> None:
-    for current in visit(browser, origin, scheme):
+    for current in visit(browser, origin, scheme, settings=True):
         page = current.page
         page.locator(SEARCH).focus()
         page.keyboard.type("zzzz")
@@ -372,7 +378,7 @@ def test_axe_finds_nothing_when_a_search_has_no_result(
 
 
 def test_the_open_list_never_makes_the_page_scroll_sideways(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin, size="narrow"):
+    for current in visit(browser, origin, settings=True, size="narrow"):
         page = current.page
         page.locator(SEARCH).focus()
         page.fill(SEARCH, "a")

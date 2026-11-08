@@ -9,7 +9,7 @@ import json
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, open_settings, visit
 
 pytestmark = pytest.mark.browser
 
@@ -70,6 +70,7 @@ def test_choosing_the_first_team_moves_to_its_matches_unless_a_list_was_picked(
 ) -> None:
     for current in visit(browser, origin):
         page = current.page
+        open_settings(page)
         page.fill(SEARCH, "palm")
         page.keyboard.press("Enter")
         assert pressed(page) == ["Meus times"]
@@ -77,6 +78,7 @@ def test_choosing_the_first_team_moves_to_its_matches_unless_a_list_was_picked(
     for current in visit(browser, origin):
         page = current.page
         choose(page, "Esta semana")
+        open_settings(page)
         page.fill(SEARCH, "palm")
         page.keyboard.press("Enter")
         assert pressed(page) == ["Esta semana"]  # the visitor's own choice stays

@@ -33,6 +33,7 @@ export function createMatchesView({
   initial = {},
   onStateChange = () => {},
   setOnlyWatchable = () => {},
+  onCompetition = () => {},
 }) {
   const list = document.getElementById('matches-list');
   const calendarRow = document.getElementById('calendar-all-row');
@@ -205,9 +206,7 @@ export function createMatchesView({
     button.addEventListener('click', () => {
       const name = button.dataset.quick;
       if (name === 'competition') {
-        const filtersBox = document.getElementById('filters');
-        filtersBox.open = true;
-        document.getElementById('filter-competition').focus();
+        onCompetition();
         return;
       }
       if (name === 'all') {

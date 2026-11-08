@@ -24,7 +24,7 @@ from typing import Any
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, open_settings, visit
 
 pytestmark = pytest.mark.browser
 
@@ -133,12 +133,24 @@ STATES: dict[str, dict[str, Any]] = {
     "everything-open": {
         "path": "/index.html?view=week",
         "changed_data": {"competitions": competitions("amistosos-selecoes")},
-        "open": ("#filters summary", "#uncovered-summary"),
+        "open": ("#uncovered-summary", "settings", "#filters summary"),
     },
     "with-choices": {"path": "/index.html", "saved": CHOICES},
+    # The settings panel with teams and services chosen, its filters unfolded.
+    "settings-panel": {
+        "path": "/index.html",
+        "saved": CHOICES,
+        "open": ("settings", "#filters summary"),
+    },
     "every-card-state": {"path": GALLERY},
 }
-MIN_STOPS = {"first-visit": 8, "everything-open": 8, "with-choices": 8, "every-card-state": 1}
+MIN_STOPS = {
+    "first-visit": 8,
+    "everything-open": 8,
+    "with-choices": 8,
+    "settings-panel": 8,
+    "every-card-state": 1,
+}
 SIZES = list(VIEWPORTS)
 SCHEMES = ["light", "dark"]
 
@@ -150,12 +162,18 @@ def state_call(name: str, **extra: Any) -> dict[str, Any]:
 
 def open_panels(page: Page, name: str) -> None:
     for selector in STATES[name].get("open", ()):
-        page.locator(selector).click()
+        if selector == "settings":
+            open_settings(page)
+        else:
+            page.locator(selector).click()
 
 
 def walk(page: Page) -> list[dict[str, Any]]:
     """Press Tab through the whole page. Returns what each stop looked like."""
     page.evaluate("document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0)")
+    # With the settings panel open the Tab key stays inside it: start from its first control.
+    if page.evaluate("document.querySelector('#settings')?.open"):
+        page.evaluate("document.querySelector('#settings-close').focus()")
     stops: list[dict[str, Any]] = []
     for _ in range(MAX_STOPS):
         page.keyboard.press("Tab")
@@ -341,7 +359,7 @@ def test_choosing_a_team_and_removing_it_is_announced_and_keeps_the_focus(
     browser: Browser, origin: str
 ) -> None:
     """Onboarding with the keyboard alone: what a screen reader is told at each step (FR-20)."""
-    for current in visit(browser, origin):
+    for current in visit(browser, origin, settings=True):
         page = current.page
         search = page.locator("#team-search")
         search.focus()
