@@ -35,6 +35,17 @@
   font-weight: var(--font-weight-bold);
 }
 
+/* On a small phone every line counts: the next match has to be on the first screen. */
+@media (max-width: 26rem) {
+  .quick {
+    margin-top: var(--space-1);
+  }
+
+  .quick button {
+    min-height: 2.25rem;
+  }
+}
+
 /* ---- a row ---- */
 
 .rail {

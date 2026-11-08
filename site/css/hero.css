@@ -5,7 +5,7 @@
  */
 
 .next {
-  margin-top: var(--space-4);
+  margin-top: var(--space-2);
 }
 
 .next[hidden] {
@@ -13,7 +13,7 @@
 }
 
 .next__title {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--space-1);
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-regular);
@@ -63,6 +63,31 @@
 
 .hero .match-card__watch {
   margin-top: var(--space-3);
+}
+
+/* On a small phone the match and where to watch it must still be on the first screen, whatever
+   font the phone uses: everything above the card is trimmed, and the card itself is tighter. */
+@media (max-width: 26rem) {
+  .hero {
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+
+  .hero__shirts {
+    gap: var(--space-4);
+    margin: 0;
+  }
+
+  .hero__shirts .shirt {
+    width: 3.25rem;
+  }
+
+  .hero__title {
+    font-size: 1.25rem;
+  }
+
+  .hero .match-card__watch {
+    margin-top: var(--space-2);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
