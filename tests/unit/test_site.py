@@ -433,7 +433,11 @@ def test_borders_and_focus_rings_have_at_least_3_to_1_contrast(
 
 def test_the_dark_theme_changes_every_colour_the_light_theme_defines() -> None:
     light, dark = themes()["light"], themes()["dark"]
+    # White text on the accent is white in both themes: the accent itself is what changes.
+    same_on_purpose = {"--color-on-accent"}
     unchanged = [
-        name for name in light if name.startswith("--color-") and light[name] == dark[name]
+        name
+        for name in light
+        if name.startswith("--color-") and light[name] == dark[name] and name not in same_on_purpose
     ]
     assert unchanged == []

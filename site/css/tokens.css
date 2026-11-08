@@ -41,24 +41,26 @@
   --motion-ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* Colour, light theme. */
-  --color-bg: #f6f7f4;
+  --color-bg: #f7f3fa;
   --color-surface: #ffffff;
-  --color-text: #14171c;
-  --color-text-muted: #4a5160;
-  --color-border: #cfd4dc;
-  --color-border-strong: #7a8294; /* the edge of a control: at least 3:1 against its surface */
-  --color-accent: #0b6e4f;
+  --color-text: #1b0a26;
+  --color-text-muted: #5a4670;
+  --color-border: #d9cce6;
+  --color-border-strong: #7a6590; /* the edge of a control: at least 3:1 against its surface */
+  --color-accent: #6a0dad;
   --color-on-accent: #ffffff;
-  --color-link: #0a5c9e;
-  --color-focus: #1a56db;
+  --color-link: #5b21b6;
+  --color-focus: #6a0dad;
+  /* The lighter purple of the dark theme, for rings and progress on a dark ground. */
+  --color-accent-soft: #e9d7f7;
 
   /* How sure we are about a broadcast, and a match's state (used by the match card, M3-05). */
   --color-confirmed-bg: #dff3e8;
   --color-confirmed-fg: #0b4a33;
   --color-rule-bg: #e3ecfb;
   --color-rule-fg: #1b3a7a;
-  --color-unknown-bg: #ebedf1;
-  --color-unknown-fg: #3d4452;
+  --color-unknown-bg: #ece6f1;
+  --color-unknown-fg: #3f3352;
   --color-live-bg: #fde3e1;
   --color-live-fg: #8a1410;
   --color-warning-bg: #fff1cc;
@@ -67,23 +69,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0e1013;
-    --color-surface: #171a1f;
-    --color-text: #eceff4;
-    --color-text-muted: #a9b1bf;
-    --color-border: #2a2f39;
-    --color-border-strong: #7d8798;
-    --color-accent: #46c28f;
-    --color-on-accent: #04261a;
-    --color-link: #7db4f0;
-    --color-focus: #8ab4ff;
+    --color-bg: #14041c;
+    --color-surface: #1f0a2b;
+    --color-text: #f6f0fa;
+    --color-text-muted: #bba6cc;
+    --color-border: #43225e;
+    --color-border-strong: #8e6ab8;
+    --color-accent: #8c0fe0;
+    --color-on-accent: #ffffff;
+    --color-link: #cfa8ff;
+    --color-focus: #c07bff;
+    --color-accent-soft: #2b1040;
 
     --color-confirmed-bg: #123a2a;
     --color-confirmed-fg: #9ee6c3;
     --color-rule-bg: #172a52;
     --color-rule-fg: #b5ccff;
-    --color-unknown-bg: #232831;
-    --color-unknown-fg: #c3cad6;
+    --color-unknown-bg: #2d1a3d;
+    --color-unknown-fg: #d6c8e3;
     --color-live-bg: #4a1714;
     --color-live-fg: #ffb4ae;
     --color-warning-bg: #4a3600;

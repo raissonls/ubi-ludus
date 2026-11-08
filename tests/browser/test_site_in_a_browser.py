@@ -174,7 +174,7 @@ def test_a_data_file_in_a_newer_format_is_refused_the_same_way(
 
 
 @pytest.mark.parametrize(
-    ("scheme", "background"), [("light", "rgb(246, 247, 244)"), ("dark", "rgb(14, 16, 19)")]
+    ("scheme", "background"), [("light", "rgb(247, 243, 250)"), ("dark", "rgb(20, 4, 28)")]
 )
 def test_the_theme_follows_the_system_setting(
     browser: Browser, origin: str, scheme: str, background: str
