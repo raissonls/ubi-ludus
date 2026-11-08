@@ -5,6 +5,8 @@ select
     short_name,
     aliases,
     country,
-    {'primary': color_primary, 'secondary': color_secondary} as colors
+    {'primary': color_primary, 'secondary': color_secondary} as colors,
+    kind,
+    {'primary': shirt_primary, 'secondary': shirt_secondary} as shirt
 from {{ ref('stg_teams') }}
 order by team_id

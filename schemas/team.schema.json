@@ -27,6 +27,31 @@
       "pattern": "^[A-Z]{2}(-[A-Z]{3})?$",
       "description": "ISO 3166-1 alpha-2, for example BR, or GB-ENG."
     },
+    "kind": {
+      "enum": [
+        "club",
+        "national"
+      ],
+      "description": "A club, or a national team (a Seleção). The published file always says which."
+    },
+    "shirt": {
+      "$ref": "#/$defs/colors",
+      "description": "The two colours of the team's usual shirt, for drawing it. Often the club colours, but not always (Corinthians play in white). The published file always has it."
+    },
+    "colors": {
+      "$ref": "#/$defs/colors"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "short_name",
+    "aliases",
+    "country",
+    "colors"
+  ],
+  "additionalProperties": false,
+  "$defs": {
     "colors": {
       "type": "object",
       "properties": {
@@ -43,14 +68,5 @@
       ],
       "additionalProperties": false
     }
-  },
-  "required": [
-    "id",
-    "name",
-    "short_name",
-    "aliases",
-    "country",
-    "colors"
-  ],
-  "additionalProperties": false
+  }
 }

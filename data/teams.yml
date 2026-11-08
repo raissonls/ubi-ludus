@@ -37,18 +37,21 @@ teams:
     aliases: ["SC Corinthians Paulista"]
     country: "BR"
     colors: {primary: "#000000", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#000000"}
   - id: sao-paulo
     name: "São Paulo"
     short_name: "São Paulo"
     aliases: ["São Paulo FC"]
     country: "BR"
     colors: {primary: "#FE0000", secondary: "#000000"}
+    shirt: {primary: "#FFFFFF", secondary: "#FE0000"}
   - id: santos
     name: "Santos"
     short_name: "Santos"
     aliases: ["Santos FC"]
     country: "BR"
     colors: {primary: "#000000", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#000000"}
   - id: fluminense
     name: "Fluminense"
     short_name: "Fluminense"
@@ -67,6 +70,7 @@ teams:
     aliases: ["CR Vasco da Gama"]
     country: "BR"
     colors: {primary: "#000000", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#000000"}
   - id: gremio
     name: "Grêmio"
     short_name: "Grêmio"
@@ -209,6 +213,7 @@ teams:
     aliases: ["Brazil", "Seleção Brasileira"]
     country: "BR"
     colors: {primary: "#FFDF00", secondary: "#009C3B"}
+    kind: "national"
 
   # --- Spain: La Liga ----------------------------------------------------------------------------
   - id: real-madrid
@@ -319,6 +324,7 @@ teams:
     aliases: ["Sevilla FC"]
     country: "ES"
     colors: {primary: "#D6001C", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#D6001C"}
   - id: valencia
     name: "Valencia"
     short_name: "Valencia"
@@ -369,6 +375,7 @@ teams:
     aliases: ["Tottenham Hotspur FC"]
     country: "GB-ENG"
     colors: {primary: "#132257", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#132257"}
   - id: newcastle
     name: "Newcastle United"
     short_name: "Newcastle"
@@ -479,6 +486,7 @@ teams:
     aliases: []
     country: "DE"
     colors: {primary: "#DD0741", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#DD0741"}
   - id: eintracht-frankfurt
     name: "Eintracht Frankfurt"
     short_name: "Frankfurt"
@@ -491,6 +499,7 @@ teams:
     aliases: ["VfB Stuttgart"]
     country: "DE"
     colors: {primary: "#E32219", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#E32219"}
   - id: werder-bremen
     name: "Werder Bremen"
     short_name: "Bremen"
@@ -699,12 +708,14 @@ teams:
     aliases: []
     country: "FR"
     colors: {primary: "#2FAEE0", secondary: "#FFFFFF"}
+    shirt: {primary: "#FFFFFF", secondary: "#2FAEE0"}
   - id: lyon
     name: "Olympique Lyonnais"
     short_name: "Lyon"
     aliases: ["Olympique Lyon"]
     country: "FR"
     colors: {primary: "#1D428A", secondary: "#E31B23"}
+    shirt: {primary: "#FFFFFF", secondary: "#1D428A"}
   - id: monaco
     name: "Monaco"
     short_name: "Monaco"
@@ -887,3 +898,261 @@ teams:
     aliases: ["Sabah FK"]
     country: "AZ"
     colors: {primary: "#E30613", secondary: "#FFFFFF"}
+
+  # --- National teams (kind: national) -----------------------------------------------------------
+  # Added for the redesigned onboarding (the visitor picks a country, then its clubs and its
+  # national team). Colours are the shirt's two main colours as I know them: review before the
+  # site relies on them. These teams have no matches until the national-team calendars exist
+  # (issue #55), so following one shows an empty list for now.
+  - id: argentina
+    name: "Argentina"
+    short_name: "Argentina"
+    aliases: []
+    country: "AR"
+    colors: {primary: "#75AADB", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: uruguai
+    name: "Uruguai"
+    short_name: "Uruguai"
+    aliases: ["Uruguay"]
+    country: "UY"
+    colors: {primary: "#6EB1E2", secondary: "#000000"}
+    kind: "national"
+  - id: chile
+    name: "Chile"
+    short_name: "Chile"
+    aliases: []
+    country: "CL"
+    colors: {primary: "#D52B1E", secondary: "#0039A6"}
+    kind: "national"
+  - id: colombia
+    name: "Colômbia"
+    short_name: "Colômbia"
+    aliases: []
+    country: "CO"
+    colors: {primary: "#FFCD00", secondary: "#003893"}
+    kind: "national"
+  - id: paraguai
+    name: "Paraguai"
+    short_name: "Paraguai"
+    aliases: ["Paraguay"]
+    country: "PY"
+    colors: {primary: "#D52B1E", secondary: "#0038A8"}
+    kind: "national"
+  - id: peru
+    name: "Peru"
+    short_name: "Peru"
+    aliases: []
+    country: "PE"
+    colors: {primary: "#FFFFFF", secondary: "#D91023"}
+    kind: "national"
+  - id: inglaterra
+    name: "Inglaterra"
+    short_name: "Inglaterra"
+    aliases: ["England"]
+    country: "GB-ENG"
+    colors: {primary: "#FFFFFF", secondary: "#CF081F"}
+    kind: "national"
+  - id: espanha
+    name: "Espanha"
+    short_name: "Espanha"
+    aliases: ["Spain"]
+    country: "ES"
+    colors: {primary: "#C60B1E", secondary: "#FFC400"}
+    kind: "national"
+  - id: italia
+    name: "Itália"
+    short_name: "Itália"
+    aliases: ["Italy"]
+    country: "IT"
+    colors: {primary: "#0066CC", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: alemanha
+    name: "Alemanha"
+    short_name: "Alemanha"
+    aliases: ["Germany"]
+    country: "DE"
+    colors: {primary: "#FFFFFF", secondary: "#000000"}
+    kind: "national"
+  - id: franca
+    name: "França"
+    short_name: "França"
+    aliases: ["France"]
+    country: "FR"
+    colors: {primary: "#1D3E8F", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: portugal
+    name: "Portugal"
+    short_name: "Portugal"
+    aliases: []
+    country: "PT"
+    colors: {primary: "#C8102E", secondary: "#006600"}
+    kind: "national"
+  - id: holanda
+    name: "Holanda"
+    short_name: "Holanda"
+    aliases: ["Netherlands"]
+    country: "NL"
+    colors: {primary: "#FF7A00", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: belgica
+    name: "Bélgica"
+    short_name: "Bélgica"
+    aliases: ["Belgium"]
+    country: "BE"
+    colors: {primary: "#E30613", secondary: "#FDDA24"}
+    kind: "national"
+  - id: turquia
+    name: "Turquia"
+    short_name: "Turquia"
+    aliases: ["Turkey"]
+    country: "TR"
+    colors: {primary: "#E30A17", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: grecia
+    name: "Grécia"
+    short_name: "Grécia"
+    aliases: ["Greece"]
+    country: "GR"
+    colors: {primary: "#0D5EAF", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: austria
+    name: "Áustria"
+    short_name: "Áustria"
+    aliases: []
+    country: "AT"
+    colors: {primary: "#ED2939", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: noruega
+    name: "Noruega"
+    short_name: "Noruega"
+    aliases: ["Norway"]
+    country: "NO"
+    colors: {primary: "#BA0C2F", secondary: "#00205B"}
+    kind: "national"
+  - id: tchequia
+    name: "Tchéquia"
+    short_name: "Tchéquia"
+    aliases: ["Czech Republic"]
+    country: "CZ"
+    colors: {primary: "#D7141A", secondary: "#11457E"}
+    kind: "national"
+  - id: eslovaquia
+    name: "Eslováquia"
+    short_name: "Eslováquia"
+    aliases: ["Slovakia"]
+    country: "SK"
+    colors: {primary: "#0B4EA2", secondary: "#EE1C25"}
+    kind: "national"
+  - id: ucrania
+    name: "Ucrânia"
+    short_name: "Ucrânia"
+    aliases: ["Ukraine"]
+    country: "UA"
+    colors: {primary: "#0057B7", secondary: "#FFD700"}
+    kind: "national"
+  - id: azerbaijao
+    name: "Azerbaijão"
+    short_name: "Azerbaijão"
+    aliases: ["Azerbaijan"]
+    country: "AZ"
+    colors: {primary: "#00B5E2", secondary: "#EF3340"}
+    kind: "national"
+  - id: estados-unidos
+    name: "Estados Unidos"
+    short_name: "Estados Unidos"
+    aliases: ["United States"]
+    country: "US"
+    colors: {primary: "#FFFFFF", secondary: "#B31942"}
+    kind: "national"
+  - id: mexico
+    name: "México"
+    short_name: "México"
+    aliases: []
+    country: "MX"
+    colors: {primary: "#006847", secondary: "#CE1126"}
+    kind: "national"
+  - id: canada
+    name: "Canadá"
+    short_name: "Canadá"
+    aliases: []
+    country: "CA"
+    colors: {primary: "#D52B1E", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: marrocos
+    name: "Marrocos"
+    short_name: "Marrocos"
+    aliases: ["Morocco"]
+    country: "MA"
+    colors: {primary: "#C1272D", secondary: "#006233"}
+    kind: "national"
+  - id: senegal
+    name: "Senegal"
+    short_name: "Senegal"
+    aliases: []
+    country: "SN"
+    colors: {primary: "#00853F", secondary: "#FDEF42"}
+    kind: "national"
+  - id: nigeria
+    name: "Nigéria"
+    short_name: "Nigéria"
+    aliases: []
+    country: "NG"
+    colors: {primary: "#008751", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: egito
+    name: "Egito"
+    short_name: "Egito"
+    aliases: ["Egypt"]
+    country: "EG"
+    colors: {primary: "#CE1126", secondary: "#000000"}
+    kind: "national"
+  - id: africa-do-sul
+    name: "África do Sul"
+    short_name: "África do Sul"
+    aliases: ["South Africa"]
+    country: "ZA"
+    colors: {primary: "#FFB81C", secondary: "#007749"}
+    kind: "national"
+  - id: japao
+    name: "Japão"
+    short_name: "Japão"
+    aliases: ["Japan"]
+    country: "JP"
+    colors: {primary: "#0A3D91", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: coreia-do-sul
+    name: "Coreia do Sul"
+    short_name: "Coreia do Sul"
+    aliases: ["South Korea"]
+    country: "KR"
+    colors: {primary: "#CD2E3A", secondary: "#0047A0"}
+    kind: "national"
+  - id: arabia-saudita
+    name: "Arábia Saudita"
+    short_name: "Arábia Saudita"
+    aliases: ["Saudi Arabia"]
+    country: "SA"
+    colors: {primary: "#006C35", secondary: "#FFFFFF"}
+    kind: "national"
+  - id: ira
+    name: "Irã"
+    short_name: "Irã"
+    aliases: ["Iran"]
+    country: "IR"
+    colors: {primary: "#FFFFFF", secondary: "#239F40"}
+    kind: "national"
+  - id: australia
+    name: "Austrália"
+    short_name: "Austrália"
+    aliases: []
+    country: "AU"
+    colors: {primary: "#FFCD00", secondary: "#00843D"}
+    kind: "national"
+  - id: nova-zelandia
+    name: "Nova Zelândia"
+    short_name: "Nova Zelândia"
+    aliases: ["New Zealand"]
+    country: "NZ"
+    colors: {primary: "#FFFFFF", secondary: "#000000"}
+    kind: "national"

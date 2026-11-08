@@ -84,7 +84,7 @@ def build_warehouse(
     previous = fetch_previous_matches(previous_url) if previous_url else None
     con = warehouse.connect(database)
     try:
-        warehouse.load_yaml_file(con, "raw_teams", teams_path, key="teams")
+        warehouse.load_teams(con, teams_path)
         warehouse.load_competitions(con, all_competitions)
         warehouse.load_provider_responses(con, responses)
         warehouse.load_previous_matches(con, previous)

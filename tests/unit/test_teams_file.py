@@ -110,10 +110,25 @@ def test_colours_are_two_hex_values_and_clubs_carry_no_crest_or_logo_fields(
     teams: list[dict[str, Any]],
 ) -> None:
     for team in teams:
-        assert set(team) == {"id", "name", "short_name", "aliases", "country", "colors"}
+        required = {"id", "name", "short_name", "aliases", "country", "colors"}
+        assert required <= set(team) <= required | {"kind", "shirt"}  # no crest, no logo
         assert set(team["colors"]) == {"primary", "secondary"}
+        assert team.get("kind", "club") in {"club", "national"}
+        assert set(team.get("shirt", team["colors"])) == {"primary", "secondary"}
 
 
 def test_the_default_path_is_the_one_in_the_repository() -> None:
     assert isinstance(DEFAULT_TEAMS_PATH, Path)
     assert DEFAULT_TEAMS_PATH.is_file()
+
+
+def test_every_country_with_clubs_has_its_national_team(teams: list[dict[str, Any]]) -> None:
+    """The onboarding shows a country as the shirt of its national team: none may be missing."""
+    clubs = {t["country"] for t in teams if t.get("kind", "club") == "club"}
+    nations = {t["country"] for t in teams if t.get("kind") == "national"}
+    assert sorted(clubs - nations) == []
+
+
+def test_there_is_one_national_team_for_each_country(teams: list[dict[str, Any]]) -> None:
+    countries = [t["country"] for t in teams if t.get("kind") == "national"]
+    assert len(countries) == len(set(countries))
