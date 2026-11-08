@@ -9,6 +9,8 @@
 // visit; isPersistent() says which of the two is happening.
 
 export const STORAGE_KEY = 'ubi-ludus:preferences';
+/** Set once the visitor has seen the first-run flow (finished or skipped), so it is not shown again. */
+export const ONBOARDED_KEY = 'ubi-ludus:onboarded';
 export const VERSION = 1;
 export const MAX_IDS = 200;
 
@@ -65,6 +67,7 @@ export function createPreferences(getStorage = () => globalThis.localStorage) {
   const listeners = new Set();
   let persistent = true;
   let state = { teams: [], services: [], onlyWatchable: false };
+  let onboarded = false;
 
   function storage() {
     try {
@@ -90,6 +93,7 @@ export function createPreferences(getStorage = () => globalThis.localStorage) {
       if (stored) {
         state = stored;
       }
+      onboarded = store.getItem(ONBOARDED_KEY) === '1';
     } catch {
       persistent = false;
     }
@@ -149,13 +153,31 @@ export function createPreferences(getStorage = () => globalThis.localStorage) {
         onlyWatchable: typeof onlyWatchable === 'boolean' ? onlyWatchable : state.onlyWatchable,
       };
     },
+    /** Whether the visitor has already seen the first-run flow. */
+    isOnboarded() {
+      return onboarded;
+    },
+    /** Remember that the first-run flow was seen (finished or skipped). */
+    markOnboarded() {
+      onboarded = true;
+      const store = storage();
+      if (store) {
+        try {
+          store.setItem(ONBOARDED_KEY, '1');
+        } catch {
+          persistent = false; // it still holds for this visit
+        }
+      }
+    },
     /** Forget everything: the saved copy and the one in memory ("Reset my data"). */
     reset() {
       state = { teams: [], services: [], onlyWatchable: false };
+      onboarded = false;
       const store = storage();
       if (store) {
         try {
           store.removeItem(STORAGE_KEY);
+          store.removeItem(ONBOARDED_KEY);
         } catch {
           persistent = false;
         }

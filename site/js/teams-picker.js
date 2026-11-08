@@ -9,25 +9,11 @@
 //
 // The markup is in index.html; this module adds the behaviour and draws the options and the chips.
 
+import { countryName } from './countries.js';
 import { el, setAccent } from './dom.js';
-import { LOCALE } from './i18n.js';
 import { buildIndex, searchTeams, suggestTeams } from './search.js';
 
 const ANNOUNCE_AFTER_TYPING_MS = 350;
-const regionNames = new Intl.DisplayNames([LOCALE], { type: 'region' });
-
-function countryName(code, translator) {
-  if (code.includes('-')) {
-    // A part of a country (England): the strings file names it. The group is read by key.
-    return translator.t(['countries', code].join('.'));
-  }
-  try {
-    return regionNames.of(code) ?? code;
-  } catch {
-    return code;
-  }
-}
-
 /**
  * @param teams    the published teams
  * @param translator  from i18n.js

@@ -1,0 +1,804 @@
+/*
+ * The first-run flow (js/onboarding.js): a full-screen dialog with a welcome, then continent,
+ * country and team as grids of cards, then the services. The colours come from the tokens, so it
+ * follows the light and dark themes.
+ *
+ * Motion (at the end) only moves, scales and fades things, so nothing shifts the layout, and it is
+ * all switched off when the visitor asks their device for less motion.
+ */
+
+html.ob-open {
+  overflow: hidden;
+}
+
+.ob {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.ob[hidden] {
+  display: none;
+}
+
+.ob__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 34rem;
+  min-height: 0;
+}
+
+/* ---- the frame: back, progress, skip ---- */
+
+.ob__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-2);
+}
+
+.ob-icon-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.ob-icon-button__arrow {
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-left: 0.25rem;
+  border-bottom: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.ob-progress {
+  display: flex;
+  flex: 1;
+  gap: 0.375rem;
+}
+
+.ob-progress span {
+  flex: 1;
+  height: 0.375rem;
+  border-radius: 0.1875rem;
+  background: var(--color-border);
+  transition: background var(--motion-base) var(--motion-ease);
+}
+
+.ob-progress .is-on {
+  background: var(--color-focus);
+}
+
+.ob-link {
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  cursor: pointer;
+}
+
+/* ---- a screen ---- */
+
+.ob__screen {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ob__body {
+  padding: var(--space-2) var(--space-4) 10rem;
+}
+
+.ob__title {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-xl);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  outline: none;
+}
+
+.ob__eyebrow {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.ob__lead {
+  margin: var(--space-2) 0 var(--space-4);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.ob__section {
+  margin: var(--space-6) 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ob__fine {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.ob-empty {
+  padding: var(--space-6) var(--space-2);
+  color: var(--color-text-muted);
+}
+
+/* ---- buttons ---- */
+
+.ob-button {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+/* ---- the shirt ---- */
+
+.shirt {
+  display: block;
+  flex-shrink: 0;
+}
+
+.shirt__body {
+  stroke: var(--color-border-strong);
+  stroke-width: 1.2;
+}
+
+.shirt__trim {
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+/* ---- cards ---- */
+
+.ob-grid {
+  display: grid;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+}
+
+.ob-grid[hidden] {
+  display: none;
+}
+
+.ob-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ob-grid--continents {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: var(--space-4);
+}
+
+.ob-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 8.5rem;
+  padding: 0.875rem 0.375rem 0.75rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ob-tile.is-picked {
+  border: 2px solid var(--color-focus);
+  background: var(--color-accent-soft);
+}
+
+.ob-tile__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.ob-tile__name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.15;
+}
+
+.ob-tile__sub,
+.ob-tile__eyebrow {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.15;
+}
+
+.ob-tile__eyebrow {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ob-tile__check {
+  display: none;
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.8125rem;
+  line-height: 1.375rem;
+  text-align: center;
+}
+
+.ob-tile.is-picked .ob-tile__check {
+  display: block;
+}
+
+.ob-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  min-width: 1.375rem;
+  padding: 0 0.375rem;
+  box-sizing: border-box;
+  border-radius: 0.6875rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.375rem;
+  text-align: center;
+}
+
+/* The nation: one wide card above the clubs. */
+.ob-tile--wide {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 4.5rem;
+  padding: 0.75rem var(--space-4);
+  text-align: left;
+}
+
+.ob-tile--wide .ob-tile__name {
+  font-size: var(--font-size-lg);
+}
+
+.ob-tile--wide .ob-tile__check {
+  top: 50%;
+  right: var(--space-4);
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  transform: translateY(-50%);
+}
+
+/* A continent: three shirts, its name and how many countries. */
+.ob-tile--continent {
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 9.5rem;
+  padding: var(--space-4) var(--space-3);
+  text-align: left;
+}
+
+.ob-tile--continent .ob-tile__name {
+  font-size: var(--font-size-lg);
+}
+
+.ob-shirts {
+  display: flex;
+  padding-left: 0.5rem;
+}
+
+.ob-shirts .shirt {
+  margin-left: -0.5rem;
+}
+
+/* ---- the search ---- */
+
+.ob-search {
+  position: relative;
+}
+
+.ob-search input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 var(--space-4) 0 2.75rem;
+  box-sizing: border-box;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.ob-search__icon {
+  position: absolute;
+  top: 1.0625rem;
+  left: 1.0625rem;
+  width: 0.8125rem;
+  height: 0.8125rem;
+  border: 2px solid var(--color-text-muted);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ob-search__icon::after {
+  content: "";
+  position: absolute;
+  right: -0.4rem;
+  bottom: -0.25rem;
+  width: 0.45rem;
+  height: 2px;
+  background: var(--color-text-muted);
+  transform: rotate(45deg);
+}
+
+.ob-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* ---- rows: a search result, a service ---- */
+
+.ob-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.625rem var(--space-4);
+  box-sizing: border-box;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ob-row.is-picked {
+  border: 2px solid var(--color-focus);
+  background: var(--color-accent-soft);
+}
+
+.ob-row__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.ob-row__name {
+  font-weight: var(--font-weight-bold);
+}
+
+.ob-row__sub {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.ob-row__go {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+.ob-row__mark {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  box-sizing: border-box;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 50%;
+  color: transparent;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.5rem;
+  text-align: center;
+}
+
+.ob-row__mark::after {
+  content: "+";
+}
+
+.ob-row.is-picked .ob-row__mark,
+.ob-row__box:checked + .ob-row .ob-row__mark {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.ob-row.is-picked .ob-row__mark::after,
+.ob-row__box:checked + .ob-row .ob-row__mark::after {
+  content: "✓";
+}
+
+.ob-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-service {
+  position: relative;
+}
+
+/* The real checkbox sits over its label: it is what is focused, clicked and read out. */
+.ob-row__box {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ob-row__box:checked + .ob-row {
+  border: 2px solid var(--color-focus);
+  background: var(--color-accent-soft);
+}
+
+.ob-row__box:focus-visible + .ob-row {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---- the bottom bar: what is picked, and the way on ---- */
+
+.ob-bar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  background: linear-gradient(to bottom, transparent, var(--color-bg) 28%);
+}
+
+.ob-bar[hidden] {
+  display: none;
+}
+
+.ob-bar > * {
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25);
+}
+
+.ob-bar > ul,
+.ob-bar__services {
+  box-shadow: none;
+}
+
+.ob-bar__chips {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  padding: 0 0 var(--space-1);
+  overflow-x: auto;
+  list-style: none;
+}
+
+.ob-chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.5rem;
+  padding: 0 0.625rem 0 0.375rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+.ob-bar__services {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ---- the welcome ---- */
+
+.ob__welcome {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: var(--space-6) var(--space-6) var(--space-6);
+  box-sizing: border-box;
+  background: radial-gradient(120% 55% at 50% 0%, var(--color-accent-soft) 0%, var(--color-bg) 62%);
+}
+
+.ob__welcome::before {
+  content: "";
+  position: absolute;
+  top: 8.5rem;
+  left: 50%;
+  width: 15rem;
+  height: 15rem;
+  margin-left: -7.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ob-brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.ob-brand__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.625rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.ob-sample {
+  position: relative;
+  margin-top: 3.25rem;
+}
+
+.ob-sample__card {
+  transform: rotate(-3deg);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 1.25rem;
+  background: var(--color-surface);
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 0.3);
+}
+
+.ob-sample__label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ob-sample__teams {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.ob-sample__match {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.ob-sample__match span {
+  display: block;
+}
+
+.ob-sample__time {
+  margin: 0 0.25rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+}
+
+.ob-sample__where {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.ob-sample__chip {
+  padding: 0.3125rem 0.75rem;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ob-sample__chip.is-free {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.ob__welcome-text {
+  position: relative;
+  margin-top: auto;
+  padding-top: var(--space-6);
+}
+
+.ob__welcome-text .ob__title {
+  font-size: clamp(2rem, 9vw, 2.5rem);
+  letter-spacing: -0.03em;
+}
+
+.ob__welcome-text .ob__lead {
+  font-size: var(--font-size-lg);
+}
+
+.ob-button--cta {
+  margin-top: var(--space-2);
+}
+
+.ob__welcome-text .ob-link {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.ob-word {
+  display: inline-block;
+}
+
+.ob-word.is-accent {
+  color: var(--color-focus);
+}
+
+/* ---- motion ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes ob-rise {
+    from { opacity: 0; transform: translateY(1.125rem); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ob-pop {
+    0% { opacity: 0; transform: scale(0.82) translateY(0.5rem); }
+    60% { opacity: 1; transform: scale(1.04); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes ob-slide-forward {
+    from { opacity: 0; transform: translateX(1.75rem); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ob-slide-back {
+    from { opacity: 0; transform: translateX(-1.75rem); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ob-card-in {
+    0% { opacity: 0; transform: translateY(-2.75rem) rotate(-10deg) scale(0.92); }
+    70% { opacity: 1; transform: translateY(0.375rem) rotate(-2deg) scale(1.01); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes ob-float {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50% { transform: rotate(-3deg) translateY(-0.4375rem); }
+  }
+  @keyframes ob-shirt-pop {
+    0% { opacity: 0; transform: scale(0.3) rotate(-14deg); }
+    65% { opacity: 1; transform: scale(1.14) rotate(4deg); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes ob-bounce {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.2) rotate(-5deg); }
+    65% { transform: scale(0.95) rotate(2deg); }
+    100% { transform: scale(1); }
+  }
+  @keyframes ob-check {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+  @keyframes ob-check-wide {
+    0% { transform: translateY(-50%) scale(0); }
+    70% { transform: translateY(-50%) scale(1.3); }
+    100% { transform: translateY(-50%) scale(1); }
+  }
+  @keyframes ob-bar-up {
+    from { opacity: 0; transform: translateY(3.25rem); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ob-glow {
+    0%, 100% { box-shadow: 0 0 0 0 transparent; }
+    50% { box-shadow: 0 0 0 0.625rem color-mix(in srgb, var(--color-accent) 32%, transparent); }
+  }
+  @keyframes ob-ring {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .ob__screen.is-forward { animation: ob-slide-forward 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ob__screen.is-back { animation: ob-slide-back 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ob__screen--welcome { animation: none; }
+
+  .ob-tile,
+  .ob-row--result,
+  .ob-service {
+    animation: ob-pop 0.45s cubic-bezier(0.3, 1.3, 0.5, 1) both;
+    animation-delay: calc(80ms + var(--i, 0) * 40ms);
+  }
+
+  .ob-tile .shirt {
+    animation: ob-shirt-pop 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+    animation-delay: calc(160ms + var(--i, 0) * 40ms);
+    transform-origin: 50% 60%;
+  }
+
+  .ob-tile .shirt.is-bounce {
+    animation: ob-bounce 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  .ob-tile.is-picked .ob-tile__check { animation: ob-check 0.35s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+  .ob-tile--wide.is-picked .ob-tile__check { animation-name: ob-check-wide; }
+  .ob-badge { animation: ob-check 0.35s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+
+  .ob-bar:not([hidden]) { animation: ob-bar-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ob-bar__chips li:last-child .ob-chip { animation: ob-pop 0.3s cubic-bezier(0.3, 1.3, 0.5, 1) both; }
+
+  /* The welcome, in order: the card drops in and floats, the shirts pop, the words arrive, then the button. */
+  .ob-brand { animation: ob-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ob__welcome::before { animation: ob-ring 1.2s ease-out 0.2s both; }
+  .ob-sample { animation: ob-card-in 0.9s cubic-bezier(0.2, 1, 0.3, 1) 0.2s both; }
+  .ob-sample__card { animation: ob-float 5s ease-in-out 1.5s infinite; }
+  .ob-sample__teams .shirt { animation: ob-shirt-pop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) 0.65s both; }
+  .ob-sample__teams .shirt:last-child { animation-delay: 0.78s; }
+  .ob-word {
+    animation: ob-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(450ms + var(--i, 0) * 70ms);
+  }
+  .ob__welcome-text .ob__lead { animation: ob-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1s both; }
+  .ob-button--cta {
+    animation:
+      ob-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both,
+      ob-glow 2.2s ease-in-out 2s 4;
+  }
+  .ob__welcome-text .ob-link { animation: ob-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both; }
+  .ob__fine { animation: ob-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.25s both; }
+}

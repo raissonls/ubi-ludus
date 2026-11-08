@@ -12,6 +12,7 @@ js/data.js        loads the five published files from data/ and indexes them by 
 js/preferences.js  the visitor's teams and services, in localStorage and nowhere else
 js/search.js       finds a team as you type (no accents, aliases, ranked); pure
 js/teams-picker.js  the "Which teams do you follow?" combobox and the chosen teams
+js/onboarding.js    the first-run flow: welcome, continent, country and team as grids of shirts, then services (js/onboarding-model.js and js/countries.js decide what it shows; js/shirt.js draws a shirt in a team's two colours)
 js/services-picker.js  the "Which services do you have?" checkboxes
 js/matches-preview.js  which matches of the followed teams are still to come; pure
 js/match-model.js  turns a match and the data into what a card shows (state, confidence, badges); pure
