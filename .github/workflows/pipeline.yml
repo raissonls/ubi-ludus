@@ -90,9 +90,12 @@ jobs:
           mkdir _site
           cp -r site/index.html site/css site/js site/i18n site/assets site/data _site/
 
+      # Kept for 14 days (the default is one) so that the deploy of an earlier run can be run
+      # again: that is the rollback (docs/runbook.md).
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
+          retention-days: 14
 
       # The e-mail job reads the same data the site is about to serve.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -122,7 +125,9 @@ jobs:
   email:
     name: Send the morning e-mail
     needs: [build, deploy]
-    if: github.event_name != 'workflow_dispatch' || inputs.send_email
+    # The repository variable EMAIL_ENABLED set to false switches the e-mail off for every run,
+    # scheduled or by hand, without editing this file (docs/runbook.md).
+    if: (github.event_name != 'workflow_dispatch' || inputs.send_email) && vars.EMAIL_ENABLED != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -155,6 +160,9 @@ jobs:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           SITE_URL: ${{ needs.deploy.outputs.page_url }}
+          # Not secrets. Empty means Brevo's relay on port 587 (docs/runbook.md, Switching provider).
+          SMTP_HOST: ${{ vars.SMTP_HOST }}
+          SMTP_PORT: ${{ vars.SMTP_PORT }}
         run: python -m ubi_ludus.email.send --data site/data
 
   # Tells the owner (FR-51). It runs whatever happened before it, except when someone cancelled the

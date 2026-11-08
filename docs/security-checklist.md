@@ -98,11 +98,11 @@ Do these in order, in the GitHub web settings. Items marked "now" can already be
 | No cookies or identifying analytics; privacy notice and `PRIVACY.md` | M3-01 (#18), M3-02 (#19) | open |
 | Preferences never leave the browser | M3-02 (#19) | open |
 | Provider calls within rate limits; user-agent identifies the project | M1-03 (#9), M1-05 (#11), M1-07 (#53) | open |
-| Runbook: rotate a leaked secret, switch provider, disable e-mail, roll back | M4-06 (#35) | open |
+| Runbook: rotate a leaked secret, switch provider, disable e-mail, roll back | M4-06 (#35), [runbook](runbook.md) | done |
 | Provider terms re-checked before launch | M5-04 (#39) | open |
 
 ## Ongoing habits
 
 - Merge or close Dependabot pull requests each week, after CI passes.
-- If a key ever leaks: revoke it at the provider first, then replace it in GitHub Secrets, then clean the code. The runbook (M4-06) will hold the exact steps.
+- If a key ever leaks: revoke it at the provider first, then replace it in GitHub Secrets, then clean the code. The exact steps are in the [runbook](runbook.md#rotating-a-leaked-secret).
 - Re-read the providers' terms before any change that could affect them: ads, paid features, selling data, crests (see [provider comparison](research/provider-comparison.md)).

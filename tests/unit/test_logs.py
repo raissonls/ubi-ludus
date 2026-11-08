@@ -186,3 +186,31 @@ def test_a_run_with_no_calls_says_none() -> None:
     found = json.loads(stream.getvalue())
     assert found["providers"] == {} and found["network_total"] == 0
     assert "Provider calls this run: none" in found["message"]
+
+
+def test_a_plain_handler_a_library_installed_is_replaced_so_no_line_comes_out_twice() -> None:
+    root = logging.getLogger()
+    plain_stream = io.StringIO()
+    plain = logging.StreamHandler(plain_stream)  # what importing dbt leaves on the root logger
+    root.addHandler(plain)
+    ours = io.StringIO()
+    configure_logging(ours)
+    logging.getLogger("ubi.test").info("once")
+    assert plain not in root.handlers
+    assert plain_stream.getvalue() == "" and len(ours.getvalue().splitlines()) == 1
+
+
+def test_a_handler_that_is_not_a_plain_stream_handler_is_left_alone() -> None:
+    class Collecting(logging.Handler):
+        def __init__(self) -> None:
+            super().__init__()
+            self.seen: list[str] = []
+
+        def emit(self, record: logging.LogRecord) -> None:
+            self.seen.append(record.getMessage())
+
+    mine = Collecting()
+    logging.getLogger().addHandler(mine)
+    configure_logging(io.StringIO())
+    logging.getLogger("ubi.test").info("kept")
+    assert mine.seen == ["kept"]

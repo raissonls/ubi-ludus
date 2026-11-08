@@ -112,7 +112,22 @@ def test_the_steps_run_in_order_and_each_waits_for_the_one_before() -> None:
 
 def test_the_e_mail_can_be_left_out_of_a_manual_run_but_never_of_the_daily_one() -> None:
     condition = pipeline_jobs()["email"]["if"]
-    assert condition == "github.event_name != 'workflow_dispatch' || inputs.send_email"
+    assert "github.event_name != 'workflow_dispatch' || inputs.send_email" in condition
+
+
+def test_the_e_mail_has_a_kill_switch_that_needs_no_pull_request() -> None:
+    """A repository variable EMAIL_ENABLED=false stops every e-mail (docs/runbook.md)."""
+    assert pipeline_jobs()["email"]["if"].endswith("&& vars.EMAIL_ENABLED != 'false'")
+
+
+def test_the_deployed_site_is_kept_long_enough_to_roll_back_to() -> None:
+    steps = pipeline_jobs()["build"]["steps"]
+    pages = next(
+        s for s in steps if str(s.get("uses", "")).startswith("actions/upload-pages-artifact@")
+    )
+    assert (
+        pages["with"]["retention-days"] >= 14
+    )  # the default of one day leaves nothing to go back to
 
 
 def test_a_provider_that_fails_stops_the_run_before_anything_is_deployed() -> None:

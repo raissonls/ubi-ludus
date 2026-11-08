@@ -12,12 +12,13 @@ from dbt_helpers import FIXTURES, NOW, fixture_registry, rights_with, rule
 from log_helpers import leave_logging_as_found  # noqa: F401 - an autouse fixture
 
 from ubi_ludus.pipeline import export, publish
+from ubi_ludus.pipeline.dbt_runner import DbtBuildError
 from ubi_ludus.pipeline.env import load_env_file
 from ubi_ludus.pipeline.fetch import FetchOutcome
 from ubi_ludus.pipeline.providers.guard import CallLog
 from ubi_ludus.pipeline.publish import Published
 from ubi_ludus.pipeline.rights import RightsData
-from ubi_ludus.pipeline.run import RunResult, build_warehouse
+from ubi_ludus.pipeline.run import PipelineError, RunResult, build_warehouse
 from ubi_ludus.pipeline.validate import SchemaValidationError, validate_file
 
 # The warehouse is built from the dbt fixtures, so it needs dbt.
@@ -355,3 +356,51 @@ def test_no_secret_in_the_environment_reaches_the_log(
     captured = capsys.readouterr()
     assert hidden_value not in captured.err + captured.out
     assert "provider said no to ***" in captured.err
+
+
+def test_when_no_provider_gives_anything_the_run_ends_with_a_message_and_a_log_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def nothing(*args: Any, **kwargs: Any) -> RunResult:
+        raise PipelineError(
+            "No provider gave any data (football-data: FOOTBALL_DATA_TOKEN is not set)"
+        )
+
+    command(monkeypatch, failed_run(tmp_path / "w.duckdb"))
+    monkeypatch.setattr(publish, "build_warehouse", nothing)
+    assert publish.main(["--run", "--out", str(tmp_path)]) == 1  # no traceback
+    captured = capsys.readouterr()
+    assert "error: No provider gave any data" in captured.err
+    [summary] = [e for e in events(captured.err) if e.get("event") == "run_summary"]
+    assert summary["outcome"] == "failed" and "FOOTBALL_DATA_TOKEN is not set" in summary["error"]
+    assert not list(tmp_path.glob("*.json"))  # nothing was written
+
+
+def test_when_a_dbt_test_fails_the_run_says_which_and_writes_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def broken(*args: Any, **kwargs: Any) -> RunResult:
+        raise DbtBuildError(["no_match_is_listed_twice"])
+
+    command(monkeypatch, failed_run(tmp_path / "w.duckdb"))
+    monkeypatch.setattr(publish, "build_warehouse", broken)
+    assert publish.main(["--run", "--out", str(tmp_path)]) == 1
+    captured = capsys.readouterr()
+    assert "dbt build failed: no_match_is_listed_twice" in captured.err
+    [summary] = [e for e in events(captured.err) if e.get("event") == "run_summary"]
+    assert summary["outcome"] == "failed" and "no_match_is_listed_twice" in summary["error"]
+
+
+def test_a_file_that_fails_its_schema_ends_the_run_with_a_message_and_a_log_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def invalid(*args: Any, **kwargs: Any) -> Published:
+        raise SchemaValidationError("matches", ["match 3: kickoff is not a UTC time"])
+
+    command(monkeypatch, failed_run(tmp_path / "w.duckdb"))
+    monkeypatch.setattr(publish, "publish", invalid)
+    assert publish.main(["--run", "--out", str(tmp_path)]) == 1
+    captured = capsys.readouterr()
+    assert "kickoff is not a UTC time" in captured.err
+    [summary] = [e for e in events(captured.err) if e.get("event") == "run_summary"]
+    assert summary["outcome"] == "failed" and "schema" in summary["message"]

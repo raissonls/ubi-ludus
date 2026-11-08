@@ -61,13 +61,13 @@ Two lines are the ones to look for. Open the build job's step "Fetch, build with
 | `event` | When | What it carries |
 | --- | --- | --- |
 | `provider_calls` | after the providers were asked | `providers`: for each one `total`, `network` (real calls) and `cached`; and `network_total`. This is the count of calls per run that FR-03 asks for. |
-| `run_summary` | at the end, whatever the result | `outcome` (`published` or `stopped`), `record_counts` and `unknown_ratio` (when published), `failed_providers` with the reason of each, `network_calls`, `duration_seconds` |
+| `run_summary` | at the end, whatever the result | `outcome` (`published`; `stopped` when a provider failed and nothing was written; `failed` when no provider gave anything, a dbt test failed or a file did not match its schema, with the reason in `error`), `record_counts` and `unknown_ratio` (when published), `failed_providers` with the reason of each, `network_calls`, `duration_seconds` |
 
 ```json
 {"time": "2026-11-07T23:12:09Z", "level": "INFO", "logger": "ubi_ludus.pipeline.publish", "message": "Run finished, 5 files written: 92 matches, ...", "event": "run_summary", "outcome": "published", "record_counts": {"matches": 92, ...}, "unknown_ratio": 0.0, "failed_providers": {}, "network_calls": 9, "duration_seconds": 22.4}
 ```
 
-On a downloaded log: `grep '"event": "run_summary"' run.log | jq .`. Not every line is JSON: dbt prints its own progress as plain text between ours.
+On a downloaded log: `grep '"event": "run_summary"' run.log | jq .`. Everything we write is JSON; if dbt prints anything of its own (it is run quietly) it is plain text.
 
 **No secrets in the log.** The value of any environment variable whose name contains TOKEN, KEY, PASSWORD or SECRET is replaced by `***` wherever it would appear in a line (message, data or error text), as a safety net behind code that does not log them to begin with. GitHub also masks secrets in Actions logs. `tests/unit/test_logs.py` and `tests/unit/test_publish.py` check it.
 
