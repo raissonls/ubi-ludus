@@ -44,7 +44,7 @@
 
 /* Smaller on a small phone, so the match and where to watch it stay above the fold. */
 .hero__shirts .shirt {
-  width: min(20vw, 5.75rem);
+  width: min(15vw, 5.75rem);
   height: auto;
 }
 

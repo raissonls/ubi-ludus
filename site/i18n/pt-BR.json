@@ -47,7 +47,6 @@
     "emptyToday": "Nenhum jogo hoje.",
     "emptyWeek": "Nenhum jogo nos próximos sete dias.",
     "groupMine": "Jogos dos seus times",
-    "groupOthers": "Outros jogos",
     "shown": {
       "one": "{count} jogo em “{view}”.",
       "other": "{count} jogos em “{view}”."
@@ -321,5 +320,34 @@
   },
   "hero": {
     "title": "Seu próximo jogo"
+  },
+  "quick": {
+    "label": "Filtros rápidos",
+    "all": "Todos",
+    "live": "Ao vivo",
+    "watchable": "Posso assistir",
+    "free": "Só TV aberta e YouTube",
+    "competition": "Competição"
+  },
+  "rails": {
+    "live": "Ao vivo agora",
+    "next": "Seus próximos jogos",
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "more": "Ver tudo",
+    "less": "Ver menos",
+    "moreFor": "Ver tudo em {title}",
+    "lessFor": "Ver menos em {title}"
+  },
+  "poster": {
+    "free": "Grátis",
+    "paid": "Pago",
+    "unknown": "A confirmar",
+    "details": "Ver detalhes",
+    "more": "+{count}",
+    "can": "✓ você tem"
+  },
+  "sheet": {
+    "close": "Fechar os detalhes"
   }
 }

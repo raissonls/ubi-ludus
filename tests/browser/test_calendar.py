@@ -15,7 +15,15 @@ from typing import Any
 import pytest
 from icalendar import Calendar
 from playwright.sync_api import Browser, Page
-from site_browser import DATA, STORAGE_KEY, VIEWPORTS, WATCH_VIOLATIONS, axe_violations, visit
+from site_browser import (
+    DATA,
+    STORAGE_KEY,
+    VIEWPORTS,
+    WATCH_VIOLATIONS,
+    axe_violations,
+    open_details,
+    visit,
+)
 
 pytestmark = pytest.mark.browser
 
@@ -38,8 +46,8 @@ def save_file(page: Page, click: Callable[[], None]) -> tuple[str, bytes]:
 
 
 def add_button(page: Page, teams: str) -> Any:
-    card = page.locator(".match-card", has_text=teams.split(" x ")[0]).first
-    return card.get_by_role("button", name=f"{ADD} de {teams}")
+    sheet = open_details(page, teams.split(" x ")[0])
+    return sheet.get_by_role("button", name=f"{ADD} de {teams}")
 
 
 def parse(raw: bytes) -> Calendar:
@@ -129,9 +137,15 @@ def test_matches_that_are_over_or_off_have_no_calendar_button(
             match["status"] = "cancelled"
     for current in visit(browser, origin, path=WEEK, changed_data={"matches": document}):
         page = current.page
-        assert page.get_by_role("button", name=ADD, exact=False).count() == 4
+        assert page.locator(".match-card--poster").count() == 5
+        # The button is in the details of each match that is still on, and not in a cancelled one.
         assert (
-            page.locator(".match-card[data-state='cancelled'] .match-card__calendar").count() == 0
+            open_details(page, "Palmeiras").get_by_role("button", name=ADD, exact=False).count()
+            == 0
+        )
+        assert (
+            open_details(page, "Real Madrid").get_by_role("button", name=ADD, exact=False).count()
+            == 1
         )
 
 
@@ -148,9 +162,7 @@ def test_names_that_try_to_break_the_file_stay_inside_one_property(
             team["name"] = team["short_name"] = hostile
     for current in visit(browser, origin, path=WEEK, changed_data={"teams": teams}):
         page = current.page
-        button = page.locator(".match-card", has_text="Flamengo").first.locator(
-            ".match-card__calendar"
-        )
+        button = open_details(page, "Flamengo").locator(".match-card__calendar")
         _, raw = save_file(page, button.click)
         lines = raw.split(b"\r\n")
         assert lines.count(b"BEGIN:VEVENT") == 1 and lines.count(b"END:VEVENT") == 1

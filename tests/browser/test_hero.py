@@ -10,7 +10,7 @@ from typing import Any
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, open_details, visit
 
 pytestmark = pytest.mark.browser
 
@@ -111,15 +111,18 @@ def test_the_shirts_are_in_the_colours_of_the_teams_and_hold_no_crest(
         assert page.locator(f"{HERO} .shirt").first.get_attribute("aria-hidden") == "true"
 
 
-def test_the_match_cards_show_shirts_in_place_of_colour_dots(browser: Browser, origin: str) -> None:
+def test_the_posters_and_the_full_card_show_shirts_in_place_of_colour_dots(
+    browser: Browser, origin: str
+) -> None:
     for current in visit(browser, origin, saved=saved(["palmeiras"])):
         page = current.page
-        card = page.locator("#matches-list .match-card").first
-        assert card.locator(".match-card__teams .shirt").count() == 2
-        assert card.locator(".swatch").count() == 0
-        assert (
-            card.locator(".match-card__teams .shirt").first.get_attribute("aria-hidden") == "true"
-        )
+        poster = page.locator("#matches-list .match-card--poster").first
+        assert poster.locator(".poster__shirts .shirt").count() == 2
+        assert poster.locator(".swatch").count() == 0
+        assert poster.locator(".shirt").first.get_attribute("aria-hidden") == "true"
+        # The full card, in the sheet, has them beside the names.
+        sheet = open_details(page, "Palmeiras")
+        assert sheet.locator(".match-card__teams .shirt").count() == 2
 
 
 @pytest.mark.parametrize("scheme", ["light", "dark"])

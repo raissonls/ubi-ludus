@@ -13,6 +13,11 @@ const formatters = {
     day: 'numeric',
     month: 'short',
   }),
+  dayMonth: new Intl.DateTimeFormat(LOCALE, {
+    timeZone: TIME_ZONE,
+    day: 'numeric',
+    month: 'short',
+  }),
   time: new Intl.DateTimeFormat(LOCALE, {
     timeZone: TIME_ZONE,
     hour: '2-digit',
@@ -47,6 +52,11 @@ function toDate(value) {
 /** "sáb., 14 de nov." for a UTC instant (an ISO string or a Date). */
 export function formatDate(value) {
   return formatters.date.format(toDate(value));
+}
+
+/** "14 de nov." for a UTC instant: short, for a small card. */
+export function formatDayMonth(value) {
+  return formatters.dayMonth.format(toDate(value));
 }
 
 /** "16:00". */

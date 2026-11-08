@@ -332,10 +332,10 @@ def test_team_colours_are_used_as_accents_and_nothing_else_is_drawn(
         assert "rgb(0, 100, 55)" in background  # Palmeiras green, #006437
         assert "rgb(255, 255, 255)" in background
         assert swatch.evaluate("e => e.getAttribute('aria-hidden')") == "true"  # the name is there
-        bar = page.locator("#matches-list .match-card").evaluate(
-            "e => getComputedStyle(e).borderInlineStartColor"
+        wash = page.locator("#matches-list .match-card").first.evaluate(
+            "e => e.style.getPropertyValue('--home')"
         )
-        assert bar == "rgb(0, 100, 55)"
+        assert wash == "#006437"  # the poster's wash starts from Palmeiras green
         # No crest, no logo, no picture: the only drawings are shirts, which are colours only.
         assert page.locator("img, canvas, picture, svg:not(.shirt)").count() == 0
         assert current.console == []  # setting a colour from script is allowed by the policy

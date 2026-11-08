@@ -62,7 +62,8 @@ function team(side, translator) {
   return [el('span', { class: 'match-card__team' }, [shirt, name])];
 }
 
-function badge(item, translator) {
+/** One broadcaster, as a badge: a tick when we are sure, words for a screen reader. */
+export function renderBadge(item, translator) {
   const sure = item.confidence === 'confirmed';
   // `accessible` is only there when the services are known. Yours: a solid outline; not yours: a
   // dashed one, and the words for a screen reader.
@@ -85,7 +86,7 @@ export function renderWatch(model, translator, cardId) {
   if (model.confidence === 'unknown') {
     return el('p', { class: 'confidence confidence--unknown', text: translator.t(CONFIDENCE_KEY.unknown) });
   }
-  const badges = model.badges.map((item) => badge(item, translator));
+  const badges = model.badges.map((item) => renderBadge(item, translator));
   const list = el('ul', { class: 'badges', id: `${cardId}-badges`, 'aria-labelledby': `${cardId}-watch` }, badges);
   const children = [el('p', { class: 'match-card__label', id: `${cardId}-watch`, text: translator.t('card.watch') }), list];
 

@@ -113,31 +113,32 @@ def test_the_day_changes_at_midnight_in_brazil_not_in_utc(browser: Browser, orig
 # --- followed teams first ------------------------------------------------------------------------
 
 
-def test_followed_teams_come_before_the_other_matches_with_the_groups_named(
+def test_the_week_is_a_row_for_each_day_soonest_first_and_a_followed_team_is_marked(
     browser: Browser, origin: str
 ) -> None:
     for current in visit(browser, origin, saved=following("sao-paulo")):
         page = current.page
         choose(page, "Esta semana")
         assert listed(page) == [
-            "São Paulo x Atlético-MG",
             "Palmeiras x Flamengo",
             "Real Madrid x Barça",
             "Chelsea x Atleti",
+            "São Paulo x Atlético-MG",
             "Brasil x A definir",
         ]
-        assert page.locator(".matches-group__title").all_inner_texts() == [
-            "Jogos dos seus times",
-            "Outros jogos",
-        ]
+        titles = page.locator(".matches-group__title").all_inner_texts()
+        assert len(titles) == 5 and titles[0] == "Amanhã"  # the clock of the test data: 2 November
         followed = page.locator(".match-card[data-followed='true'] .match-card__teams")
         assert followed.all_inner_texts() == ["São Paulo x Atlético-MG"]
 
 
-def test_without_followed_matches_there_are_no_group_titles(browser: Browser, origin: str) -> None:
-    for current in visit(browser, origin):
-        choose(current.page, "Esta semana")
-        assert current.page.locator(".matches-group__title").count() == 0
+def test_today_with_nobody_followed_is_a_row_for_each_competition(
+    browser: Browser, origin: str
+) -> None:
+    for current in visit(browser, origin, now="2026-11-03T12:00:00Z"):
+        choose(current.page, "Hoje")
+        titles = current.page.locator(".matches-group__title").all_inner_texts()
+        assert titles == ["Campeonato Brasileiro Série A"]
 
 
 # --- the buttons ---------------------------------------------------------------------------------

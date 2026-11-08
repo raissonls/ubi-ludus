@@ -61,6 +61,7 @@ export function mountHome({ data, translator, preferences }) {
     data,
     translator,
     initial: { view: fromAddress.view, filters: fromAddress.filters },
+    setOnlyWatchable: (value) => preferences.setOnlyWatchable(value),
     onStateChange: (state) => {
       filtersView.show(state.filters);
       syncAddress();

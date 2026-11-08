@@ -11,7 +11,7 @@ from urllib.parse import parse_qs, urlparse
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import DATA, STORAGE_KEY, VIEWPORTS, axe_violations, open_details, visit
 
 pytestmark = pytest.mark.browser
 
@@ -137,8 +137,8 @@ def test_each_card_has_a_link_that_reports_that_match_with_what_the_site_shows(
     for current in visit(browser, origin):
         page = current.page
         week(page)
-        card = page.locator(".match-card", has_text="Palmeiras")
-        link = card.get_by_role("link", name="Reportar transmissão errada de Palmeiras x Flamengo")
+        sheet = open_details(page, "Palmeiras")
+        link = sheet.get_by_role("link", name="Reportar transmissão errada de Palmeiras x Flamengo")
         assert link.count() == 1  # the name says which match, since every card has the link
         href = link.get_attribute("href") or ""
         parts = urlparse(href)
@@ -162,7 +162,7 @@ def test_a_match_with_no_known_broadcaster_can_be_reported_too(
     for current in visit(browser, origin):
         page = current.page
         week(page)
-        link = page.locator(".match-card", has_text="Real Madrid").get_by_role("link")
+        link = open_details(page, "Real Madrid").get_by_role("link", name="Reportar", exact=False)
         assert query(link.get_attribute("href") or "")["shown"] == (
             "nenhuma emissora (transmissão não confirmada)"
         )
@@ -176,10 +176,17 @@ def test_a_match_that_is_over_or_off_has_nothing_to_report(browser: Browser, ori
     for current in visit(browser, origin, changed_data={"matches": document}):
         page = current.page
         week(page)
-        cancelled = page.locator(".match-card[data-state='cancelled']")
-        assert cancelled.count() == 1
-        assert cancelled.get_by_role("link").count() == 0
-        assert page.locator(".match-card").get_by_role("link").count() == 4
+        assert page.locator(".match-card--poster[data-state='cancelled']").count() == 1
+        sheet = open_details(page, "Palmeiras")  # fx-1, the cancelled match
+        assert sheet.locator(".match-card").get_attribute("data-state") == "cancelled"
+        assert sheet.get_by_role("link", name="Reportar", exact=False).count() == 0
+        # The others have the link.
+        assert (
+            open_details(page, "Real Madrid")
+            .get_by_role("link", name="Reportar", exact=False)
+            .count()
+            == 1
+        )
 
 
 def test_the_link_carries_the_match_and_nothing_about_the_visitor(
@@ -192,7 +199,11 @@ def test_the_link_carries_the_match_and_nothing_about_the_visitor(
         "onlyWatchable": True,
     }
     for current in visit(browser, origin, saved={STORAGE_KEY: json.dumps(record)}):
-        hrefs = current.page.locator(".match-card__report").evaluate_all("a => a.map(x => x.href)")
+        hrefs = (
+            open_details(current.page, "Palmeiras")
+            .locator(".match-card__report")
+            .evaluate_all("a => a.map(x => x.href)")
+        )
         assert hrefs
         for href in hrefs:
             assert set(query(href)) == {"template", "title", "match", "shown"}
@@ -210,7 +221,7 @@ def test_following_the_link_goes_to_the_new_issue_form_and_only_then(
         week(page)
         before = [r for r in current.requests if urlparse(r).hostname == SHOWN_HOST]
         assert before == []  # drawing the page and the cards sends nothing to GitHub
-        page.locator(".match-card", has_text="Palmeiras").get_by_role("link").click()
+        open_details(page, "Palmeiras").get_by_role("link", name="Reportar", exact=False).click()
         page.wait_for_url("https://github.com/**")
         assert urlparse(page.url).path == REPO_PATH
         assert query(page.url)["title"] == "Transmissão errada: Palmeiras x Flamengo"
