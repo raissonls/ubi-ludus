@@ -220,5 +220,103 @@
     "name": "Ubi Ludus: jogos dos meus times",
     "check": "Confira a emissora perto do jogo.",
     "from": "Horário de Brasília: {when}. Dados do Ubi Ludus."
+  },
+  "onboarding": {
+    "dialogLabel": "Primeiros passos",
+    "reopen": "Escolher de novo, passo a passo",
+    "skip": "Pular",
+    "back": "Voltar",
+    "progress": "Passo {step} de {total}",
+    "nation": "Seleção",
+    "clubs": "Clubes",
+    "chosen": "Times escolhidos",
+    "remove": "Remover {team}",
+    "next": {
+      "one": "Continuar com {count} escolhido",
+      "other": "Continuar com {count} escolhidos"
+    },
+    "added": {
+      "one": "{team} escolhido. {count} time escolhido.",
+      "other": "{team} escolhido. {count} times escolhidos."
+    },
+    "removed": {
+      "one": "{team} removido. {count} time escolhido.",
+      "other": "{team} removido. {count} times escolhidos."
+    },
+    "removedAll": "{team} removido. Nenhum time escolhido.",
+    "chosenCount": {
+      "one": "{count} escolhido",
+      "other": "{count} escolhidos"
+    },
+    "continentLabel": "Continente",
+    "continent": {
+      "south-america": "América do Sul",
+      "europe": "Europa",
+      "north-america": "América do Norte e Central",
+      "africa": "África",
+      "asia": "Ásia",
+      "oceania": "Oceania",
+      "other": "Outros países"
+    },
+    "countries": {
+      "one": "{count} país",
+      "other": "{count} países"
+    },
+    "countriesNations": {
+      "one": "{count} país · só seleções",
+      "other": "{count} países · só seleções"
+    },
+    "countriesLead": "Escolha o país do seu time. A camisa é a da seleção dele.",
+    "clubsAndNation": {
+      "one": "{count} time + Seleção",
+      "other": "{count} times + Seleção"
+    },
+    "onlyNation": "Só a Seleção",
+    "seeCountry": "País · ver os times",
+    "welcome": {
+      "title": "Onde vai passar o jogo do seu time?",
+      "lead": "Escolha seus times e veja, todo dia, em qual canal ou serviço assistir.",
+      "start": "Escolher meus times",
+      "skip": "Ver todos os jogos sem escolher",
+      "privacy": "Sem cadastro. Sem rastreadores. Suas escolhas ficam só neste aparelho."
+    },
+    "sample": {
+      "label": "Hoje · Brasileirão",
+      "home": "Palmeiras",
+      "away": "Flamengo",
+      "time": "21:30",
+      "free": "Globo",
+      "paid": "Premiere"
+    },
+    "continents": {
+      "title": "De que parte do mundo é o seu time?",
+      "lead": "Escolha o continente. Depois, o país e o time."
+    },
+    "search": {
+      "label": "Buscar time ou país",
+      "placeholder": "Já sabe o nome? Busque o time ou o país",
+      "none": "Nenhum time ou país com o nome “{query}”. Tente só o começo, como “palm”.",
+      "found": {
+        "one": "{count} resultado.",
+        "other": "{count} resultados."
+      }
+    },
+    "teams": {
+      "lead": {
+        "one": "{count} time e a Seleção. Toque para escolher quantos quiser.",
+        "other": "{count} times e a Seleção. Toque para escolher quantos quiser."
+      },
+      "leadNation": "Só a Seleção por enquanto. Toque para escolher."
+    },
+    "services": {
+      "title": "O que você tem em casa?",
+      "lead": "Assim mostramos primeiro o que você pode assistir. A TV aberta (Globo, SBT, Record, Band) e o YouTube já estão sempre incluídos. Pode pular.",
+      "finish": "Concluir",
+      "finishWith": {
+        "one": "Concluir com {count} serviço",
+        "other": "Concluir com {count} serviços"
+      },
+      "skip": "Pular por enquanto"
+    }
   }
 }

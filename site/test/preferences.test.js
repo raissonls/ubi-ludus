@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { MAX_IDS, STORAGE_KEY, cleanIds, createPreferences, restrictTo } from '../js/preferences.js';
+import { MAX_IDS, ONBOARDED_KEY, STORAGE_KEY, cleanIds, createPreferences, restrictTo } from '../js/preferences.js';
 
 /** A storage that behaves like localStorage, and can be told to misbehave. */
 function fakeStorage(initial = {}, { failGet = false, failSet = false, failRemove = false } = {}) {
@@ -194,4 +194,45 @@ test('adopting leaves out what the link does not mention and cleans what it does
   preferences.setTeams(['palmeiras']);
   preferences.adopt({ teams: null, services: ['BAD ID', 'premiere'], onlyWatchable: null });
   assert.deepEqual(preferences.get(), { teams: ['palmeiras'], services: ['premiere'], onlyWatchable: false });
+});
+
+// --- the first-run flow: has the visitor seen it? --------------------------------------------
+
+test('a new visitor has not seen the first-run flow, and once they have it is remembered', () => {
+  const storage = fakeStorage();
+  const first = createPreferences(() => storage);
+  assert.equal(first.isOnboarded(), false);
+  first.markOnboarded();
+  assert.equal(first.isOnboarded(), true);
+  assert.equal(storage.items[ONBOARDED_KEY], '1');
+  assert.equal(createPreferences(() => storage).isOnboarded(), true);
+});
+
+test('seeing the first-run flow is not a choice: nothing is saved in the choices for it', () => {
+  const storage = fakeStorage();
+  const preferences = createPreferences(() => storage);
+  preferences.markOnboarded();
+  assert.ok(!(STORAGE_KEY in storage.items));
+  assert.deepEqual(preferences.get(), { teams: [], services: [], onlyWatchable: false });
+});
+
+test('reset forgets that the flow was seen, so it is offered again', () => {
+  const storage = fakeStorage();
+  const preferences = createPreferences(() => storage);
+  preferences.markOnboarded();
+  preferences.reset();
+  assert.equal(preferences.isOnboarded(), false);
+  assert.ok(!(ONBOARDED_KEY in storage.items));
+});
+
+test('when storage refuses the flag it still holds for this visit', () => {
+  const preferences = createPreferences(() => fakeStorage({}, { failSet: true }));
+  preferences.markOnboarded();
+  assert.equal(preferences.isOnboarded(), true);
+  assert.equal(preferences.isPersistent(), false);
+});
+
+test('only the exact flag value counts as seen', () => {
+  const storage = fakeStorage({ [ONBOARDED_KEY]: 'yes' });
+  assert.equal(createPreferences(() => storage).isOnboarded(), false);
 });

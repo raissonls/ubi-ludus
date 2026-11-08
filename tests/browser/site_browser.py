@@ -15,6 +15,7 @@ DATA = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "data"
 GALLERY = Path(__file__).resolve().parents[1] / "fixtures" / "site" / "gallery"
 NOW = "2026-11-02T12:00:00Z"  # the matches of the fixtures are in the days after this
 STORAGE_KEY = "ubi-ludus:preferences"
+ONBOARDED_KEY = "ubi-ludus:onboarded"  # set once the first-run flow was seen
 SECRET_TEAM = "time-secreto-xyz"  # noqa: S105 - a marker that must never leave the browser
 SECRET_SERVICE = "servico-secreto-xyz"  # noqa: S105 - same
 CHOICES = {
@@ -85,13 +86,15 @@ def visit(
     now: str = NOW,
     ticking: bool = False,
     forced_colors: str = "none",
+    onboarding: bool = False,
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
     it were in a format the site does not know, `changed_data` maps a data file to the document
     served in its place, `before_open` is called with the page just before it loads, `now` is the
     time the page sees (it stands still unless `ticking`, when the test moves it), `forced_colors`
-    is "active" to see the page as in Windows high-contrast mode."""
+    is "active" to see the page as in Windows high-contrast mode, `onboarding` is True to let the
+    first-run flow open (by default the visitor has already seen it, so it stays out of the way)."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
@@ -100,6 +103,8 @@ def visit(
         viewport={"width": width, "height": height},
     )
     try:
+        if not onboarding:
+            context.add_init_script(f"localStorage.setItem('{ONBOARDED_KEY}', '1');")
         if saved:
             items = json.dumps(saved)
             context.add_init_script(

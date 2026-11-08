@@ -19,6 +19,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/onboarding.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -124,6 +125,7 @@
       <ul id="chosen-teams" class="chips" aria-labelledby="chosen-title"></ul>
       <p id="chosen-empty" data-i18n="picker.none"></p>
       <p id="picker-announcer" class="visually-hidden" role="status"></p>
+      <p><button type="button" id="reopen-onboarding" data-i18n="onboarding.reopen"></button></p>
     </section>
 
     <!-- Which services do you have? js/services-picker.js draws one checkbox for each. -->
@@ -139,6 +141,13 @@
     <!-- Shown only when scripts are off; the one string that lives outside the strings file. -->
     <noscript><p>Este site precisa de JavaScript para mostrar os jogos.</p></noscript>
   </main>
+
+  <!-- The first-run flow (js/onboarding.js fills it in when a new visitor arrives, or when the
+       visitor asks to change their teams). Nothing is in it until then. -->
+  <div id="onboarding" class="ob" role="dialog" aria-modal="true" data-i18n-attr="aria-label:onboarding.dialogLabel" hidden>
+    <div id="ob-stage" class="ob__stage"></div>
+    <p id="ob-live" class="visually-hidden" role="status"></p>
+  </div>
 
   <footer class="site-footer">
     <div class="container">

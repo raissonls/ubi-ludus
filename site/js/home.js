@@ -5,6 +5,7 @@ import { createFiltersView } from './filters-view.js';
 import { filterOptions } from './filters.js';
 import { VIEWS } from './home-views.js';
 import { createMatchesView } from './matches-view.js';
+import { createOnboarding } from './onboarding.js';
 import { restrictTo } from './preferences.js';
 import { createServicesPicker } from './services-picker.js';
 import { createShare } from './share.js';
@@ -78,6 +79,8 @@ export function mountHome({ data, translator, preferences }) {
       return `${location.origin}${location.pathname}${buildSearch({ view, filters, choices: chosen() })}`;
     },
   });
+  const onboarding = createOnboarding({ data, translator, preferences });
+  document.getElementById('reopen-onboarding').addEventListener('click', () => onboarding.open({ from: 'continents' }));
   const onlyWatchable = document.getElementById('only-watchable');
   onlyWatchable.addEventListener('change', () => preferences.setOnlyWatchable(onlyWatchable.checked));
 
@@ -98,4 +101,10 @@ export function mountHome({ data, translator, preferences }) {
     syncAddress();
   });
   show();
+
+  // A new visitor, with nothing chosen and not arriving from a shared link, starts with the flow.
+  // (With storage refused nothing can be remembered, so the flow would come back on every load.)
+  if (!shared && preferences.isPersistent() && !preferences.isOnboarded() && chosen().teams.length === 0) {
+    onboarding.open({ from: 'welcome' });
+  }
 }
