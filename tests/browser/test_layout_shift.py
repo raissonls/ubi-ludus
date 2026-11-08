@@ -95,7 +95,8 @@ def test_the_footer_starts_below_the_first_screen_so_it_never_has_to_jump(
 def test_what_is_filled_in_later_has_its_room_before_it_arrives(
     browser: Browser, origin: str
 ) -> None:
-    """The name, the title, the section title and the freshness line, before any text exists."""
+    """The name, the title and the freshness line, before any text exists. (The section title
+    "Jogos" is for screen readers only, so it takes no room.)"""
     for current in visit(browser, origin, size="mobile", wait_ready=False):
         page = current.page
         page.route("**/i18n/*.json", lambda route: route.abort())  # the strings never arrive
@@ -103,7 +104,7 @@ def test_what_is_filled_in_later_has_its_room_before_it_arrives(
         page.wait_for_selector("footer", state="attached")
         heights = page.evaluate(
             """() => Object.fromEntries(
-              ['.brand', '#freshness', 'main h1', '#matches-title'].map((selector) =>
+              ['.brand', '#freshness', 'main h1'].map((selector) =>
                 [selector, document.querySelector(selector).getBoundingClientRect().height]))"""
         )
         assert all(height >= 20 for height in heights.values()), heights

@@ -198,10 +198,12 @@ def test_the_footer_is_short_and_keeps_the_privacy_notice_and_the_attribution(
     browser: Browser, origin: str
 ) -> None:
     for current in visit(browser, origin):
-        text = current.page.locator("footer").inner_text()
-        assert "football-data.org" in text.lower() or "Football-Data.org" in text
-        assert "cookies" in text
-        assert "Apagar meus dados" not in text  # it is in the settings now
+        lines = current.page.locator("footer").inner_text().splitlines()
+        # The attribution football-data.org's terms ask for, as its own line (a whole line, not a
+        # piece of text that merely contains a host name).
+        assert "Football data provided by the Football-Data.org API" in lines
+        assert any("cookies" in line for line in lines)  # the privacy notice
+        assert "Apagar meus dados" not in lines  # it is in the settings now
 
 
 @pytest.mark.parametrize("scheme", ["light", "dark"])

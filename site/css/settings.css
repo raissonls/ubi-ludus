@@ -25,9 +25,10 @@
   gap: var(--space-3);
 }
 
+/* The room for the freshness line (two lines on a phone, where the warning wraps) is the one the
+   base styles keep from the first paint, so the warning never pushes the page down. */
 .site-header .freshness {
   margin-top: 0;
-  min-height: calc(var(--font-size-sm) * var(--line-height-base) + 2 * var(--space-1));
 }
 
 .icon-button {
@@ -49,6 +50,19 @@
   content: "×";
   font-size: 1.5rem;
   line-height: 1;
+}
+
+/* The heading "Jogos" names the lists for a screen reader; the strip and the three buttons say what
+   they are, so it takes no room on screen (the next match is worth more of the first screen). */
+#matches-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 /* ---- the strip with your teams ---- */
