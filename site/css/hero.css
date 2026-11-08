@@ -1,0 +1,88 @@
+/*
+ * The next match of the followed teams (js/hero.js): both shirts big, then where to watch. The
+ * broadcaster badges, the access line and the state word are the match card's own styles. The
+ * motion only moves, scales and fades, and is off when the visitor asks for less.
+ */
+
+.next {
+  margin-top: var(--space-4);
+}
+
+.next[hidden] {
+  display: none;
+}
+
+.next__title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 1.5rem;
+  background: linear-gradient(160deg, var(--color-accent-soft) 0%, var(--color-surface) 70%);
+}
+
+.hero__when {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.hero__shirts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  margin: var(--space-2) 0 var(--space-1);
+}
+
+/* Smaller on a small phone, so the match and where to watch it stay above the fold. */
+.hero__shirts .shirt {
+  width: min(20vw, 5.75rem);
+  height: auto;
+}
+
+.hero__versus {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
+.hero__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  letter-spacing: -0.02em;
+  line-height: var(--line-height-tight);
+  text-align: center;
+}
+
+.hero .match-card__watch {
+  margin-top: var(--space-3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(1.125rem); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes hero-shirt {
+    0% { opacity: 0; transform: scale(0.3) rotate(-14deg); }
+    65% { opacity: 1; transform: scale(1.14) rotate(4deg); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes hero-pulse {
+    from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-focus) 70%, transparent); }
+    to { box-shadow: 0 0 0 0.875rem transparent; }
+  }
+
+  .hero { animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+  .hero__shirts .shirt { animation: hero-shirt 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) 0.45s both; transform-origin: 50% 60%; }
+  .hero__shirts .shirt:last-child { animation-delay: 0.58s; }
+  /* The first broadcaster the visitor can watch pulses twice, to say "here". */
+  .hero .badge[data-access="yours"]:first-child { animation: hero-pulse 1.2s ease-out 1.1s 2; }
+}

@@ -8,8 +8,10 @@ import { defaultView, selectMatches } from './home-views.js';
 import { describeHorizonNotice, uncoveredCompetitions } from './horizon.js';
 import { createCalendar } from './calendar.js';
 import { createLiveClock } from './live-clock.js';
+import { renderHero } from './hero.js';
 import { renderMatchCard } from './match-card.js';
 import { accessibleBroadcasters, describeMatch } from './match-model.js';
+import { upcomingMatches } from './matches-preview.js';
 import { matchReportUrl } from './report.js';
 
 /** Cards after this one enter together, so a long list does not take long to appear. */
@@ -37,6 +39,8 @@ export function createMatchesView({
     url: `${location.origin}${location.pathname}`,
   });
   const empty = document.getElementById('matches-empty');
+  const nextSection = document.getElementById('next-match');
+  const nextCard = document.getElementById('next-match-card');
   const status = document.getElementById('matches-status');
   const horizon = document.getElementById('horizon-notice');
   const uncovered = document.getElementById('uncovered');
@@ -105,6 +109,7 @@ export function createMatchesView({
       groups.push(group(others, false, titled ? translator.t('matches.groupOthers') : ''));
     }
     list.replaceChildren(...groups);
+    showNext(now);
     showHorizonNotice([...followed, ...others]);
     liveClock.update();
     showCalendarAll();
@@ -121,6 +126,16 @@ export function createMatchesView({
     }
     const label = buttons.find((button) => button.dataset.view === view)?.textContent ?? '';
     status.textContent = translator.plural('matches.shown', total, { view: label });
+  }
+
+  // The next match of the followed teams, big, above whichever list is shown. It is "your next
+  // match", so the filters do not hide it.
+  function showNext(now) {
+    const next = teamIds.length > 0 ? upcomingMatches(data.matches, teamIds, now, 1)[0] : undefined;
+    nextSection.hidden = next === undefined;
+    nextCard.replaceChildren(
+      ...(next ? [renderHero(describeMatch(next, data, { accessible }), { translator })] : []),
+    );
   }
 
   // FR-34: say it when a competition we only know until tomorrow is in the list, or is the one

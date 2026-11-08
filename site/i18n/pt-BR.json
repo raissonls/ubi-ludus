@@ -318,5 +318,8 @@
       },
       "skip": "Pular por enquanto"
     }
+  },
+  "hero": {
+    "title": "Seu próximo jogo"
   }
 }

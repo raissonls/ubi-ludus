@@ -8,6 +8,8 @@
 
 import { el, setAccent } from './dom.js';
 import { formatDateTime } from './format.js';
+import { shirtOf } from './onboarding-model.js';
+import { createShirt } from './shirt.js';
 
 /** Past this many badges the rest wait behind a "+N" button, so a card stays short. */
 export const BADGES_SHOWN = 4;
@@ -30,6 +32,16 @@ const CONFIDENCE_KEY = {
   unknown: 'card.confidence.unknown',
 };
 
+/** "Ao vivo", "Adiado" and so on, as a word (never colour alone), or null for a match to come. */
+export function stateBadge(model, translator) {
+  if (!STATE_KEY[model.state]) return null;
+  const live = model.state === 'live';
+  return el('span', { class: `state state--${model.state}` }, [
+    live ? el('span', { class: 'live-dot', 'aria-hidden': 'true', text: '● ' }) : '',
+    el('span', { text: translator.t(STATE_KEY[model.state]) }),
+  ]);
+}
+
 export function roundText(round, translator) {
   if (!round) return null;
   if (round.kind === 'matchday') return translator.t('card.round', { number: round.number });
@@ -41,9 +53,13 @@ export function roundText(round, translator) {
 }
 
 function team(side, translator) {
-  const swatch = el('span', { class: 'swatch', 'aria-hidden': 'true' });
-  if (side.team) setAccent(swatch, side.team);
-  return [swatch, ' ', side.name ?? translator.t('matches.tbd')];
+  // A shirt in the team's colours (never a crest); a team that is still to be decided has none.
+  const name = side.name ?? translator.t('matches.tbd');
+  if (!side.team) return [name];
+  const shirt = createShirt(shirtOf(side.team), 24);
+  shirt.classList.add('match-card__shirt');
+  // One element for the shirt and the name, with the gap in CSS: no stray spaces in the text.
+  return [el('span', { class: 'match-card__team' }, [shirt, name])];
 }
 
 function badge(item, translator) {
@@ -64,7 +80,8 @@ function badge(item, translator) {
   ]);
 }
 
-function watch(model, translator, cardId) {
+/** Where to watch: the broadcasters, whether the visitor can, and how sure we are. */
+export function renderWatch(model, translator, cardId) {
   if (model.confidence === 'unknown') {
     return el('p', { class: 'confidence confidence--unknown', text: translator.t(CONFIDENCE_KEY.unknown) });
   }
@@ -118,15 +135,8 @@ export function renderMatchCard(
   const when = el('p', { class: 'match-card__when' }, [
     el('time', { datetime: model.kickoff, text: formatDateTime(model.kickoff) }),
   ]);
-  if (STATE_KEY[model.state]) {
-    const live = model.state === 'live';
-    when.append(
-      el('span', { class: `state state--${model.state}` }, [
-        live ? el('span', { class: 'live-dot', 'aria-hidden': 'true', text: '● ' }) : '',
-        el('span', { text: translator.t(STATE_KEY[model.state]) }),
-      ]),
-    );
-  }
+  const state = stateBadge(model, translator);
+  if (state) when.append(state);
 
   const title = el('h3', { class: 'match-card__teams', id: `${cardId}-title` }, [
     ...team(model.home, translator),
@@ -152,7 +162,7 @@ export function renderMatchCard(
     card.dataset.horizon = 'short';
     card.append(el('p', { class: 'match-card__horizon', text: translator.t('horizon.card') }));
   }
-  if (model.showBroadcasts) card.append(watch(model, translator, cardId));
+  if (model.showBroadcasts) card.append(renderWatch(model, translator, cardId));
   if (model.showBroadcasts && (reportHref || onCalendar)) {
     const teams = title.textContent.replace(/\s+/g, ' ').trim();
     const actions = el('div', { class: 'match-card__actions' });
