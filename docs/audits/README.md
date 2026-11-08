@@ -2,11 +2,13 @@
 
 **Accessibility:** [accessibility-2026-11-07.md](accessibility-2026-11-07.md) (M5-01): the WCAG 2.2 AA audit of the site, its findings, and the checklist for a pass with a real screen reader.
 
+**Launch measurement (M5-06):** [TEMPLATE.md](TEMPLATE.md) is the weekly audit to copy, [effort-log.md](effort-log.md) is the owner's log for the 14 days, and the review that closes them is [../closure-review.md](../closure-review.md). **Usability:** [../usability/README.md](../usability/README.md).
+
 ## Broadcast audits
 
 Each week, after the matches are played, the owner checks a sample of at least **10 matches of the followed teams** against the official source (the club, the league or the broadcaster's own page) and records what the site said and what was true (PRD S1: at least 85% right). One file per audit, named `YYYY-MM-DD.md`, in this folder. The routine is in the [runbook](../runbook.md#the-weekly-routine).
 
-Copy this table:
+Copy [TEMPLATE.md](TEMPLATE.md) (it has this table and the other weekly numbers), or just this table:
 
 ```markdown
 # Audit 2026-11-12

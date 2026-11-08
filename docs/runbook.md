@@ -166,7 +166,7 @@ The data is rebuilt from the providers every morning and is not stored in the re
 2. Open its job **Deploy to GitHub Pages** and choose **Re-run this job**. Or from the command line: `gh run view <run id> --json jobs` shows the job's id, then `gh run rerun <run id> --job <job id>`.
 3. The site is back to that run's data and files within a minute.
 
-> **Not yet tried for real.** The 14-day keep and the way to re-run one job are in place and follow how GitHub's deploy action works, but nobody has done this on the live site yet. Do it once on a quiet day with a recent run (it publishes data that is hours old, so it is harmless) and note here how it went. This is one of the drills of M5-05.
+> **Not yet tried for real.** The 14-day keep and the way to re-run one job are in place and follow how GitHub's deploy action works, but nobody has done this on the live site yet. On 2026-11-08 the assistant tried (`gh run rerun <run id> --job <deploy job id>` on the 02:07 run) and the session's automatic safety check refused it as an unapproved production deploy, so it was left undone. Do it once yourself on a quiet day with a recent run (it publishes data that is hours old, so it is harmless): run the command above, check that `curl -s https://raissonls.github.io/ubi-ludus/data/status.json` shows that run's `generated_at`, then run the pipeline by hand to bring the fresh data back, and note here how it went.
 
 This puts old data up **until the next daily run, at 09:00 UTC, which replaces it with fresh data again**. So also fix the cause first: a wrong rule or override in `data/rights/`, a bad change on `main` (below). If the next run would publish the same fault, pause the schedules until it is fixed:
 
@@ -211,6 +211,29 @@ FOOTBALL_DATA_TOKEN= python -m ubi_ludus.pipeline.publish --run --require-all-pr
 ```
 
 It must end with `error: No provider gave any data (football-data: FOOTBALL_DATA_TOKEN is not set)`, exit status 1, a log line `"event": "run_summary", "outcome": "failed"`, and **no `drill` folder**. That is what a real outage does on GitHub, where the same failure also opens the issue and leaves the site as it was. (This drill ran on 2026-11-07, and found that the command used to end with a traceback and no log line; that is fixed.)
+
+### The same drill on GitHub (live)
+
+This one uses the real pipeline and the real site. It changes no secret and makes no provider call:
+
+```bash
+gh workflow run pipeline.yml -f simulate_outage=true -f send_email=false
+```
+
+The fetch step then runs with the provider token blanked for that run only. Expected, in order: the build job red with `No provider gave any data`, the deploy and e-mail jobs skipped, the site still serving the data it had, and an issue "Daily pipeline failed" assigned to you. Then start a normal run (`gh workflow run pipeline.yml -f send_email=false`); the issue closes by itself when it is green.
+
+**Done for real on 2026-11-08 (M5-05).** Result:
+
+| What | Result |
+| --- | --- |
+| Build job | red about a second after the fetch step started, with `error: No provider gave any data (football-data: FOOTBALL_DATA_TOKEN is not set)` and the log line `run_summary`, `outcome: failed` |
+| Deploy and e-mail | skipped |
+| Site data | untouched: `status.json` still said `generated_at 11:11:27`, the time of the run before the drill, and the 24 match cards were still there |
+| Alert | issue "Daily pipeline failed" opened 8 seconds after the failure, assigned to the owner (GitHub then e-mails assignees) |
+| Recovery | the next normal run was green and closed the issue by itself |
+| Freshness warning | the data is called "possibly out of date" once it is more than 36 hours old, not before. On the live site, the freshness rule gave "fresh" up to 35 hours after the last good run and "stale" from 37 hours on; the page itself shows the warning in the browser tests (`tests/browser/test_freshness_report.py`). So after one missed day (up to 24 hours) the page shows no warning, which is deliberate: the data is still the day's. |
+
+Gaps found: none in the steps above. The one step not drilled is the site rollback (below).
 
 ## Useful commands
 
