@@ -31,6 +31,8 @@ gh workflow run pipeline.yml -f force_failure=true
 
 An issue "Daily pipeline failed" should appear, assigned to you, with an e-mail from GitHub. The next run that works (a normal manual run) closes it.
 
+**Provider outage drill:** `gh workflow run pipeline.yml -f simulate_outage=true -f send_email=false` runs the real fetch step with the provider token blanked for that run only (no secret is touched, no call is made). The build fails, nothing is deployed, the site keeps its data and the owner is told. See [the runbook](runbook.md#simulating-a-provider-outage-a-drill-you-can-do-any-time).
+
 ## Keep-alive (FR-52)
 
 GitHub switches off scheduled workflows in a public repository after 60 days with no repository activity, and this pipeline deliberately commits nothing. So `watchdog.yml` also has a **keep-alive** job: every day it runs `gh workflow enable` on every workflow that has a schedule (`pipeline.yml`, `review-report.yml` and `watchdog.yml` itself), with a token that can do nothing else (`actions: write`). A test fails if a new scheduled workflow is added and not put on that list.

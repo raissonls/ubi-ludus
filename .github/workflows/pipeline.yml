@@ -26,6 +26,10 @@ on:
         description: "Fail on purpose, to test that the failure alert reaches the owner"
         type: boolean
         default: false
+      simulate_outage:
+        description: "Run as if the provider were down (token blanked for this run): the outage drill"
+        type: boolean
+        default: false
 
 # Nothing by default. Each job asks only for what it needs.
 permissions: {}
@@ -71,9 +75,18 @@ jobs:
         env:
           FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
           PREVIOUS_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/data/matches.json
-        run: >
-          python -m ubi_ludus.pipeline.publish --run --require-all-providers
-          --out site/data --previous-url "$PREVIOUS_URL"
+          SIMULATE_OUTAGE: ${{ inputs.simulate_outage }}
+        # The outage drill (M5-05, docs/runbook.md): with simulate_outage the token is blanked for
+        # this step only, so the provider "fails" exactly as a real outage does, with no call made
+        # and no secret touched. Everything after it is the real thing: the job fails, nothing is
+        # deployed, the site keeps the data it had, and the owner is told.
+        run: |
+          if [ "$SIMULATE_OUTAGE" = "true" ]; then
+            echo "::warning title=Outage drill::simulate_outage is on: the provider token is blanked for this run."
+            export FOOTBALL_DATA_TOKEN=
+          fi
+          python -m ubi_ludus.pipeline.publish --run --require-all-providers \
+            --out site/data --previous-url "$PREVIOUS_URL"
 
       - name: Show what was built on the run summary
         run: |

@@ -165,7 +165,7 @@ def test_each_secret_goes_to_one_step_and_nothing_else_gets_a_secret() -> None:
     assert holders(jobs["email"]) == ["Send the e-mail"]
     assert holders(jobs["deploy"]) == []
     build_env = next(s for s in jobs["build"]["steps"] if "pipeline.publish" in str(s.get("run")))
-    assert set(build_env["env"]) == {"FOOTBALL_DATA_TOKEN", "PREVIOUS_URL"}
+    assert set(build_env["env"]) == {"FOOTBALL_DATA_TOKEN", "PREVIOUS_URL", "SIMULATE_OUTAGE"}
     mail = next(s for s in jobs["email"]["steps"] if "email.send" in str(s.get("run")))
     assert {"SMTP_USER", "SMTP_PASSWORD", "EMAIL_FROM", "EMAIL_TO"} <= set(mail["env"])
     for job in jobs.values():
@@ -202,6 +202,23 @@ def test_a_failure_can_be_forced_by_hand_to_test_the_alert() -> None:
     first = pipeline_jobs()["build"]["steps"][0]
     assert first["if"] == "inputs.force_failure" and "exit 1" in first["run"]
     assert "uses" not in first  # it fails before anything is downloaded or run
+
+
+def test_a_provider_outage_can_be_simulated_by_hand_without_touching_a_secret() -> None:
+    """The M5-05 drill: the real fetch step runs with the token blanked, so it fails for real."""
+    inputs = load(PIPELINE)[True]["workflow_dispatch"]["inputs"]
+    assert inputs["simulate_outage"]["default"] is False  # a daily run is never a drill
+    step = next(
+        s for s in pipeline_jobs()["build"]["steps"] if "pipeline.publish" in str(s.get("run"))
+    )
+    assert step["env"]["SIMULATE_OUTAGE"] == "${{ inputs.simulate_outage }}"
+    run = str(step["run"])
+    # Blanked inside the step (a shell variable), not by an expression that would fall back to the
+    # secret when the blank is "false" in GitHub's expression language.
+    assert '[ "$SIMULATE_OUTAGE" = "true" ]' in run and "export FOOTBALL_DATA_TOKEN=\n" in run
+    assert run.index("export FOOTBALL_DATA_TOKEN=") < run.index("pipeline.publish")
+    # It is the same command as the daily one, so the drill exercises the real failure path.
+    assert "--require-all-providers" in run
 
 
 def test_the_status_job_runs_after_anything_except_a_cancel_and_can_only_write_issues() -> None:
