@@ -84,16 +84,19 @@ def visit(
     before_open: Callable[[Page], None] | None = None,
     now: str = NOW,
     ticking: bool = False,
+    forced_colors: str = "none",
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
     it were in a format the site does not know, `changed_data` maps a data file to the document
     served in its place, `before_open` is called with the page just before it loads, `now` is the
-    time the page sees (it stands still unless `ticking`, when the test moves it)."""
+    time the page sees (it stands still unless `ticking`, when the test moves it), `forced_colors`
+    is "active" to see the page as in Windows high-contrast mode."""
     width, height = VIEWPORTS[size]
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
         reduced_motion=reduced_motion,  # type: ignore[arg-type]
+        forced_colors=forced_colors,  # type: ignore[arg-type]
         viewport={"width": width, "height": height},
     )
     try:

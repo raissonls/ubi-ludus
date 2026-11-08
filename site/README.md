@@ -151,3 +151,8 @@ The data is published once a day, so it can say "scheduled" for a match that is 
 - Today that is Copa do Brasil, Copa Sul-Americana, the state championships, the World Cup qualifiers and the national-team friendlies, since API-Football is not used ([ADR-003](../docs/adr/ADR-003-drop-api-football.md)). The page learns it from the data, not from a list in the code, so adding a source for one of them removes it from the list.
 - Keyboard and screen readers: it is a native `<details>`, so Enter and Space open it and the list is announced as a list. Shown once, even when a filter or a quiet day leaves no matches.
 - Code: `uncoveredCompetitions()` in `js/horizon.js` (pure) and `showUncovered()` in `matches-view.js`. Tests: `site/test/horizon.test.js` and `tests/browser/test_horizon.py`.
+
+## Accessibility (WCAG 2.2 AA, FR-31)
+- The audit, its findings and the checklist for a real screen reader are in [docs/audits/accessibility-2026-11-07.md](../docs/audits/accessibility-2026-11-07.md).
+- `tests/browser/test_accessibility_audit.py` runs on every pull request: the Tab walk (focus ring visible and at least 3:1, never hidden, no trap, every target at least 24 px), text spacing, text at 200% with no sideways scroll at 320 px, forced colours, reduced motion, and the page structure, in both themes and at three sizes. Each feature's own tests also run axe in their states.
+- When you add a control: give it a name, at least 24 px of height and width (the project uses 32 px and up), keep the global focus ring, and let long text wrap (`overflow-wrap: anywhere`) instead of pushing the page wider.
