@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/onboarding.css">
+  <link rel="stylesheet" href="css/hero.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -66,6 +67,11 @@
           <button type="button" data-view="today" aria-pressed="false" data-i18n="views.today"></button>
           <button type="button" data-view="week" aria-pressed="false" data-i18n="views.week"></button>
         </div>
+        <!-- The next match of the followed teams, big (js/hero.js through js/matches-view.js). -->
+        <section id="next-match" class="next" aria-labelledby="next-match-title" hidden>
+          <h3 id="next-match-title" class="next__title" data-i18n="hero.title"></h3>
+          <div id="next-match-card"></div>
+        </section>
         <details id="filters" class="filters">
           <summary id="filters-summary" data-i18n="filters.title"></summary>
           <div class="filters__fields">

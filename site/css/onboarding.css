@@ -174,6 +174,13 @@ html.ob-open {
   flex-shrink: 0;
 }
 
+/* In the line of a match card the shirt sits with the words, as the colour dot did. */
+.match-card__shirt {
+  display: inline-block;
+  margin-right: 0.35em;
+  vertical-align: -0.4em;
+}
+
 .shirt__body {
   stroke: var(--color-border-strong);
   stroke-width: 1.2;

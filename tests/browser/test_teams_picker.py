@@ -336,7 +336,8 @@ def test_team_colours_are_used_as_accents_and_nothing_else_is_drawn(
             "e => getComputedStyle(e).borderInlineStartColor"
         )
         assert bar == "rgb(0, 100, 55)"
-        assert page.locator("img, svg, canvas, picture").count() == 0  # no crest, no logo
+        # No crest, no logo, no picture: the only drawings are shirts, which are colours only.
+        assert page.locator("img, canvas, picture, svg:not(.shirt)").count() == 0
         assert current.console == []  # setting a colour from script is allowed by the policy
 
 

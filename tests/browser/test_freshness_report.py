@@ -121,8 +121,11 @@ def test_the_next_match_is_still_on_screen_on_a_phone_with_the_indicator(
     height = VIEWPORTS["mobile"][1]
     stale = status_with("2026-10-29T09:00:00Z")
     for current in visit(browser, origin, size="mobile", saved=saved, changed_data=stale):
-        box = current.page.locator("#matches-list .match-card").first.bounding_box()
-        assert box is not None and box["y"] + box["height"] <= height, box
+        # The next match and where to watch it: the big card's teams and its broadcasters.
+        hero = current.page.locator("#next-match .hero")
+        for part in (hero.locator(".hero__title"), hero.locator(".badges")):
+            box = part.bounding_box()
+            assert box is not None and box["y"] + box["height"] <= height, box
 
 
 # --- report a wrong broadcast --------------------------------------------------------------------

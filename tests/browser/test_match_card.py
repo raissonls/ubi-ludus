@@ -138,7 +138,11 @@ def test_a_team_colour_is_the_cards_accent_and_nothing_else_is_drawn(
             "e => getComputedStyle(e).borderInlineStartColor"
         )
         assert bar == "rgb(0, 100, 55)"  # Palmeiras green
-        assert page.locator("img, svg, canvas, picture").count() == 0
+        # No crest, no logo, no picture: the only drawing is the shirt, which is colours only.
+        assert page.locator("img, canvas, picture, svg:not(.shirt)").count() == 0
+        assert page.locator("svg.shirt path").evaluate_all(
+            "e => e.every(p => ['shirt__body', 'shirt__trim'].includes(p.getAttribute('class')))"
+        )
 
 
 def test_rounds_read_as_a_matchday_a_stage_or_nothing(browser: Browser, origin: str) -> None:
