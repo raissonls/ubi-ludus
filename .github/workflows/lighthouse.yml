@@ -1,0 +1,100 @@
+name: Lighthouse
+
+# The site's speed and weight, held to the targets of the PRD (NFR performance, S8, M5-02), for a
+# phone on a simulated 4G connection: Lighthouse 90 or more in all four categories, Largest
+# Contentful Paint 2.5 s or less, layout shift 0.1 or less, JavaScript 100 KB gzipped or less.
+#
+#   repository  on every push to main that touches the site: this commit's code, served the way
+#               GitHub Pages serves it (gzip, ten minutes of cache), on the data that is published now.
+#   deployed    after each daily deploy: the real site, as a visitor gets it.
+#
+# Lighthouse is run three times and the middle value of each number is used, because one run
+# varies. A miss fails the run (and GitHub tells the owner). The numbers are on the run's summary
+# page. The rules are in src/ubi_ludus/quality/lighthouse.py; how to read this is in docs/performance.md.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "src/ubi_ludus/quality/**"
+      - ".github/workflows/lighthouse.yml"
+  workflow_run:
+    workflows: ["Daily pipeline"]
+    types: [completed]
+  workflow_dispatch:
+
+# Nothing by default. Each job asks only for what it needs.
+permissions: {}
+
+concurrency:
+  group: lighthouse-${{ github.event_name }}
+  cancel-in-progress: false
+
+env:
+  # An exact version: the scores change between versions, so a change is made on purpose.
+  # (Version 13 needs a newer Node than the runners' default.)
+  LIGHTHOUSE_VERSION: "12.8.2"
+
+jobs:
+  repository:
+    name: This commit, served like Pages
+    if: github.event_name != 'workflow_run'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      PAGES: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The data is made by the pipeline and is not in the repository. Take what is published now so
+      # that the page has the weight of a real one; on the first run, before anything is published,
+      # use the small set the tests use.
+      - name: Get the data the site shows now
+        run: |
+          mkdir -p lighthouse-data
+          for name in matches teams competitions broadcasters status; do
+            curl -fsS "$PAGES/data/$name.json" -o "lighthouse-data/$name.json" || {
+              echo "::notice title=Lighthouse::using the test data: $name.json is not published yet"
+              cp tests/fixtures/site/data/*.json lighthouse-data/
+              break
+            }
+          done
+
+      # The server, the three runs and the check are one step, so the server is stopped when they end.
+      - name: Serve the site like GitHub Pages, measure three times, hold the numbers to the targets
+        run: |
+          set -o pipefail
+          PYTHONPATH=src python3 -m ubi_ludus.quality.lighthouse serve --site site --data lighthouse-data --port 8765 &
+          server=$!
+          trap 'kill "$server"' EXIT
+          for _ in $(seq 1 20); do curl -fs -o /dev/null http://127.0.0.1:8765/ && break; sleep 1; done
+          for run in 1 2 3; do
+            npx --yes "lighthouse@$LIGHTHOUSE_VERSION" http://127.0.0.1:8765/               --chrome-flags="--headless=new --no-sandbox"               --only-categories=performance,accessibility,best-practices,seo               --output=json --output-path="lighthouse-$run.json" --quiet
+          done
+          PYTHONPATH=src python3 -m ubi_ludus.quality.lighthouse check lighthouse-1.json lighthouse-2.json lighthouse-3.json | tee -a "$GITHUB_STEP_SUMMARY"
+
+  deployed:
+    name: The deployed site
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      PAGES: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Measure three times and hold the numbers to the targets
+        run: |
+          set -o pipefail
+          for run in 1 2 3; do
+            npx --yes "lighthouse@$LIGHTHOUSE_VERSION" "$PAGES/"               --chrome-flags="--headless=new --no-sandbox"               --only-categories=performance,accessibility,best-practices,seo               --output=json --output-path="lighthouse-$run.json" --quiet
+          done
+          PYTHONPATH=src python3 -m ubi_ludus.quality.lighthouse check lighthouse-1.json lighthouse-2.json lighthouse-3.json | tee -a "$GITHUB_STEP_SUMMARY"

@@ -72,6 +72,7 @@ Static JSON with a schema version, served next to the site: `matches.json`, `tea
 | Why we chose this architecture | [ADR-001](adr/ADR-001-architecture.md) |
 | Why dbt and Python together, on DuckDB | [ADR-002](adr/ADR-002-dbt-duckdb.md) |
 | Why API-Football is not used | [ADR-003](adr/ADR-003-drop-api-football.md) |
+| How fast the site is held to be, and how it is checked | [performance.md](performance.md) |
 | Providers: coverage, limits, terms | [provider comparison](research/provider-comparison.md) |
 | Security and the go-public plan | [security checklist](security-checklist.md) |
 | How we plan and track work | [README](../README.md#how-we-plan-work) |

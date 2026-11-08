@@ -33,6 +33,15 @@ h3 {
 
 h1 {
   font-size: var(--font-size-xl);
+  /* The title is filled in with the page's strings. Its line is kept from the first paint (two
+     lines on a phone, where it wraps), or everything below it jumps when it arrives. */
+  min-height: calc(var(--font-size-xl) * var(--line-height-tight));
+}
+
+@media (max-width: 26rem) {
+  h1 {
+    min-height: calc(2 * var(--font-size-xl) * var(--line-height-tight));
+  }
 }
 
 p {
@@ -113,9 +122,21 @@ main:focus {
   font-weight: var(--font-weight-bold);
 }
 
+/* The name and the freshness line below are filled in once the page's strings and data have
+   arrived. The room they will take is kept from the first paint: without it the header grew twice
+   and pushed the whole page down each time (layout shift). */
+.brand {
+  min-height: calc(var(--font-size-lg) * var(--line-height-base));
+}
+
 main {
   flex: 1;
   padding-block: var(--space-8);
+  /* The first paint is already a screen tall, so the footer starts below the fold. Without this the
+     footer sat at the bottom of the screen until the matches arrived, and then jumped thousands of
+     pixels down: a layout shift of 1.08 (Lighthouse wants under 0.1). */
+  min-height: 100vh;
+  min-height: 100svh;
 }
 
 .site-footer {
@@ -170,6 +191,7 @@ h2 {
   font-size: var(--font-size-lg);
   line-height: var(--line-height-tight);
   margin: var(--space-8) 0 var(--space-2);
+  min-height: calc(var(--font-size-lg) * var(--line-height-tight)); /* filled in with the strings: keep its line */
 }
 
 h3 {
@@ -583,8 +605,23 @@ input[type="text"] {
 
 .freshness {
   margin: var(--space-1) 0 0;
+  /* Two lines of text and the padding of the warning, kept before the text exists. One line is
+     enough where the text fits on one (wide screens). */
+  min-height: calc(2 * var(--font-size-sm) * var(--line-height-base) + 2 * var(--space-1));
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+}
+
+/* Not yet known: invisible, and out of the way of a screen reader, but its room is kept. */
+.freshness[hidden] {
+  display: block;
+  visibility: hidden;
+}
+
+@media (min-width: 40rem) {
+  .freshness {
+    min-height: calc(var(--font-size-sm) * var(--line-height-base) + 2 * var(--space-1));
+  }
 }
 
 /* Old data, or none recorded: a warning in words and a mark, not colour alone. */
