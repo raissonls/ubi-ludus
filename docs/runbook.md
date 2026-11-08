@@ -166,7 +166,7 @@ The data is rebuilt from the providers every morning and is not stored in the re
 2. Open its job **Deploy to GitHub Pages** and choose **Re-run this job**. Or from the command line: `gh run view <run id> --json jobs` shows the job's id, then `gh run rerun <run id> --job <job id>`.
 3. The site is back to that run's data and files within a minute.
 
-> **Not yet tried for real.** The 14-day keep and the way to re-run one job are in place and follow how GitHub's deploy action works, but nobody has done this on the live site yet. On 2026-11-08 the assistant tried (`gh run rerun <run id> --job <deploy job id>` on the 02:07 run) and the session's automatic safety check refused it as an unapproved production deploy, so it was left undone. Do it once yourself on a quiet day with a recent run (it publishes data that is hours old, so it is harmless): run the command above, check that `curl -s https://raissonls.github.io/ubi-ludus/data/status.json` shows that run's `generated_at`, then run the pipeline by hand to bring the fresh data back, and note here how it went.
+> **Tried for real on 2026-11-08 (M5-05), and it works.** The owner re-ran the deploy job of the 02:07 UTC run (`gh run rerun 42437187362 --job 128598642903`, which made it attempt 2). The job took 11 seconds; the e-mail job was skipped because that original run had been started without the e-mail; GitHub's deployment record shows a new deployment at 11:58 UTC from the commit that run was built from (`0393e01`, while `main` had moved on), so the old files were what went up. Running the pipeline by hand afterwards put the fresh data back (`generated_at` 12:03:22). Things to know: re-running the job does not run the build, so the e-mail and the data checks are not repeated; and the site stays on the old data until a later run replaces it, so pause the schedules first if the cause is not fixed (below).
 
 This puts old data up **until the next daily run, at 09:00 UTC, which replaces it with fresh data again**. So also fix the cause first: a wrong rule or override in `data/rights/`, a bad change on `main` (below). If the next run would publish the same fault, pause the schedules until it is fixed:
 
@@ -233,7 +233,7 @@ The fetch step then runs with the provider token blanked for that run only. Expe
 | Recovery | the next normal run was green and closed the issue by itself |
 | Freshness warning | the data is called "possibly out of date" once it is more than 36 hours old, not before. On the live site, the freshness rule gave "fresh" up to 35 hours after the last good run and "stale" from 37 hours on; the page itself shows the warning in the browser tests (`tests/browser/test_freshness_report.py`). So after one missed day (up to 24 hours) the page shows no warning, which is deliberate: the data is still the day's. |
 
-Gaps found: none in the steps above. The one step not drilled is the site rollback (below).
+Gaps found: none. The site rollback was drilled the same day (see [Rolling back the site](#rolling-back-the-site)).
 
 ## Useful commands
 
