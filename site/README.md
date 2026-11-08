@@ -156,3 +156,7 @@ The data is published once a day, so it can say "scheduled" for a match that is 
 - The audit, its findings and the checklist for a real screen reader are in [docs/audits/accessibility-2026-11-07.md](../docs/audits/accessibility-2026-11-07.md).
 - `tests/browser/test_accessibility_audit.py` runs on every pull request: the Tab walk (focus ring visible and at least 3:1, never hidden, no trap, every target at least 24 px), text spacing, text at 200% with no sideways scroll at 320 px, forced colours, reduced motion, and the page structure, in both themes and at three sizes. Each feature's own tests also run axe in their states.
 - When you add a control: give it a name, at least 24 px of height and width (the project uses 32 px and up), keep the global focus ring, and let long text wrap (`overflow-wrap: anywhere`) instead of pushing the page wider.
+
+## Performance (NFR, M5-02)
+- Targets, how they are checked and how to measure by hand: [docs/performance.md](../docs/performance.md). Lighthouse mobile is 99 or more on the same data served like GitHub Pages; JavaScript is 43 KB gzipped.
+- **The page must not jump while it loads.** What is filled in later (the strings, the data) must have its room from the first paint: the page is at least a screen tall, and the name, the title, the section title and the freshness line each keep their line's height in `css/base.css`. When you add something that appears after load, give it a `min-height` the same way. `tests/browser/test_layout_shift.py` fails if the page moves by 0.1 or more.
