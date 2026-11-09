@@ -1,0 +1,64 @@
+name: Bug report
+description: Something on the site looks wrong, does not work, or cannot be used.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for telling us. A wrong broadcaster or kick-off time is not this form: use "Transmissão errada" instead. Please do not include personal data, and do not paste anything you would not post in public.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw. If something is hard to read or reach with the keyboard or a screen reader, say so.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to see it
+      description: What you did, one step on each line.
+      placeholder: |
+        1. Open the site on the phone
+        2. Tap the settings button
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: For example "iPhone 13", "Samsung Galaxy A54" or "Windows laptop".
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      description: For example "Safari 17.4", "Chrome 124". On a phone it is in the browser's settings or "About" page. If you do not know, write the name of the app.
+    validations:
+      required: true
+  - type: dropdown
+    id: theme
+    attributes:
+      label: Theme and text size
+      description: Only if it matters here.
+      multiple: true
+      options:
+        - Dark theme
+        - Light theme
+        - Larger text size
+        - Reduced motion
+        - Screen reader on
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot or recording
+      description: Drag a picture here if you have one. Hide anything personal first.

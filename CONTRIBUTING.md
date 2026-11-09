@@ -8,7 +8,8 @@ Thanks for helping with Ubi Ludus. This file is short on purpose; the planning r
 2. Create a branch from `main`. Name it after the task, for example `m1-03-football-data-adapter`.
 3. Make the change, with tests where code is involved.
 4. Run the checks locally (see [Development](README.md#development)): `ruff check .`, `ruff format .`, `mypy`, `pytest`.
-5. Open a pull request that mentions the issue (`Closes #12`). CI must pass before merging.
+5. Open a pull request that mentions the issue (`Closes #12`). The [pull request template](.github/pull_request_template.md) is filled in for you: it lists what to check for a change to the site, and asks for evidence and a way back. CI must pass before merging.
+6. [`.github/CODEOWNERS`](.github/CODEOWNERS) names who reviews each area. Changes to the rights data and to the workflows always need the maintainer's review.
 
 ## Standards
 
@@ -26,4 +27,6 @@ Thanks for helping with Ubi Ludus. This file is short on purpose; the planning r
 
 ## Reporting a problem
 
-Wrong broadcast information is the most useful report you can send. Open an issue with the match, the date and the correct broadcaster, ideally with a link to the official source.
+Wrong broadcast information is the most useful report you can send. Use the "Transmissão errada" form with the match, the date and the correct broadcaster, ideally with a link to the official source.
+
+For anything else, pick the form that fits when you open an issue: a **bug report** (it asks for the device and browser, which is what we need first) or a **feature request** (it asks for the problem before the idea). A security problem is reported privately: see [SECURITY.md](SECURITY.md).

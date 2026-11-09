@@ -2,6 +2,11 @@ name: CI
 
 # Runs on every pull request and on main. Later tasks add to this file:
 # schema validation (M1-01) and front-end checks, axe and Lighthouse (M3-01, M5-02).
+#
+# The two slow parts, the browser tests and the dbt tests, run only when a pull request changes
+# something they check (src/ubi_ludus/quality/changes.py has the rules, docs/adr/ADR-004 the reason).
+# Everything cheap always runs, and a push to main always runs everything. The job and its name stay
+# the same either way, so the required check "Lint, types and tests" always reports a result.
 on:
   pull_request:
   push:
@@ -25,7 +30,26 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0 # the list of changed files needs the history between the two commits
           persist-credentials: false
+
+      # Which slow parts this change needs. Plain Python from the runner, nothing installed: it
+      # reads the list of changed files from git. Anything it cannot tell runs everything.
+      - name: Decide which slow checks to run
+        id: areas
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -o pipefail
+          if [ "$EVENT" = "pull_request" ]; then
+            PYTHONPATH=src python3 -m ubi_ludus.quality.changes --base "$BASE" --head "$HEAD" 2> reason.txt | tee -a "$GITHUB_OUTPUT"
+          else
+            PYTHONPATH=src python3 -m ubi_ludus.quality.changes --all 2> reason.txt | tee -a "$GITHUB_OUTPUT"
+          fi
+          cat reason.txt
+          cat reason.txt >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
@@ -38,6 +62,7 @@ jobs:
 
       # The site's accessibility, policy and request checks run in a real browser.
       - name: Install the browser for the site tests
+        if: steps.areas.outputs.browser != 'false' # anything but a clear "false" installs it
         run: python -m playwright install --with-deps chromium
 
       - name: Lint
@@ -57,10 +82,24 @@ jobs:
       # Includes the dbt tests (marker "dbt"): they build the dbt project on fixtures, so a
       # failing dbt model or data test fails this step. They run in parallel, one file per worker,
       # because several files share one warehouse build between their tests.
+      # When a slow part is left out, its tests are deselected by marker and the coverage rule is
+      # not applied (it is measured on the full run, which every push to main makes).
       - name: Tests (unit and dbt build on fixtures)
         env:
           UBI_LUDUS_REQUIRE_BROWSER: "1" # a missing browser fails the run instead of skipping
-        run: pytest -n auto --dist loadfile
+          RUN_BROWSER: ${{ steps.areas.outputs.browser }}
+          RUN_PIPELINE: ${{ steps.areas.outputs.pipeline }}
+        run: |
+          expression=""
+          # Only a clear "false" leaves a part out: an empty answer runs it.
+          [ "$RUN_BROWSER" != "false" ] || expression="not browser"
+          [ "$RUN_PIPELINE" != "false" ] || expression="${expression:+$expression and }not dbt"
+          if [ -n "$expression" ]; then
+            echo "Left out: $expression" | tee -a "$GITHUB_STEP_SUMMARY"
+            pytest -n auto --dist loadfile --no-cov -m "$expression"
+          else
+            pytest -n auto --dist loadfile
+          fi
 
   secret-scan:
     name: Secret scan

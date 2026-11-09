@@ -60,7 +60,7 @@ Static JSON with a schema version, served next to the site: `matches.json`, `tea
 
 ## Schedule and environments
 
-- **CI** runs on every pull request and on `main` ([ci.yml](../.github/workflows/ci.yml)): lint, format, type-check, tests and a secret scan.
+- **CI** runs on every pull request and on `main` ([ci.yml](../.github/workflows/ci.yml)): lint, format, type-check, tests and a secret scan. The browser tests and the dbt tests run on a pull request only when it changes something they check ([ADR-004](adr/ADR-004-run-only-the-checks-a-change-needs.md)); a push to `main` runs everything.
 - **Daily pipeline** (from M4): 09:00 UTC (06:00 BRT) with a manual trigger, plus a keep-alive so GitHub does not disable the schedule after 60 days of inactivity.
 - **Secrets** (provider keys, e-mail credentials) live only in GitHub Secrets and in a local `.env` that git ignores.
 - **Local development:** see the README. Provider keys are optional for most work because tests use recorded fixtures, not live calls.
