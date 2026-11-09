@@ -1,1 +1,8 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Security problem
+    url: https://github.com/raissonls/ubi-ludus/security/advisories/new
+    about: Please do not open a public issue. Report it privately here.
+  - name: Privacy
+    url: https://github.com/raissonls/ubi-ludus/blob/main/PRIVACY.md
+    about: What the site does and does not collect (it collects nothing), and how to delete what is saved in your browser.

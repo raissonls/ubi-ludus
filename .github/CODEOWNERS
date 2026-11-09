@@ -1,0 +1,30 @@
+# Who looks after what. GitHub asks these people to review a pull request that touches the path.
+# The last matching line wins, so the general line is first.
+#
+# While the project has one maintainer every line is the same person. The lines are here so that
+# the areas are named, and so that "Require review from Code Owners" can be switched on the day a
+# second person (or a contributor, issue #47) joins, with no change to this file except the names.
+# A test (tests/unit/test_github_templates.py) keeps every path below pointing at something real.
+
+*                       @raissonls
+
+# The site a visitor sees
+/site/                  @raissonls
+
+# The daily pipeline, its models and the shape of its files
+/src/ubi_ludus/         @raissonls
+/dbt/                   @raissonls
+/schemas/               @raissonls
+
+# Who broadcasts what: a wrong line here shows a visitor the wrong channel, so the maintainer
+# reads every change
+/data/                  @raissonls
+/config/                @raissonls
+
+# What runs with the repository's permissions: the workflows, and the rules about who may write
+/.github/workflows/     @raissonls
+/.github/CODEOWNERS     @raissonls
+
+# Tests and documents
+/tests/                 @raissonls
+/docs/                  @raissonls

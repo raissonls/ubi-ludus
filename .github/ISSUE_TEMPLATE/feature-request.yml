@@ -1,0 +1,39 @@
+name: Feature request
+description: An idea that would help someone find where to watch a match.
+title: "Idea: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ubi Ludus is free, has no accounts and keeps your choices in your own browser. Ideas that need to collect personal data, show ads or track visitors will not be built, but every other idea is welcome. Please do not include personal data.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What were you trying to do, and what got in the way? Start here, before the idea.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What would you like the site to do?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Other ways to solve it
+      description: Something else you tried or thought about, including another site or app that does it well.
+  - type: dropdown
+    id: who
+    attributes:
+      label: Who is it for
+      options:
+        - Me
+        - Anyone who follows a team
+        - People who use a screen reader or the keyboard
+        - People on a slow connection or an old phone
+        - Someone who maintains the data
+        - Not sure
