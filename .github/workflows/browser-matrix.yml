@@ -11,8 +11,6 @@ on:
   schedule:
     - cron: "30 6 * * 1" # Mondays 06:30 UTC, 03:30 in Brazil
   workflow_dispatch:
-  push: # TEMPORARY: remove before the pull request is ready
-    branches: [q-01-02-browser-support-and-webkit]
 
 # Nothing by default. Each job asks only for what it needs.
 permissions: {}

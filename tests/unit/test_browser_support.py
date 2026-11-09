@@ -188,3 +188,36 @@ def test_only_the_scheduled_run_opens_issues_and_it_is_the_only_job_that_can() -
     owner = jobs["tell-the-owner"]
     assert owner["permissions"] == {"issues": "write"}
     assert "github.event_name == 'schedule'" in owner["if"]
+
+
+# --- the layout sweep --------------------------------------------------------------------------
+
+SWEEP = ROOT / ".github" / "workflows" / "layout-sweep.yml"
+
+
+def test_the_layout_sweep_is_started_by_hand_and_keeps_its_pictures_for_a_week() -> None:
+    document = yaml.safe_load(SWEEP.read_text(encoding="utf-8"))
+    assert list(document[True]) == ["workflow_dispatch"]  # by hand only
+    job = document["jobs"]["sweep"]
+    assert job["env"]["UBI_LUDUS_SCREENSHOTS"] == "sweep-pictures"
+    upload = next(step for step in job["steps"] if "upload-artifact" in step.get("uses", ""))
+    assert upload["with"]["retention-days"] == 7
+    assert upload["with"]["path"] == "sweep-pictures"
+    assert job["permissions"] == {"contents": "read"}
+
+
+def test_the_sweep_covers_the_widths_and_states_the_issue_asks_for() -> None:
+    text = (ROOT / "tests" / "browser" / "test_layout_sweep.py").read_text(encoding="utf-8")
+    widths = re.search(r"WIDTHS = \(([^)]*)\)", text)
+    assert widths is not None
+    assert {int(w) for w in widths.group(1).split(",") if w.strip()} >= {
+        320,
+        360,
+        390,
+        430,
+        768,
+        1024,
+        1440,
+    }
+    for state in ("empty", "with-teams", "settings-open", "match-sheet-open", "first-run"):
+        assert f'"{state}"' in text, state

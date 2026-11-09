@@ -70,9 +70,11 @@ reads. Below the floor:
 | `webkit-iphone` | WebKit | An iPhone: touch, 3x pixels, Safari's user agent | Every Monday and by hand |
 | `chromium-android` | Chromium | An Android phone: touch, Chrome's user agent | Every Monday and by hand |
 
+The layout is also swept across seven widths (320 to 1440 px) in five states in every pull request (`tests/browser/test_layout_sweep.py`): no sideways scroll, and nothing that stays in place on the screen covers anything else. A manual run of the "Layout sweep" workflow keeps a picture of every width and state for a week, for a person to look at.
+
 The weekly runs are in `.github/workflows/browser-matrix.yml`. How to run them on your own machine
 and how to read a failure is in [the runbook](runbook.md#browser-matrix-webkit-and-phones).
 
-Not tested: Firefox, any real device, any version below the floor, and Safari's own behaviour that
+Not tested: Firefox, any real device, the saved copy of the matches in WebKit (the entries of Cache Storage do not survive a reload in Playwright's WebKit, so the fallback to the copy is only tested in Chromium; opening the site, going offline and reloading is a check for a real iPhone), any version below the floor, and Safari's own behaviour that
 Playwright's WebKit does not reproduce (the on-screen keyboard resizing the page, the address bar
 folding away). The screen-reader pass on an iPhone is by hand: see [the usability kit](usability/README.md).
