@@ -79,3 +79,5 @@ How bad: **blocks the task** (someone could not finish), **slows** (finished, bu
 ## Before the first session, check yourself
 
 A five-minute self-run catches silly problems that would waste a volunteer's time: reset the data, open the site on a phone, and do task 1 yourself. If it takes you more than 15 seconds, fix that first.
+
+Which phones and browsers the site promises to work in, and what is tested without a person, is in [browser-support.md](../browser-support.md). Choose the volunteers' phones with that list in mind, and note the phone and the browser next to each P1 to P5.

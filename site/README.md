@@ -59,6 +59,10 @@ test/             unit tests for js/ (Node's built-in runner)
 | **Storage that fails**: blocked, missing or full, the page works and the choices live in memory for the visit. | `site/test/`, `tests/browser` |
 | **Data that fails**: a file that is missing, not JSON, or in a newer format shows a message, not a blank page, and is still accessible. | `site/test/`, `tests/browser` |
 
+## Which browsers
+
+The site promises to work in the browsers listed in [docs/browser-support.md](../docs/browser-support.md) (Safari and Chrome on phones first), and a test keeps that list in line with the features the site uses. A new feature of the web platform goes into that file's table in the same pull request.
+
 ## Working on it
 
 - **Data:** `python -m ubi_ludus.pipeline.publish --run` runs the pipeline against the live providers (keys in `.env`, see `.env.example`) and writes `site/data/`. `--cache-dir .cache` reuses answers for an hour, so repeated runs spend no quota. Without `--run` it only re-writes the files from the last warehouse.
@@ -66,7 +70,7 @@ test/             unit tests for js/ (Node's built-in runner)
 - **A new string:** add it to `i18n/pt-BR.json`, use it with `data-i18n="group.key"` in HTML or `t('group.key')` in code. Plurals are objects of forms (`one`, `other`) read with `plural()`. A string nothing uses fails a test, so add it with the thing that shows it.
 - **A new colour or size:** add a token to `css/tokens.css` (with a dark value), never a raw value in another file. A colour used for text goes in `TEXT_PAIRS` in `tests/unit/test_site.py` so its contrast is checked.
 - **A new image or font:** the site test refuses any file type it does not know. Add it on purpose, with a reason and its licence.
-- **Tests:** `cd site && npm test` for the JavaScript, `pytest -m browser` for the browser checks. CI runs both.
+- **Tests:** `cd site && npm test` for the JavaScript, `pytest -m browser` for the browser checks. CI runs both. A weekly run repeats the browser checks in WebKit with an iPhone and in Chromium with an Android phone (see the runbook).
 
 ## Data attribution
 

@@ -295,6 +295,7 @@ def test_only_the_issue_jobs_can_write_issues_and_only_one_job_can_write_pages()
                     writers.setdefault(scope, set()).add(f"{path.name}:{name}")
     assert writers == {
         "issues": {
+            "browser-matrix.yml:tell-the-owner",
             "pipeline.yml:status",
             "review-report.yml:report",
             "watchdog.yml:freshness",

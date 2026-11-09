@@ -1,0 +1,70 @@
+name: Layout sweep
+
+# The layout test (tests/browser/test_layout_sweep.py) already runs in every pull request, with no
+# pictures. This is the same test started by hand with a picture of every width and state kept for a
+# week, for a quick visual look at a change to the layout. Nothing is compared pixel by pixel:
+# fonts differ between machines, so the pictures are for a person to look at.
+#
+# Pictures are named <state>-<width>.png, for example settings-open-390.png, and are in the
+# artifact "layout-sweep" on the run's page.
+on:
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: "Browser engine"
+        type: choice
+        default: chromium
+        options: [chromium, webkit]
+      profile:
+        description: "Device"
+        type: choice
+        default: desktop
+        options: [desktop, iphone, android]
+
+# Nothing by default. Each job asks only for what it needs.
+permissions: {}
+
+concurrency:
+  group: layout-sweep
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    name: Sweep ${{ inputs.engine }} / ${{ inputs.profile }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      UBI_LUDUS_ENGINE: ${{ inputs.engine }}
+      UBI_LUDUS_PROFILE: ${{ inputs.profile }}
+      UBI_LUDUS_REQUIRE_BROWSER: "1"
+      UBI_LUDUS_SCREENSHOTS: sweep-pictures
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev]"
+
+      - name: Install the browser
+        run: python -m playwright install --with-deps ${{ inputs.engine }}
+
+      - name: Sweep the widths
+        run: pytest tests/browser/test_layout_sweep.py -n auto --no-cov
+
+      - name: Keep the pictures for a week
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: layout-sweep
+          path: sweep-pictures
+          retention-days: 7
+          if-no-files-found: warn

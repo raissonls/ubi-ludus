@@ -1,13 +1,16 @@
 """Shared for the browser tests: the site's files, the page load and what it reports."""
 
 import json
+import os
 import re
 from collections.abc import Callable, Iterator
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 
+import pytest
 from axe_playwright_python.sync_playwright import Axe  # type: ignore[import-untyped]
-from playwright.sync_api import Browser, Locator, Page, Request, Route
+from playwright.sync_api import Browser, ConsoleMessage, Locator, Page, Request, Route
 
 SITE = Path(__file__).resolve().parents[2] / "site"
 # The published files the site loads from /data/. The pipeline writes the real ones; the tests
@@ -27,12 +30,69 @@ STORAGE_BLOCKED = (
     " { get() { throw new DOMException('denied', 'SecurityError'); } });"
 )
 WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]
+VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
+
+# Which engine and device the browser tests run on (docs/browser-support.md). The pull-request run
+# uses Chromium with no device. The weekly run (.github/workflows/browser-matrix.yml) sets these.
+ENGINE = os.environ.get("UBI_LUDUS_ENGINE", "chromium")  # chromium | webkit
+PROFILE = os.environ.get("UBI_LUDUS_PROFILE", "desktop")  # desktop | iphone | android
+# What a phone adds to the page: touch, the phone's own pixel density and user agent, and the
+# mobile meta-viewport rules. The width and height still come from the size a test asks for.
+PROFILES: dict[str, dict[str, object]] = {
+    "desktop": {},
+    "iphone": {
+        "is_mobile": True,
+        "has_touch": True,
+        "device_scale_factor": 3,
+        "user_agent": (
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 "
+            "(KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
+        ),
+    },
+    "android": {
+        "is_mobile": True,
+        "has_touch": True,
+        "device_scale_factor": 2.625,
+        "user_agent": (
+            "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+        ),
+    },
+}
+
+# WebKit draws a <select> with an inline style of its own, which the page's policy (style-src
+# 'self') refuses, and reports it as "Refused to apply a stylesheet" against the line of the
+# <select> in index.html. It is the engine's own markup, not the page's: nothing the site writes
+# is blocked (the poster colours, which a script sets, do apply). The report is left out of what a
+# test sees, but only in WebKit, only for that message, and only on the line of a <select>.
+SELECT_LINES = sorted(
+    number
+    for number, line in enumerate((SITE / "index.html").read_text(encoding="utf-8").splitlines(), 1)
+    if "<select" in line
+)
+
+
+def is_webkits_select_style(message: str, line: int) -> bool:
+    """The console line (0-based, as the browser reports it) is WebKit styling a <select>."""
+    return (
+        ENGINE == "webkit"
+        and message.startswith("Refused to apply a stylesheet")
+        and line + 1 in SELECT_LINES
+    )
+
+
 WATCH_VIOLATIONS = (
     "window.__violations = [];"
-    "document.addEventListener('securitypolicyviolation',"
-    " e => window.__violations.push(e.violatedDirective));"
+    "document.addEventListener('securitypolicyviolation', e => {"
+    f" if ({'true' if ENGINE == 'webkit' else 'false'} && e.violatedDirective === 'style-src-attr'"
+    f" && {SELECT_LINES}.includes(e.lineNumber)) return;"  # see the note above
+    " window.__violations.push(e.violatedDirective); });"
 )
-VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
+
+
+def skip_in_webkit(reason: str) -> pytest.MarkDecorator:
+    """Mark a test that cannot run in Playwright's WebKit. The reason is shown in the report."""
+    return pytest.mark.skipif(ENGINE == "webkit", reason=reason)
 
 
 def open_settings(page: Page) -> Locator:
@@ -103,10 +163,18 @@ class Visit:
         self.requests: list[str] = []
         self.details: list[Request] = []
         self.failed: list[str] = []
-        page.on("console", lambda m: self.console.append(f"{m.type}: {m.text}"))
+        page.on("console", self._heard)
         page.on("pageerror", lambda e: self.console.append(f"pageerror: {e}"))
         page.on("request", self._saw)
         page.on("requestfailed", lambda r: self.failed.append(r.url))
+
+    def _heard(self, message: ConsoleMessage) -> None:
+        line = int(message.location.get("lineNumber", -1))
+        if urlparse(message.location.get("url", "")).path.endswith(
+            "/index.html"
+        ) and is_webkits_select_style(message.text, line):
+            return
+        self.console.append(f"{message.type}: {message.text}")
 
     def _saw(self, request: Request) -> None:
         self.requests.append(request.url)
@@ -137,6 +205,7 @@ def visit(
     forced_colors: str = "none",
     onboarding: bool = False,
     settings: bool = False,
+    width: int | None = None,
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
@@ -146,13 +215,17 @@ def visit(
     is "active" to see the page as in Windows high-contrast mode, `onboarding` is True to let the
     first-run flow open (by default the visitor has already seen it, so it stays out of the way),
     `settings` is True to open the settings panel once the page is ready (the teams, services and
-    filters are in it)."""
-    width, height = VIEWPORTS[size]
+    filters are in it), `width` is a width in pixels to use instead of the one of `size` (the
+    height stays that of `size`; the layout sweep uses it)."""
+    shown, height = VIEWPORTS[size]
+    if width is not None:
+        shown = width
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
         reduced_motion=reduced_motion,  # type: ignore[arg-type]
         forced_colors=forced_colors,  # type: ignore[arg-type]
-        viewport={"width": width, "height": height},
+        viewport={"width": shown, "height": height},
+        **PROFILES[PROFILE],  # type: ignore[arg-type]
     )
     try:
         if not onboarding:

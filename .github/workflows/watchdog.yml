@@ -39,7 +39,7 @@ jobs:
       # schedule; a test fails if a new scheduled workflow is not on it.
       - name: Enable the scheduled workflows
         run: |
-          for workflow in pipeline.yml review-report.yml watchdog.yml; do
+          for workflow in browser-matrix.yml pipeline.yml review-report.yml watchdog.yml; do
             gh workflow enable "$workflow"
             echo "Enabled (or already on): $workflow"
           done

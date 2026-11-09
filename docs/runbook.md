@@ -235,6 +235,51 @@ The fetch step then runs with the provider token blanked for that run only. Expe
 
 Gaps found: none. The site rollback was drilled the same day (see [Rolling back the site](#rolling-back-the-site)).
 
+## Browser matrix: WebKit and phones
+
+Every pull request runs the browser tests in Chromium. Every Monday, and when started by hand,
+`.github/workflows/browser-matrix.yml` runs the same tests twice more: in **WebKit with an iPhone**
+(Safari's engine, touch, 3x pixels) and in **Chromium with an Android phone**. The reasons and the
+list of supported browsers are in [browser-support.md](browser-support.md).
+
+**A red weekly run** opens an issue labelled `browser-matrix-failure` (or adds a comment to the one
+that is open), and closes it when a weekly run is green. To read it:
+
+1. Open the run: the two jobs are `webkit-iphone` and `chromium-android`. They fail separately.
+2. Open the first red test. A failure only in WebKit is either a real Safari bug or a test that
+   leans on Chromium. Decide which: reproduce it below, then fix the site, or mark the test for
+   that engine **with the reason** (`pytest.mark.skipif(ENGINE == "webkit", reason="...")`). A
+   silent skip is not allowed.
+3. A manual run keeps its report (`report-<name>.xml`) for a week, under the run's artifacts.
+
+**On your machine:**
+
+```bash
+python -m playwright install webkit
+UBI_LUDUS_ENGINE=webkit UBI_LUDUS_PROFILE=iphone pytest tests/browser -m browser --no-cov
+UBI_LUDUS_PROFILE=android pytest tests/browser -m browser --no-cov
+```
+
+`UBI_LUDUS_ENGINE` is `chromium` (the default) or `webkit`; `UBI_LUDUS_PROFILE` is `desktop` (the
+default), `iphone` or `android`. Without WebKit installed, the tests are skipped, not failed.
+
+**Layout sweep.** `tests/browser/test_layout_sweep.py` runs in every pull request: seven widths from
+320 to 1440 px over the empty page, with teams, the settings panel, the match sheet and the first-run
+flow. A failure says which element is beyond the edge or which two fixed things cover each other.
+To look at it, run the workflow "Layout sweep" by hand (`gh workflow run layout-sweep.yml`, with an
+engine and a device if you want): the pictures are in the artifact `layout-sweep` for a week, named
+`<state>-<width>.png`. On your machine, `UBI_LUDUS_SCREENSHOTS=pictures pytest
+tests/browser/test_layout_sweep.py` writes the same files.
+
+**Windows:** Playwright's WebKit on Windows is a different build from the one on the runner, and a
+few keyboard tests fail only there (the skip link, the focus walk, Escape in the first-run flow).
+The weekly run on GitHub is the reference; a red test on your machine only is not a bug until it is
+red there too.
+
+**What it cannot see:** the on-screen keyboard resizing the page and the address bar folding away
+are Safari behaviours that Playwright's WebKit does not reproduce, and there is no real device
+here. The screen-reader pass on an iPhone stays by hand ([the usability kit](usability/README.md)).
+
 ## Why a pull request did not run the browser tests
 
 The pull request check runs the browser tests and the dbt tests only when the change touches what

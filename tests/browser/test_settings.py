@@ -40,7 +40,7 @@ def test_the_header_has_the_logo_the_name_and_a_settings_button(
 def test_the_header_stays_at_the_top_while_the_page_scrolls(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, size="mobile", saved=saved(["palmeiras"])):
         page = current.page
-        page.mouse.wheel(0, 1200)
+        page.evaluate("window.scrollTo(0, 1200)")  # (a mouse wheel does not exist in mobile WebKit)
         page.wait_for_timeout(200)
         top = page.evaluate("document.querySelector('.site-header').getBoundingClientRect().top")
         assert top == 0
