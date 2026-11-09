@@ -235,6 +235,23 @@ The fetch step then runs with the provider token blanked for that run only. Expe
 
 Gaps found: none. The site rollback was drilled the same day (see [Rolling back the site](#rolling-back-the-site)).
 
+## Why a pull request did not run the browser tests
+
+The pull request check runs the browser tests and the dbt tests only when the change touches what
+they check ([ADR-004](adr/ADR-004-run-only-the-checks-a-change-needs.md)). The step "Decide which
+slow checks to run" says what it chose and why, on the run's summary page, and the test step says
+what was left out. To see the answer for a branch on your machine:
+
+```bash
+PYTHONPATH=src python -m ubi_ludus.quality.changes --base origin/main --head HEAD
+```
+
+It prints `browser=` and `pipeline=`. To force the full run on a pull request, change something
+the rules treat as shared (a no-op edit to a comment in `.github/workflows/ci.yml`), or run
+`gh workflow run ci.yml --ref <branch>`: a manual run always runs everything. A push to `main`
+always runs everything, so a red `main` after a merge that skipped a part means a rule is missing
+in `src/ubi_ludus/quality/changes.py`: revert, add the rule with a test, and merge again.
+
 ## Useful commands
 
 ```bash

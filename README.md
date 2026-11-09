@@ -114,7 +114,7 @@ tests/                    unit/, fixtures/, e2e/
 docs/                     PRD, research, architecture decisions (adr/)
 ```
 
-**CI:** every pull request runs the same checks on GitHub Actions (lint, format, type-check, tests, plus a secret scan). Dependabot opens weekly update pull requests for GitHub Actions and Python packages. Third-party actions are pinned to commit SHAs, and each workflow job requests only the permissions it needs.
+**CI:** every pull request runs the same checks on GitHub Actions (lint, format, type-check, tests, plus a secret scan). The two slow parts, the browser tests and the dbt tests, run only when the change touches what they check, and always on `main`: see [ADR-004](docs/adr/ADR-004-run-only-the-checks-a-change-needs.md). Dependabot opens weekly update pull requests for GitHub Actions and Python packages. Third-party actions are pinned to commit SHAs, and each workflow job requests only the permissions it needs.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how to propose a change.
 
