@@ -1,6 +1,7 @@
 """Shared for the browser tests: the site's files, the page load and what it reports."""
 
 import json
+import os
 import re
 from collections.abc import Callable, Iterator
 from datetime import datetime, timedelta
@@ -33,6 +34,34 @@ WATCH_VIOLATIONS = (
     " e => window.__violations.push(e.violatedDirective));"
 )
 VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
+
+# Which engine and device the browser tests run on (docs/browser-support.md). The pull-request run
+# uses Chromium with no device. The weekly run (.github/workflows/browser-matrix.yml) sets these.
+ENGINE = os.environ.get("UBI_LUDUS_ENGINE", "chromium")  # chromium | webkit
+PROFILE = os.environ.get("UBI_LUDUS_PROFILE", "desktop")  # desktop | iphone | android
+# What a phone adds to the page: touch, the phone's own pixel density and user agent, and the
+# mobile meta-viewport rules. The width and height still come from the size a test asks for.
+PROFILES: dict[str, dict[str, object]] = {
+    "desktop": {},
+    "iphone": {
+        "is_mobile": True,
+        "has_touch": True,
+        "device_scale_factor": 3,
+        "user_agent": (
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 "
+            "(KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1"
+        ),
+    },
+    "android": {
+        "is_mobile": True,
+        "has_touch": True,
+        "device_scale_factor": 2.625,
+        "user_agent": (
+            "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+        ),
+    },
+}
 
 
 def open_settings(page: Page) -> Locator:
@@ -137,6 +166,7 @@ def visit(
     forced_colors: str = "none",
     onboarding: bool = False,
     settings: bool = False,
+    width: int | None = None,
 ) -> Iterator[Visit]:
     """Open the page. ``saved`` is what localStorage holds before the page runs, ``broken`` maps a
     data file to the HTTP status it answers with, `newer_format` names a data file served as if
@@ -146,13 +176,17 @@ def visit(
     is "active" to see the page as in Windows high-contrast mode, `onboarding` is True to let the
     first-run flow open (by default the visitor has already seen it, so it stays out of the way),
     `settings` is True to open the settings panel once the page is ready (the teams, services and
-    filters are in it)."""
-    width, height = VIEWPORTS[size]
+    filters are in it), `width` is a width in pixels to use instead of the one of `size` (the
+    height stays that of `size`; the layout sweep uses it)."""
+    shown, height = VIEWPORTS[size]
+    if width is not None:
+        shown = width
     context = browser.new_context(
         color_scheme=scheme,  # type: ignore[arg-type]
         reduced_motion=reduced_motion,  # type: ignore[arg-type]
         forced_colors=forced_colors,  # type: ignore[arg-type]
-        viewport={"width": width, "height": height},
+        viewport={"width": shown, "height": height},
+        **PROFILES[PROFILE],  # type: ignore[arg-type]
     )
     try:
         if not onboarding:

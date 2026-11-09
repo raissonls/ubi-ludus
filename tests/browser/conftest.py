@@ -3,6 +3,9 @@
 Needs a Chromium. In CI it is installed (`playwright install chromium`) and a missing browser is a
 failure (UBI_LUDUS_REQUIRE_BROWSER=1). On a developer machine the tests use Chromium if it is
 there, else Chrome or Edge, and skip when there is none.
+
+The weekly run also uses WebKit and phone profiles: UBI_LUDUS_ENGINE=webkit,
+UBI_LUDUS_PROFILE=iphone (see site_browser.py and docs/browser-support.md).
 """
 
 import functools
@@ -14,7 +17,7 @@ from urllib.parse import urlparse
 
 import pytest
 from playwright.sync_api import Browser, Playwright, sync_playwright
-from site_browser import DATA, GALLERY, SITE
+from site_browser import DATA, ENGINE, GALLERY, PROFILE, PROFILES, SITE
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -48,6 +51,18 @@ def origin() -> Iterator[str]:
 
 
 def launch(playwright: Playwright) -> Browser:
+    if PROFILE not in PROFILES:
+        pytest.fail(f"UBI_LUDUS_PROFILE={PROFILE!r}: use one of {sorted(PROFILES)}")
+    if ENGINE == "webkit":  # Safari's engine: iPhone and Mac. Only the one build, no channels.
+        try:
+            return playwright.webkit.launch()
+        except Exception as exc:  # noqa: BLE001 - same reasoning as below
+            message = f"No WebKit for the site tests ({str(exc).splitlines()[0]})"
+            if os.environ.get("UBI_LUDUS_REQUIRE_BROWSER") == "1":
+                pytest.fail(message)
+            pytest.skip(message)
+    if ENGINE != "chromium":
+        pytest.fail(f"UBI_LUDUS_ENGINE={ENGINE!r}: use chromium or webkit")
     errors = []
     for channel in (None, "chrome", "msedge"):
         try:
