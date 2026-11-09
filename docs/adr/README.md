@@ -14,3 +14,4 @@ Short notes that explain **why** a meaningful technical choice was made, so nobo
 | [ADR-001](ADR-001-architecture.md) | Static pipeline architecture and data providers | Accepted |
 | [ADR-002](ADR-002-dbt-duckdb.md) | dbt and Python together, on DuckDB | Accepted |
 | [ADR-003](ADR-003-drop-api-football.md) | Stop using API-Football in the daily job | Accepted |
+| [ADR-004](ADR-004-run-only-the-checks-a-change-needs.md) | Run only the slow checks a change needs | Accepted |
