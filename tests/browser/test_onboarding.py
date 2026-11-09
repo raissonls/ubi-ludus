@@ -71,7 +71,9 @@ def team(page: Page, name: str) -> Any:
 
 
 def title(page: Page) -> str:
-    return page.locator(f"{DIALOG} .ob__title").inner_text()
+    # The words are separate boxes: some engines leave the space between them out of inner_text().
+    text = page.locator(f"{DIALOG} .ob__title").text_content() or ""
+    return " ".join(text.split())
 
 
 def stored(page: Page) -> Any:

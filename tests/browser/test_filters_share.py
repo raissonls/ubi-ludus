@@ -11,7 +11,7 @@ from urllib.parse import parse_qs, urlparse
 
 import pytest
 from playwright.sync_api import Browser, Page
-from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, visit
+from site_browser import STORAGE_KEY, VIEWPORTS, axe_violations, skip_in_webkit, visit
 
 pytestmark = pytest.mark.browser
 
@@ -233,6 +233,7 @@ def share(page: Page) -> str:
     return str(page.evaluate("navigator.clipboard.readText()"))
 
 
+@skip_in_webkit("Playwright's WebKit cannot grant the clipboard permissions the test needs")
 def test_the_share_button_copies_a_link_with_the_filters_teams_and_services(
     browser: Browser, origin: str
 ) -> None:

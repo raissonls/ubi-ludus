@@ -6,9 +6,11 @@ import re
 from collections.abc import Callable, Iterator
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 
+import pytest
 from axe_playwright_python.sync_playwright import Axe  # type: ignore[import-untyped]
-from playwright.sync_api import Browser, Locator, Page, Request, Route
+from playwright.sync_api import Browser, ConsoleMessage, Locator, Page, Request, Route
 
 SITE = Path(__file__).resolve().parents[2] / "site"
 # The published files the site loads from /data/. The pipeline writes the real ones; the tests
@@ -28,11 +30,6 @@ STORAGE_BLOCKED = (
     " { get() { throw new DOMException('denied', 'SecurityError'); } });"
 )
 WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]
-WATCH_VIOLATIONS = (
-    "window.__violations = [];"
-    "document.addEventListener('securitypolicyviolation',"
-    " e => window.__violations.push(e.violatedDirective));"
-)
 VIEWPORTS = {"desktop": (1280, 800), "mobile": (375, 812), "narrow": (320, 640)}
 
 # Which engine and device the browser tests run on (docs/browser-support.md). The pull-request run
@@ -62,6 +59,40 @@ PROFILES: dict[str, dict[str, object]] = {
         ),
     },
 }
+
+# WebKit draws a <select> with an inline style of its own, which the page's policy (style-src
+# 'self') refuses, and reports it as "Refused to apply a stylesheet" against the line of the
+# <select> in index.html. It is the engine's own markup, not the page's: nothing the site writes
+# is blocked (the poster colours, which a script sets, do apply). The report is left out of what a
+# test sees, but only in WebKit, only for that message, and only on the line of a <select>.
+SELECT_LINES = sorted(
+    number
+    for number, line in enumerate((SITE / "index.html").read_text(encoding="utf-8").splitlines(), 1)
+    if "<select" in line
+)
+
+
+def is_webkits_select_style(message: str, line: int) -> bool:
+    """The console line (0-based, as the browser reports it) is WebKit styling a <select>."""
+    return (
+        ENGINE == "webkit"
+        and message.startswith("Refused to apply a stylesheet")
+        and line + 1 in SELECT_LINES
+    )
+
+
+WATCH_VIOLATIONS = (
+    "window.__violations = [];"
+    "document.addEventListener('securitypolicyviolation', e => {"
+    f" if ({'true' if ENGINE == 'webkit' else 'false'} && e.violatedDirective === 'style-src-attr'"
+    f" && {SELECT_LINES}.includes(e.lineNumber)) return;"  # see the note above
+    " window.__violations.push(e.violatedDirective); });"
+)
+
+
+def skip_in_webkit(reason: str) -> pytest.MarkDecorator:
+    """Mark a test that cannot run in Playwright's WebKit. The reason is shown in the report."""
+    return pytest.mark.skipif(ENGINE == "webkit", reason=reason)
 
 
 def open_settings(page: Page) -> Locator:
@@ -132,10 +163,18 @@ class Visit:
         self.requests: list[str] = []
         self.details: list[Request] = []
         self.failed: list[str] = []
-        page.on("console", lambda m: self.console.append(f"{m.type}: {m.text}"))
+        page.on("console", self._heard)
         page.on("pageerror", lambda e: self.console.append(f"pageerror: {e}"))
         page.on("request", self._saw)
         page.on("requestfailed", lambda r: self.failed.append(r.url))
+
+    def _heard(self, message: ConsoleMessage) -> None:
+        line = int(message.location.get("lineNumber", -1))
+        if urlparse(message.location.get("url", "")).path.endswith(
+            "/index.html"
+        ) and is_webkits_select_style(message.text, line):
+            return
+        self.console.append(f"{message.type}: {message.text}")
 
     def _saw(self, request: Request) -> None:
         self.requests.append(request.url)

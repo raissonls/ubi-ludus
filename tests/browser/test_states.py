@@ -20,10 +20,17 @@ from site_browser import (
     VIEWPORTS,
     axe_violations,
     open_settings,
+    skip_in_webkit,
     visit,
 )
 
 pytestmark = pytest.mark.browser
+
+# The saved copy lives in Cache Storage. In Playwright's WebKit the entries are gone after a reload
+# (they are written, read back within the page, and empty after the page is loaded again), so the
+# fallback to the copy cannot be exercised there. Whether Safari itself keeps the copy across
+# reloads is checked by hand on a phone (docs/browser-support.md).
+NO_SAVED_COPY = "Cache Storage does not survive a reload in Playwright's WebKit"
 
 DATA_FILES = "**/data/*.json"
 RETRY = "Tentar de novo"
@@ -264,6 +271,7 @@ def test_the_empty_screen_can_look_again(browser: Browser, origin: str) -> None:
 # --- the copy kept from the last good load --------------------------------------------------------
 
 
+@skip_in_webkit(NO_SAVED_COPY)
 def test_when_the_load_fails_the_last_good_data_is_shown_with_a_notice(
     browser: Browser, origin: str
 ) -> None:
@@ -283,6 +291,7 @@ def test_when_the_load_fails_the_last_good_data_is_shown_with_a_notice(
         assert page.locator("#freshness").get_attribute("data-state") == "fresh"
 
 
+@skip_in_webkit(NO_SAVED_COPY)
 def test_a_server_error_falls_back_to_the_copy_as_well(browser: Browser, origin: str) -> None:
     for current in visit(browser, origin, path=WEEK):
         reload_without_the_data(current.page, fail_the_data)
@@ -290,6 +299,7 @@ def test_a_server_error_falls_back_to_the_copy_as_well(browser: Browser, origin:
         assert current.page.locator("#saved-notice").is_visible()
 
 
+@skip_in_webkit(NO_SAVED_COPY)
 def test_an_old_copy_is_shown_with_the_freshness_warning(browser: Browser, origin: str) -> None:
     old = status_with("2026-10-28T09:00:00Z")
     for current in visit(browser, origin, path=WEEK, changed_data=old):
@@ -302,6 +312,7 @@ def test_an_old_copy_is_shown_with_the_freshness_warning(browser: Browser, origi
         assert warning.inner_text().startswith("⚠ Dados possivelmente desatualizados.")
 
 
+@skip_in_webkit(NO_SAVED_COPY)
 def test_a_choice_survives_a_failed_load_and_the_copy_shows_the_followed_teams(
     browser: Browser, origin: str
 ) -> None:
@@ -373,7 +384,17 @@ def test_a_copy_that_no_longer_fits_the_site_is_not_shown(browser: Browser, orig
 
 @pytest.mark.parametrize("size", list(VIEWPORTS))
 @pytest.mark.parametrize("scheme", ["light", "dark"])
-@pytest.mark.parametrize("how", ["offline", "error", "outdated", "empty", "unexpected", "saved"])
+@pytest.mark.parametrize(
+    "how",
+    [
+        "offline",
+        "error",
+        "outdated",
+        "empty",
+        "unexpected",
+        pytest.param("saved", marks=skip_in_webkit(NO_SAVED_COPY)),
+    ],
+)
 def test_axe_finds_nothing_on_any_screen(
     browser: Browser, origin: str, scheme: str, size: str, how: str
 ) -> None:
